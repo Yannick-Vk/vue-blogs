@@ -51,7 +51,7 @@ export const useAuthStore = defineStore('auth', () => {
             const response = await axios.post<LoginResponse>(`${authApiUrl}/login`, credentials);
             localStorage.setItem('user', JSON.stringify(response.data));
             localStorage.setItem('expiration', response.data.expiry);
-            user.value = new User(response.data) // Set the user state directly from the login response
+            user.value = new User(response.data)
         } catch (error) {
             user.value = null;
             throw error
@@ -61,10 +61,17 @@ export const useAuthStore = defineStore('auth', () => {
     async function register(details: {
         username?: string,
         email?: string,
-        password?: string,
-        password_confirmation?: string
+        password?: string
     }) {
-
+        try {
+            const response = await axios.post(`${authApiUrl}/register`, details);
+            localStorage.setItem('user', JSON.stringify(response.data));
+            localStorage.setItem('expiration', response.data.expiry);
+            user.value = new User(response.data)
+        } catch (error) {
+            user.value = null;
+            throw error
+        }
     }
 
     async function logout() {
