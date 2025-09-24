@@ -7,34 +7,15 @@ const route = useRoute()
 
 const items = computed<NavigationMenuItem[]>(() => [
   {
-    label: 'Docs',
-    to: '/docs/getting-started',
-    active: route.path.startsWith('/docs/getting-started')
+    label: 'Home',
+    to: '/home',
+    active: route.path.startsWith('/home')
   },
-  {
-    label: 'Components',
-    to: '/docs/components',
-    active: route.path.startsWith('/docs/components')
-  },
-  {
-    label: 'Figma',
-    to: 'https://go.nuxt.com/figma-ui',
-    target: '_blank'
-  },
-  {
-    label: 'Releases',
-    to: 'https://github.com/nuxt/ui/releases',
-    target: '_blank'
-  }
 ])
 </script>
 
 <template>
   <UHeader>
-    <template #title>
-      <Logo class="h-6 w-auto" />
-    </template>
-
     <UNavigationMenu :items="items" />
 
     <template #right>
@@ -46,7 +27,7 @@ const items = computed<NavigationMenuItem[]>(() => [
             variant="ghost"
             to="https://github.com/nuxt/ui"
             target="_blank"
-            icon="i-simple-icons-github"
+            icon="lucide:github"
             aria-label="GitHub"
         />
       </UTooltip>
