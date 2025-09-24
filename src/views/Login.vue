@@ -1,10 +1,13 @@
 ﻿<script setup lang="ts">
 import * as z from 'zod'
 import type {FormSubmitEvent} from '@nuxt/ui'
-import {reactive} from "vue";
 import {useAuthStore} from '@/stores/auth';
 import {useRouter} from 'vue-router';
 import type {AxiosError} from 'axios';
+
+const toast = useToast()
+const authStore = useAuthStore()
+const router = useRouter()
 
 function isAxiosError(error: unknown): error is AxiosError {
   return (error as AxiosError).isAxiosError !== undefined;
@@ -17,14 +20,32 @@ const schema = z.object({
 
 type Schema = z.output<typeof schema>
 
-const state = reactive<Partial<Schema>>({
-  username: "",
-  password: "",
-})
+const fields = [{
+  name: 'username',
+  type: 'text' as const,
+  label: 'Username/Email',
+  placeholder: 'Enter your username or email',
+  required: true
+}, {
+  name: 'password',
+  label: 'Password',
+  type: 'password' as const,
+  placeholder: 'Enter your password'
+}]
 
-const toast = useToast()
-const authStore = useAuthStore()
-const router = useRouter()
+const providers = [{
+  label: 'Google',
+  icon: 'logos:google-icon',
+  onClick: () => {
+    toast.add({ title: 'Google', icon: "logos:google-icon", description: 'Login with Google' })
+  }
+}, {
+  label: 'GitHub',
+  icon: 'lucide:github',
+  onClick: () => {
+    toast.add({ title: 'GitHub', icon:"lucide:github", description: 'Login with GitHub' })
+  }
+}]
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
@@ -57,32 +78,23 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 </script>
 
 <template>
-  <div class="flex justify-center mt-5">
-    <UCard variant="subtle">
-      <template #header>
-        <h2 class="text-2xl text-primary-800">Login</h2>
-      </template>
-      <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-        <UFormField label="Username/Email" name="username">
-          <UInput v-model="state.username" class="w-80"/>
-        </UFormField>
-
-        <UFormField label="Password" name="password">
-          <PasswordField v-model="state.password" class="w-80"></PasswordField>
-        </UFormField>
-
-        <UButton type="submit">
-          Submit
-        </UButton>
-      </UForm>
-
-      <template #footer>
-        <p class="text-center">
-          Don't have an account yet?
-          <ULink to="/register" class="text-primary-500 hover:text-secondary-500">Register here
-          </ULink>
-        </p>
-      </template>
-    </UCard>
+  <div class="flex flex-col items-center justify-center gap-4 p-4">
+    <UPageCard class="w-full max-w-md">
+      <UAuthForm
+          :schema="schema"
+          :fields="fields"
+          :providers="providers"
+          title="Welcome back!"
+          icon="i-lucide-lock"
+          @submit="onSubmit"
+      >
+        <template #description>
+          Don't have an account? <ULink to="register" class="text-primary font-medium">Register</ULink>.
+        </template>
+        <template #password-hint>
+          <ULink to="#" class="text-primary font-medium" tabindex="-1">Forgot password?</ULink>
+        </template>
+      </UAuthForm>
+    </UPageCard>
   </div>
 </template>
