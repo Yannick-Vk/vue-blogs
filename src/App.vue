@@ -3,8 +3,10 @@ import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
 import NavBar from "@/components/NavBar.vue";
 import { useAuthStore } from '@/stores/auth';
+import type {ToasterProps} from "@nuxt/ui/components/Toaster.vue";
 
 const authStore = useAuthStore();
+const toaster: ToasterProps = { position: 'top-right', expand: false };
 
 onMounted(() => {
   authStore.fetchUser();
@@ -12,7 +14,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <UApp>
+  <UApp :toaster="toaster">
     <nav>
       <div>
         <NavBar/>
