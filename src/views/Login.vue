@@ -29,13 +29,13 @@ const router = useRouter()
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
     await authStore.login(event.data)
-    toast.add({title: 'Login Successful!', description: `Welcome back ${authStore.user?.username}`, color: 'success'})
+    toast.add({title: 'Login Successful!', icon: "lucide:user-round-check", description: `Welcome back ${authStore.user?.username}`, color: 'success'})
     await router.push({name: 'home'})
   } catch (error) {
     if (isAxiosError(error) && error.response?.data) {
-      toast.add({title: 'Login Failed', description: `Error: ${error.response.data}`, color: 'error'})
+      toast.add({title: 'Login Failed', icon: "lucide:user-x", description: `Error: ${error.response.data}`, color: 'error'})
     } else {
-      toast.add({title: 'Login Failed', description: `An unexpected error occurred: ${error}`, color: 'error'})
+      toast.add({title: 'Login Failed', icon: "lucide:user-x", description: `An unexpected error occurred: ${error}`, color: 'error'})
     }
   }
 }
