@@ -1,8 +1,9 @@
 <script lang="ts" setup>
+import Login from "@/views/Login.vue";
 </script>
 
 <template>
   <main>
-    <u-button> Demo button </u-button>
+    <Login />
   </main>
 </template>
