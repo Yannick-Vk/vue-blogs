@@ -2,24 +2,34 @@
 import * as z from 'zod'
 import type {FormSubmitEvent} from '@nuxt/ui'
 import {reactive} from "vue";
+import {useAuthStore} from '@/stores/auth';
+import {useRouter} from 'vue-router';
 
 const schema = z.object({
-  username: z.string(),
-  password: z.string()
+  username: z.string().trim().nonempty("Username/Email cannot be empty"),
+  password: z.string().trim().nonempty("Password cannot be empty"),
 })
 
 type Schema = z.output<typeof schema>
 
 const state = reactive<Partial<Schema>>({
-  username: undefined,
-  password: undefined
+  username: "",
+  password: "",
 })
 
 const toast = useToast()
+const authStore = useAuthStore()
+const router = useRouter()
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  toast.add({title: 'Success', description: 'The form has been submitted.', color: 'success'})
-  console.log(event.data)
+  try {
+    await authStore.login(event.data)
+    toast.add({title: 'Login Successful!', description: `Welcome back ${authStore.user?.username}`, color: 'success'})
+    await router.push({name: 'home'})
+  } catch (error) {
+    console.error(error.response.data)
+    toast.add({title: 'Login Failed', description: `Error: ${error.response.data}`, color: 'error'})
+  }
 }
 </script>
 
