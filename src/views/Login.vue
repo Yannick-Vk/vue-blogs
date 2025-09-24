@@ -28,11 +28,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     <UCard variant="subtle">
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <UFormField label="Username/Email" name="username">
-          <UInput v-model="state.username"/>
+          <UInput v-model="state.username" class="w-60"/>
         </UFormField>
 
         <UFormField label="Password" name="password">
-          <PasswordField v-model="state.password"></PasswordField>
+          <PasswordField v-model="state.password" class="w-60"></PasswordField>
         </UFormField>
 
         <UButton type="submit">
