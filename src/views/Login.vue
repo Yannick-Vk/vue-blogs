@@ -14,8 +14,8 @@ function isAxiosError(error: unknown): error is AxiosError {
 }
 
 const schema = z.object({
-  username: z.string().trim().nonempty("Username/Email cannot be empty"),
-  password: z.string().trim().nonempty("Password cannot be empty"),
+  username: z.string("Username/Email cannot be empty").trim().nonempty("Username/Email cannot be empty"),
+  password: z.string("Username/Email cannot be empty").trim().nonempty("Password cannot be empty"),
 })
 
 type Schema = z.output<typeof schema>
@@ -25,12 +25,13 @@ const fields = [{
   type: 'text' as const,
   label: 'Username/Email',
   placeholder: 'Enter your username or email',
-  required: true
+  required: true,
 }, {
   name: 'password',
   label: 'Password',
   type: 'password' as const,
-  placeholder: 'Enter your password'
+  placeholder: 'Enter your password',
+  required: true,
 }]
 
 const providers = [{
