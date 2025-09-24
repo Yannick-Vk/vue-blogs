@@ -4,10 +4,16 @@ import axios from 'axios'
 import {api_base_url} from "@/services/Api.ts";
 
 // Define a type for the user data you expect from your API
-export interface User {
+export class User {
     id: string;
     username: string;
     email: string;
+
+    constructor(loginResponse: LoginResponse) {
+        this.id = loginResponse.id;
+        this.username = loginResponse.username;
+        this.email = loginResponse.email;
+    }
 }
 
 interface LoginResponse {
@@ -43,8 +49,8 @@ export const useAuthStore = defineStore('auth', () => {
             const response = await axios.post<LoginResponse>(`${authApiUrl}/login`, credentials);
             localStorage.setItem('user', JSON.stringify(response.data));
             localStorage.setItem('expiration', response.data.expiry);
-            user.value = response.data; // Set the user state directly from the login response
-            console.log("Got user", user.value);
+            console.log("Got user", response.data);
+            user.value = new User(response.data) // Set the user state directly from the login response
         } catch (error) {
             user.value = null;
             throw error
