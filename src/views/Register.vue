@@ -11,15 +11,19 @@ function isAxiosError(error: unknown): error is AxiosError {
 }
 
 const schema = z.object({
-  username: z.string().trim().nonempty("Username/Email cannot be empty"),
+  username: z.string().trim().nonempty("Username cannot be empty"),
+  email: z.email().trim().nonempty("Email cannot be empty"),
   password: z.string().trim().nonempty("Password cannot be empty"),
+  password_confirmation: z.string().trim().nonempty("Password confirm cannot be empty"),
 })
 
 type Schema = z.output<typeof schema>
 
 const state = reactive<Partial<Schema>>({
   username: "",
+  email: "",
   password: "",
+  password_confirmation: "",
 })
 
 const toast = useToast()
@@ -28,14 +32,14 @@ const router = useRouter()
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
-    await authStore.login(event.data)
-    toast.add({title: 'Login Successful!', description: `Welcome back ${authStore.user?.username}`, color: 'success'})
+    await authStore.register(event.data)
+    toast.add({title: 'Registry Successful!', description: `Welcome ${authStore.user?.username}`, color: 'success'})
     await router.push({name: 'home'})
   } catch (error) {
     if (isAxiosError(error) && error.response?.data) {
-      toast.add({title: 'Login Failed', description: `Error: ${error.response.data}`, color: 'error'})
+      toast.add({title: 'Registry Failed', description: `Error: ${error.response.data}`, color: 'error'})
     } else {
-      toast.add({title: 'Login Failed', description: `An unexpected error occurred: ${error}`, color: 'error'})
+      toast.add({title: 'Registry Failed', description: `An unexpected error occurred: ${error}`, color: 'error'})
     }
   }
 }
@@ -45,12 +49,20 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   <div class="flex justify-center">
     <UCard variant="subtle">
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-        <UFormField label="Username/Email" name="username">
+        <UFormField label="Username" name="username">
           <UInput v-model="state.username" class="w-60"/>
+        </UFormField>
+
+        <UFormField label="Email" name="email">
+          <UInput v-model="state.email" class="w-60"/>
         </UFormField>
 
         <UFormField label="Password" name="password">
           <PasswordField v-model="state.password" class="w-60"></PasswordField>
+        </UFormField>
+
+        <UFormField label="Confirm Password" name="password_confirmation">
+          <PasswordField v-model="state.password_confirmation" class="w-60"></PasswordField>
         </UFormField>
 
         <UButton type="submit">
@@ -58,8 +70,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         </UButton>
       </UForm>
       <p class="text-center mt-4">
-        Don't have an account yet?
-        <ULink to="/register" class="text-primary-500 hover:text-secondary-500">Register here
+        Already have an account?
+        <ULink to="/login" class="text-primary-500 hover:text-secondary-500">Login here
         </ULink>
       </p>
     </UCard>
