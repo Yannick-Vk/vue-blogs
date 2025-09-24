@@ -15,7 +15,10 @@ const schema = z.object({
   email: z.email().trim().nonempty("Email cannot be empty"),
   password: z.string().trim().nonempty("Password cannot be empty"),
   password_confirmation: z.string().trim().nonempty("Password confirm cannot be empty"),
-})
+}).refine((data) => data.password === data.password_confirmation, {
+  message: 'Passwords do not match',
+  path: ["password_confirmation"],
+});
 
 type Schema = z.output<typeof schema>
 
