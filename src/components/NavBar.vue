@@ -25,7 +25,7 @@ const items = computed<NavigationMenuItem[]>(() => [
         <UButton
             color="neutral"
             variant="ghost"
-            to="https://github.com/nuxt/ui"
+            to="https://github.com/Yannick-Vk/vue-blogs"
             target="_blank"
             icon="lucide:github"
             aria-label="GitHub"
