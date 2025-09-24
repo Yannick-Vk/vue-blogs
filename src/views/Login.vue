@@ -29,13 +29,28 @@ const router = useRouter()
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
     await authStore.login(event.data)
-    toast.add({title: 'Login Successful!', icon: "lucide:user-round-check", description: `Welcome back ${authStore.user?.username}`, color: 'success'})
+    toast.add({
+      title: 'Login Successful!',
+      icon: "lucide:user-round-check",
+      description: `Welcome back ${authStore.user?.username}`,
+      color: 'success'
+    })
     await router.push({name: 'home'})
   } catch (error) {
     if (isAxiosError(error) && error.response?.data) {
-      toast.add({title: 'Login Failed', icon: "lucide:user-x", description: `Error: ${error.response.data}`, color: 'error'})
+      toast.add({
+        title: 'Login Failed',
+        icon: "lucide:user-x",
+        description: `Error: ${error.response.data}`,
+        color: 'error'
+      })
     } else {
-      toast.add({title: 'Login Failed', icon: "lucide:user-x", description: `An unexpected error occurred: ${error}`, color: 'error'})
+      toast.add({
+        title: 'Login Failed',
+        icon: "lucide:user-x",
+        description: `An unexpected error occurred: ${error}`,
+        color: 'error'
+      })
     }
   }
 }
@@ -44,6 +59,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 <template>
   <div class="flex justify-center mt-5">
     <UCard variant="subtle">
+      <template #header>
+        <h2 class="text-2xl text-primary-800">Login</h2>
+      </template>
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <UFormField label="Username/Email" name="username">
           <UInput v-model="state.username" class="w-80"/>
@@ -57,11 +75,14 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           Submit
         </UButton>
       </UForm>
-      <p class="text-center mt-4">
-        Don't have an account yet?
-        <ULink to="/register" class="text-primary-500 hover:text-secondary-500">Register here
-        </ULink>
-      </p>
+
+      <template #footer>
+        <p class="text-center">
+          Don't have an account yet?
+          <ULink to="/register" class="text-primary-500 hover:text-secondary-500">Register here
+          </ULink>
+        </p>
+      </template>
     </UCard>
   </div>
 </template>

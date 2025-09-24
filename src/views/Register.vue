@@ -51,6 +51,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 <template>
   <div class="flex justify-center mt-5">
     <UCard variant="subtle">
+      <template #header>
+        <h2 class="text-2xl text-primary-800">Register</h2>
+      </template>
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <UFormField label="Username" name="username">
           <UInput v-model="state.username" class="w-80"/>
@@ -72,11 +75,14 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           Submit
         </UButton>
       </UForm>
-      <p class="text-center mt-4">
-        Already have an account?
-        <ULink to="/login" class="text-primary-500 hover:text-secondary-500">Login here
-        </ULink>
-      </p>
+
+      <template #footer>
+        <p class="text-center">
+          Already have an account?
+          <ULink to="/login" class="text-primary-500 hover:text-secondary-500">Login here
+          </ULink>
+        </p>
+      </template>
     </UCard>
   </div>
 </template>
