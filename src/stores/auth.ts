@@ -1,7 +1,7 @@
 
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import axios from 'axios'
+import axios, {type AxiosError} from 'axios'
 import { api_base_url } from "@/services/Api.ts";
 
 // Define a type for the user data you expect from your API
@@ -31,7 +31,6 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = response.data; // Set the user state directly from the login response
     } catch (error) {
       user.value = null;
-      console.error("Login failed:", error)
       throw error
     }
   }

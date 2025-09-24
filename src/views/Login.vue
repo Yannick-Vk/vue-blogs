@@ -4,6 +4,11 @@ import type {FormSubmitEvent} from '@nuxt/ui'
 import {reactive} from "vue";
 import {useAuthStore} from '@/stores/auth';
 import {useRouter} from 'vue-router';
+import type { AxiosError } from 'axios';
+
+function isAxiosError(error: unknown): error is AxiosError {
+  return (error as AxiosError).isAxiosError !== undefined;
+}
 
 const schema = z.object({
   username: z.string().trim().nonempty("Username/Email cannot be empty"),
@@ -27,8 +32,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     toast.add({title: 'Login Successful!', description: `Welcome back ${authStore.user?.username}`, color: 'success'})
     await router.push({name: 'home'})
   } catch (error) {
-    console.error(error.response.data)
-    toast.add({title: 'Login Failed', description: `Error: ${error.response.data}`, color: 'error'})
+    if (isAxiosError(error) && error.response?.data) {
+      toast.add({title: 'Login Failed', description: `Error: ${error.response.data}`, color: 'error'})
+    } else {
+      toast.add({title: 'Login Failed', description: `An unexpected error occurred: ${error}`, color: 'error'})
+    }
   }
 }
 </script>
