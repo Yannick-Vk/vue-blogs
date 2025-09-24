@@ -9,7 +9,7 @@ const items = computed<NavigationMenuItem[]>(() => [
   {
     label: 'Home',
     to: '/home',
-    active: route.path.startsWith('/home')
+    active: route.path === '/' || route.path.startsWith('/home')
   }
 ])
 </script>
