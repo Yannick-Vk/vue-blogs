@@ -1,6 +1,6 @@
 ﻿<script setup lang="ts">
-import type { NavigationMenuItem } from '@nuxt/ui'
-import {computed, ref} from "vue";
+import type {NavigationMenuItem} from '@nuxt/ui'
+import {computed} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {useAuthStore} from "@/stores/auth.ts";
 
@@ -8,8 +8,16 @@ const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 
+const toast = useToast()
+
 async function logout() {
   await authStore.logout()
+  toast.add({
+    title: 'Logged out',
+    icon: "lucide:log-out",
+    description: `Successfully logged out, see you next time!`,
+    color: 'success'
+  })
   await router.push({name: 'login'})
 }
 
@@ -24,10 +32,10 @@ const items = computed<NavigationMenuItem[]>(() => [
 
 <template>
   <UHeader>
-    <UNavigationMenu :items="items" />
+    <UNavigationMenu :items="items"/>
 
     <template #right>
-      <UColorModeButton />
+      <UColorModeButton/>
 
       <UTooltip text="Open on GitHub" :kbds="['meta', 'G']">
         <UButton

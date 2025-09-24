@@ -3,6 +3,8 @@ import {defineStore} from 'pinia'
 import axios from 'axios'
 import {api_base_url} from "@/services/Api.ts";
 
+axios.defaults.withCredentials = true;
+
 // Define a type for the user data you expect from your API
 export class User {
     id: string;
@@ -49,7 +51,6 @@ export const useAuthStore = defineStore('auth', () => {
             const response = await axios.post<LoginResponse>(`${authApiUrl}/login`, credentials);
             localStorage.setItem('user', JSON.stringify(response.data));
             localStorage.setItem('expiration', response.data.expiry);
-            console.log("Got user", response.data);
             user.value = new User(response.data) // Set the user state directly from the login response
         } catch (error) {
             user.value = null;
@@ -71,6 +72,8 @@ export const useAuthStore = defineStore('auth', () => {
             await axios.post(`${authApiUrl}/logout`);
         } finally {
             user.value = null
+            localStorage.removeItem('user');
+            localStorage.removeItem('expiration');
         }
     }
 
