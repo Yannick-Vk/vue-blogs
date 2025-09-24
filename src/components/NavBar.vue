@@ -10,7 +10,7 @@ const items = computed<NavigationMenuItem[]>(() => [
     label: 'Home',
     to: '/home',
     active: route.path.startsWith('/home')
-  },
+  }
 ])
 </script>
 
@@ -31,6 +31,8 @@ const items = computed<NavigationMenuItem[]>(() => [
             aria-label="GitHub"
         />
       </UTooltip>
+
+      <UButton to="/login">Login</UButton>
     </template>
   </UHeader>
 </template>
