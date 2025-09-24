@@ -10,8 +10,9 @@ import NavBar from "@/components/NavBar.vue";
         <NavBar/>
       </div>
     </nav>
-
-    <RouterView/>
+    <UContainer class="mt-3">
+      <RouterView/>
+    </UContainer>
   </UApp>
 </template>
 

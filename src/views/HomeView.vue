@@ -3,5 +3,6 @@
 
 <template>
   <main>
+    <u-button> Demo button </u-button>
   </main>
 </template>
