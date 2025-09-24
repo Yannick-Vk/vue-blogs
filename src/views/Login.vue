@@ -42,15 +42,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 </script>
 
 <template>
-  <div class="flex justify-center">
+  <div class="flex justify-center mt-5">
     <UCard variant="subtle">
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <UFormField label="Username/Email" name="username">
-          <UInput v-model="state.username" class="w-60"/>
+          <UInput v-model="state.username" class="w-80"/>
         </UFormField>
 
         <UFormField label="Password" name="password">
-          <PasswordField v-model="state.password" class="w-60"></PasswordField>
+          <PasswordField v-model="state.password" class="w-80"></PasswordField>
         </UFormField>
 
         <UButton type="submit">
