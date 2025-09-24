@@ -5,15 +5,30 @@ import {api_base_url} from "@/services/Api.ts";
 
 // Define a type for the user data you expect from your API
 export interface User {
-    id: number;
+    id: string;
     username: string;
     email: string;
+}
+
+interface LoginResponse {
+    id: string;
+    username: string;
+    email: string;
+    expiry: string;
 }
 
 const authApiUrl = `${api_base_url}/auth`;
 
 export const useAuthStore = defineStore('auth', () => {
     const user = ref<User | null>(null)
+
+    // Load user from localStorage on store initialization
+    const storedUser = localStorage.getItem('user');
+    const expiration = localStorage.getItem('expiration');
+
+    if (storedUser && expiration && new Date(expiration) > new Date()) {
+        user.value = JSON.parse(storedUser);
+    }
 
     // The user is authenticated if the user object is not null
     const isLoggedIn = computed(() => !!user.value)
@@ -25,9 +40,11 @@ export const useAuthStore = defineStore('auth', () => {
     async function login(credentials: { username?: string, password?: string }) {
         try {
             // This endpoint sets the cookie and returns the user object
-            const response = await axios.post<User>(`${authApiUrl}/login`, credentials);
-            console.log("Got user", response.data);
+            const response = await axios.post<LoginResponse>(`${authApiUrl}/login`, credentials);
+            localStorage.setItem('user', JSON.stringify(response.data));
+            localStorage.setItem('expiration', response.data.expiry);
             user.value = response.data; // Set the user state directly from the login response
+            console.log("Got user", user.value);
         } catch (error) {
             user.value = null;
             throw error

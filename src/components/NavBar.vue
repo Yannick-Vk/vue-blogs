@@ -40,8 +40,9 @@ const items = computed<NavigationMenuItem[]>(() => [
         />
       </UTooltip>
 
-      <UButton v-if="!authStore.isLoggedIn" to="/login">Login</UButton>
-      <UButton v-else @click="logout">Logout</UButton>
+      <UButton v-if="authStore.isLoggedIn" @click="logout">Logout</UButton>
+      <UButton v-else-if="route.path === '/login'" to="/register">Register</UButton>
+      <UButton v-else to="/login">Login</UButton>
     </template>
   </UHeader>
 </template>
