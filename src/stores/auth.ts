@@ -16,7 +16,7 @@ export const useAuthStore = defineStore('auth', () => {
     const user = ref<User | null>(null)
 
     // The user is authenticated if the user object is not null
-    const isAuthenticated = computed(() => !!user.value)
+    const isLoggedIn = computed(() => !!user.value)
 
     // Fetches the user's profile from a protected endpoint to check for an active session
     async function fetchUser() {
@@ -51,7 +51,7 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
-    return {user, isAuthenticated, login, logout, register, fetchUser}
+    return {user, isLoggedIn, login, logout, register, fetchUser}
 })
 
 
