@@ -61,23 +61,22 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     })
     await router.push({name: 'home'})
   } catch (error) {
+    let errorMessage = `Unexpected error occurred: ${error}`;
     if (isAxiosError(error) && error.response?.data) {
-      toast.add({
-        title: 'Login Failed',
-        icon: "lucide:user-x",
-        description: `Error: ${error.response.data}`,
-        color: 'error'
-      })
-      errorBox.value = error.response.data as string;
+      errorMessage = error.response.data as string;
     } else {
-      toast.add({
-        title: 'Login Failed',
-        icon: "lucide:user-x",
-        description: `An unexpected error occurred: ${error}`,
-        color: 'error'
-      })
-      errorBox.value = error.message as string
+      if (isAxiosError(error) && !error.response) {
+        errorMessage = 'Server is unavailable. Please try again later.';
+      }
     }
+
+    toast.add({
+      title: 'Login Failed',
+      icon: "lucide:user-x",
+      description: errorMessage,
+      color: 'error'
+    })
+    errorBox.value = errorMessage;
   }
 }
 </script>
