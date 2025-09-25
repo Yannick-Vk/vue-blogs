@@ -6,7 +6,7 @@ const blogs = ref<Array<string>>(["jeff"]);
 
 <template>
   <UPageList>
-    <blog-list-item v-for="blog in blogs" :key="blog" />
+    <blog-list-item v-for="blog in blogs" :key="blog" :title="blog" icon="lucide:user" description="demo" />
   </UPageList>
 </template>
 

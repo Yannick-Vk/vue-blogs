@@ -1,13 +1,14 @@
 ﻿<script setup lang="ts">
-import {ref} from "vue";
-
 type orientationEnum = "horizontal" | "vertical";
 
-const title = ref<string>("")
-const description = ref<string>("")
-const icon = ref<string>("")
-const orientation = ref<orientationEnum>("horizontal")
-
+withDefaults(defineProps<{
+  title: string,
+  description: string,
+  icon: string,
+  orientation?: orientationEnum,
+}>(), {
+  orientation: "horizontal"
+})
 </script>
 
 <template>
@@ -19,6 +20,8 @@ const orientation = ref<orientationEnum>("horizontal")
       spotlight
       spotlight-color="primary"
   >
-    <img src="../assets/logo.svg" alt="Tailwind CSS" class="w-full" />
+    <div>
+
+    </div>
   </UPageCard>
 </template>
