@@ -11,7 +11,8 @@ const props = defineProps({
     <blog-list-item class="my-3" v-for="blog in blogs" :key="blog.id"
                     icon="lucide:user"
                     :title="blog.title"
-                    :description="blog.description" />
+                    :description="blog.description"
+                    :to="{ name: 'blog-detail', params: { id: blog.id } }" />
   </UPageList>
 </template>
 

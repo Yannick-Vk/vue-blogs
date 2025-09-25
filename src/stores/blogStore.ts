@@ -16,6 +16,7 @@ export interface Blog {
 
 export const useBlogStore = defineStore('blogs', () => {
     const blogs = ref<Array<Blog>>([]);
+    const currentBlog = ref<Blog | null>(null);
 
     async function GetAllBlogs() {
         try {
@@ -26,5 +27,15 @@ export const useBlogStore = defineStore('blogs', () => {
         }
     }
 
-    return {blogs, GetAllBlogs};
+    async function getBlogById(id: string) {
+        currentBlog.value = null;
+        try {
+            const response = await axios.get<Blog>(`${api}/${id}`);
+            currentBlog.value = response.data;
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    return {blogs, currentBlog, GetAllBlogs, getBlogById};
 })

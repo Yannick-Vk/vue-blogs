@@ -6,6 +6,7 @@ withDefaults(defineProps<{
   description: string,
   icon: string,
   orientation?: orientationEnum,
+  to?: string | object
 }>(), {
   orientation: "horizontal"
 })
@@ -13,6 +14,7 @@ withDefaults(defineProps<{
 
 <template>
   <UPageCard
+      :to="to"
       :title="title"
       :description="description"
       :icon="icon"
