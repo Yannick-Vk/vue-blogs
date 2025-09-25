@@ -15,9 +15,6 @@ const schema = z.object({
   email: z.email("Email must be a valid email-address").trim().nonempty("Email cannot be empty"),
   password: z.string("Password cannot be empty").trim().nonempty("Password cannot be empty"),
   password_confirmation: z.string("Confirm password cannot be empty").trim().nonempty("Password confirm cannot be empty"),
-}).refine((data) => data.password === data.password_confirmation, {
-  message: 'Passwords do not match',
-  path: ["password_confirmation"],
 });
 
 type Schema = z.output<typeof schema>
@@ -69,6 +66,18 @@ const router = useRouter()
 const errorBox = ref<string | null>(null);
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
+  errorBox.value = null;
+  if (event.data.password !== event.data.password_confirmation) {
+    const errorMessage = 'Passwords do not match';
+    toast.add({
+      title: 'Registration Failed',
+      icon: "lucide:user-x",
+      description: errorMessage,
+      color: 'error'
+    })
+    errorBox.value = errorMessage;
+    return;
+  }
   try {
     await authStore.register(event.data)
     toast.add({
