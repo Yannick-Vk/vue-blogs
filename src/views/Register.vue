@@ -115,7 +115,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           :schema="schema"
           :fields="fields"
           :providers="providers"
-          title="Welcome back!"
+          title="Welcome!"
           icon="i-lucide-lock"
           @submit="onSubmit"
       >
