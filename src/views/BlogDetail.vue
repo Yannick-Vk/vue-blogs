@@ -30,7 +30,7 @@ onMounted(() => {
       {{ currentBlog.description }}
     </div>
 
-    <div v-if="currentBlog.blogContent">
+    <div v-if="currentBlog.blogContent" class="prose max-w-none">
       <VueShowdown
           :markdown="currentBlog.blogContent"
           flavor="github"
@@ -45,3 +45,45 @@ onMounted(() => {
     <p>Loading blog post...</p>
   </div>
 </template>
+
+<style>
+/*
+  This style block counteracts the Tailwind Typography plugin (`prose`)
+  which strips styling from code blocks, allowing the highlight.js theme to work.
+*/
+
+/*
+  1. The `prose` class removes the background from `pre` elements.
+     We re-apply the background color from your chosen theme (tokyo-night-dark).
+*/
+.prose pre {
+  background-color: #1a1b26;
+  border-radius: 8px;
+}
+
+/*
+  2. The `prose` class also interferes with text color on `code` elements.
+     We reset a few properties here so the highlight.js theme can take over.
+*/
+.prose pre code {
+  color: #c5c5c5;
+  background-color: transparent;
+  font-weight: inherit;
+  font-size: inherit;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+}
+
+/*
+  3. Now, your custom overrides will work as expected.
+*/
+.prose .hljs-comment {
+  color: #7a7a7a;
+  font-style: italic;
+}
+
+.prose .hljs-string {
+  color: #8af1b7;
+}
+</style>
