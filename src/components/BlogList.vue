@@ -6,15 +6,7 @@ const blogs = ref<Array<string>>(["jeff"]);
 
 <template>
   <UPageList>
-    <UPageCard
-        v-for="(blog, index) in blogs"
-        :key="index"
-        variant="ghost"
-    >
-      <template #body>
-        <BlogListItem />
-      </template>
-    </UPageCard>
+    <blog-list-item v-for="blog in blogs" :key="blog" />
   </UPageList>
 </template>
 

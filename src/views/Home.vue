@@ -8,7 +8,7 @@ const user = ref<User | null>(useAuthStore().user)
 
 <template>
   <main>
-    <UButton>
+    <UButton class="my-3">
       <span v-if="user">Welcome {{ user!.username }}!</span>
       <span v-else>Welcome!</span>
     </UButton>
