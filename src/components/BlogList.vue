@@ -1,12 +1,17 @@
 ﻿<script setup lang="ts">
-import {ref} from "vue";
+import type {Blog} from "@/stores/blogStore.ts";
 
-const blogs = ref<Array<string>>(["jeff", "Demo blog", "This is my new blog!"]);
+const props = defineProps({
+  blogs: Array<Blog>,
+})
 </script>
 
 <template>
   <UPageList divide>
-    <blog-list-item class="my-3" v-for="blog in blogs" :key="blog" :title="blog" icon="lucide:user" description="demo" />
+    <blog-list-item class="my-3" v-for="blog in blogs" :key="blog.id"
+                    icon="lucide:user"
+                    :title="blog.title"
+                    :description="blog.description" />
   </UPageList>
 </template>
 

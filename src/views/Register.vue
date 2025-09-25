@@ -1,7 +1,7 @@
 ﻿<script setup lang="ts">
 import * as z from 'zod'
 import type {FormSubmitEvent} from '@nuxt/ui'
-import {reactive, ref} from "vue";
+import {ref} from "vue";
 import {useAuthStore} from '@/stores/auth';
 import {useRouter} from 'vue-router';
 import type {AxiosError} from 'axios';
