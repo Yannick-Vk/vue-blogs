@@ -4,10 +4,12 @@ import type {FormSubmitEvent} from '@nuxt/ui'
 import {useAuthStore} from '@/stores/auth';
 import {useRouter} from 'vue-router';
 import type {AxiosError} from 'axios';
+import {ref} from "vue";
 
 const toast = useToast()
 const authStore = useAuthStore()
 const router = useRouter()
+const errorBox = ref<string | null>(null)
 
 function isAxiosError(error: unknown): error is AxiosError {
   return (error as AxiosError).isAxiosError !== undefined;
@@ -66,6 +68,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         description: `Error: ${error.response.data}`,
         color: 'error'
       })
+      errorBox.value = error.response.data as string;
     } else {
       toast.add({
         title: 'Login Failed',
@@ -73,6 +76,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         description: `An unexpected error occurred: ${error}`,
         color: 'error'
       })
+      errorBox.value = error.message as string
     }
   }
 }
@@ -94,6 +98,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         </template>
         <template #password-hint>
           <ULink to="#" class="text-primary font-medium" tabindex="-1">Forgot password?</ULink>
+        </template>
+        <template #validation>
+          <UAlert v-if="errorBox" color="error" icon="i-lucide-info" :title="errorBox" />
         </template>
       </UAuthForm>
     </UPageCard>
