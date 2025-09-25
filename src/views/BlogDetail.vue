@@ -4,6 +4,8 @@ import {useRoute} from "vue-router";
 import {useBlogStore} from "@/stores/blogStore";
 import {storeToRefs} from "pinia";
 import {DateTime} from "luxon";
+import 'highlight.js/styles/tokyo-night-dark.css';
+import showdownHighlight from 'showdown-highlight';
 
 const route = useRoute();
 const blogStore = useBlogStore();
@@ -33,6 +35,7 @@ onMounted(() => {
           :markdown="currentBlog.blogContent"
           flavor="github"
           :options="{ emoji: true }"
+          :extensions="[showdownHighlight({pre: true})]"
       />
     </div>
 
