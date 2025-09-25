@@ -10,13 +10,17 @@ export interface Blog {
     title: string;
     author: string;
     description: string;
-    created_at: string;
-    updated_at?: string;
+    createdAt: string;
+    updatedAt?: string;
+}
+
+export interface BlogWithContent extends Blog {
+    content: string;
 }
 
 export const useBlogStore = defineStore('blogs', () => {
     const blogs = ref<Array<Blog>>([]);
-    const currentBlog = ref<Blog | null>(null);
+    const currentBlog = ref<BlogWithContent | null>(null);
 
     async function GetAllBlogs() {
         try {
@@ -30,7 +34,7 @@ export const useBlogStore = defineStore('blogs', () => {
     async function getBlogById(id: string) {
         currentBlog.value = null;
         try {
-            const response = await axios.get<Blog>(`${api}/${id}`);
+            const response = await axios.get<BlogWithContent>(`${api}/${id}`);
             currentBlog.value = response.data;
         } catch (err) {
             console.error(err);

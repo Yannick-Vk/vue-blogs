@@ -3,6 +3,7 @@ import { onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useBlogStore } from "@/stores/blogStore";
 import { storeToRefs } from "pinia";
+import { DateTime } from "luxon";
 
 const route = useRoute();
 const blogStore = useBlogStore();
@@ -17,7 +18,11 @@ onMounted(() => {
 <template>
   <div v-if="currentBlog" class="p-4">
     <h1 class="text-3xl font-bold mb-2">{{ currentBlog.title }}</h1>
-    <p class="text-gray-500 mb-4">by {{ currentBlog.author }} on {{ new Date(currentBlog.created_at).toLocaleDateString() }}</p>
+    <p class="text-gray-500 mb-4">
+      by {{ currentBlog.author }} on {{DateTime.fromISO(currentBlog.createdAt).toLocaleString(DateTime.DATE_MED)}}
+      <span v-if="currentBlog.updatedAt" class="text-gray-500 mb-4">edited on {{DateTime.fromISO(currentBlog.updatedAt).toLocaleString(DateTime.DATE_MED)}}</span>
+    </p>
+
     <div class="prose max-w-none">
       {{ currentBlog.description }}
     </div>
