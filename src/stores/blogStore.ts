@@ -15,7 +15,7 @@ export interface Blog {
 }
 
 export interface BlogWithContent extends Blog {
-    content: string;
+    blogContent: string;
 }
 
 export const useBlogStore = defineStore('blogs', () => {
@@ -35,6 +35,7 @@ export const useBlogStore = defineStore('blogs', () => {
         currentBlog.value = null;
         try {
             const response = await axios.get<BlogWithContent>(`${api}/${id}`);
+            console.dir(response.data);
             currentBlog.value = response.data;
         } catch (err) {
             console.error(err);

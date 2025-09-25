@@ -12,10 +12,12 @@
         "showdown": "^2.1.0",
         "vue": "^3.5.18",
         "vue-router": "^4.5.1",
+        "vue-showdown": "^4.2.0",
       },
       "devDependencies": {
         "@tsconfig/node22": "^22.0.2",
         "@types/node": "^22.16.5",
+        "@types/showdown": "^2.0.6",
         "@vitejs/plugin-vue": "^6.0.1",
         "@vue/tsconfig": "^0.7.0",
         "npm-run-all2": "^8.0.4",
@@ -308,6 +310,8 @@
     "@types/luxon": ["@types/luxon@3.7.1", "", {}, "sha512-H3iskjFIAn5SlJU7OuxUmTEpebK6TKB8rxZShDslBMZJ5u9S//KM1sbdAisiSrqwLQncVjnpi2OK2J51h+4lsg=="],
 
     "@types/node": ["@types/node@22.18.6", "", { "dependencies": { "undici-types": "~6.21.0" } }, "sha512-r8uszLPpeIWbNKtvWRt/DbVi5zbqZyj1PTmhRMqBMvDnaz1QpmSKujUtJLrqGZeoM8v72MfYggDceY4K1itzWQ=="],
+
+    "@types/showdown": ["@types/showdown@2.0.6", "", {}, "sha512-pTvD/0CIeqe4x23+YJWlX2gArHa8G0J0Oh6GKaVXV7TAeickpkkZiNOgFcFcmLQ5lB/K0qBJL1FtRYltBfbGCQ=="],
 
     "@types/web-bluetooth": ["@types/web-bluetooth@0.0.21", "", {}, "sha512-oIQLCGWtcFZy2JW77j9k8nHzAOpqMHLQejDA48XXMWH6tjCQHz5RCFz1bzsmROyL6PUm+LLnUiI4BCn221inxA=="],
 
@@ -882,6 +886,8 @@
     "vue-demi": ["vue-demi@0.14.10", "", { "peerDependencies": { "@vue/composition-api": "^1.0.0-rc.1", "vue": "^3.0.0-0 || ^2.6.0" }, "optionalPeers": ["@vue/composition-api"], "bin": { "vue-demi-fix": "bin/vue-demi-fix.js", "vue-demi-switch": "bin/vue-demi-switch.js" } }, "sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg=="],
 
     "vue-router": ["vue-router@4.5.1", "", { "dependencies": { "@vue/devtools-api": "^6.6.4" }, "peerDependencies": { "vue": "^3.2.0" } }, "sha512-ogAF3P97NPm8fJsE4by9dwSYtDwXIY1nFY9T6DyQnGHd1E2Da94w9JIolpe42LJGIl0DwOHBi8TcRPlPGwbTtw=="],
+
+    "vue-showdown": ["vue-showdown@4.2.0", "", { "dependencies": { "@types/showdown": "^2.0.1", "showdown": "^2.1.0", "vue": "^3.3.4" } }, "sha512-2/daUw8TsMFCAb+6yRC87eM4U/B/vp/oCWPbSlUSNbttKitIiQ7NCDRVzhjPmNVIzzToEBnQNonZEE5ZJyTzIg=="],
 
     "vue-tsc": ["vue-tsc@3.0.8", "", { "dependencies": { "@volar/typescript": "2.4.23", "@vue/language-core": "3.0.8" }, "peerDependencies": { "typescript": ">=5.0.0" }, "bin": { "vue-tsc": "./bin/vue-tsc.js" } }, "sha512-H9yg/m6ywykmWS+pIAEs65v2FrVm5uOA0a0dHkX6Sx8dNg1a1m4iudt/6eGa9fAenmNHGlLFN9XpWQb8i5sU1w=="],
 
