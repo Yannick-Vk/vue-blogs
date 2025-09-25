@@ -12,5 +12,7 @@ const user = ref<User | null>(useAuthStore().user)
       <span v-if="user">Welcome {{ user!.username }}!</span>
       <span v-else>Welcome!</span>
     </UButton>
+
+    <blog-list/>
   </main>
 </template>
