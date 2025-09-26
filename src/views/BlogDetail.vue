@@ -32,6 +32,11 @@ onMounted(() => {
           DateTime.fromISO(currentBlog.updatedAt).toLocaleString(DateTime.DATE_MED)
         }}</span>
     </p>
+    <UAvatarGroup v-for="(author, key) in currentBlog.authors" :key="key">
+      <UTooltip :text="author.name">
+        <UAvatar :src="author.avatar?.src" :alt="author.description"/>
+      </UTooltip>
+    </UAvatarGroup>
 
     <div class="prose max-w-none">
       {{ currentBlog.description }}
