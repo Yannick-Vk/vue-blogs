@@ -11,7 +11,7 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-  <div v-if="error" class="mx-auto max-w-lg">
+  <div v-if="error" class="mx-auto max-w-2xl">
     <UAlert
       :title="error"
       color="error"
