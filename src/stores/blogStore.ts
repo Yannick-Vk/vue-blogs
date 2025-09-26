@@ -39,7 +39,7 @@ export const useBlogStore = defineStore('blogs', () => {
     const currentBlog = ref<BlogWithContent | null>(null);
     const error = ref<string | null>(null);
 
-    async function GetAllBlogs() {
+    async function getAllBlogs() {
         error.value = null;
         try {
             const response = await axios.get<Array<ApiBlog>>(`${api}`);
@@ -80,5 +80,5 @@ export const useBlogStore = defineStore('blogs', () => {
         }
     }
 
-    return {blogs, currentBlog, error, GetAllBlogs, getBlogById};
+    return {blogs, currentBlog, error, getAllBlogs, getBlogById};
 })

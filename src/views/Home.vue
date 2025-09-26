@@ -10,14 +10,12 @@ const blogStore = useBlogStore();
 const {blogs, error} = storeToRefs(blogStore);
 
 onMounted(() => {
-  blogStore.GetAllBlogs();
+  blogStore.getAllBlogs();
 });
 </script>
 
 <template>
-  <main>
-    <HeroComponent />
+  <HeroComponent/>
 
-    <blog-list :blogs="blogs" :error="error"/>
-  </main>
+  <blog-list :blogs="blogs" :error="error"/>
 </template>

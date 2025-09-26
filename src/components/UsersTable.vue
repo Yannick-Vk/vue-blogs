@@ -1,5 +1,4 @@
 ﻿<script setup lang="ts">
-import {ref} from "vue";
 
 const props = defineProps({
   isLoading: Boolean,
@@ -9,5 +8,6 @@ const props = defineProps({
 </script>
 
 <template>
-  <UTable :loading="isLoading" sticky loading-color="primary" loading-animation="carousel" :data="data" class="flex-1 max-h-[70vh]"/>
+  <UTable :loading="isLoading" sticky loading-color="primary" loading-animation="carousel" :data="data"
+          class="flex-1 max-h-[70vh]"/>
 </template>

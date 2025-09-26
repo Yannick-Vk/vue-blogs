@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { onMounted } from 'vue';
-import { RouterView } from 'vue-router';
+import {onMounted} from 'vue';
+import {RouterView} from 'vue-router';
 import NavBar from "@/components/NavBar.vue";
-import { useAuthStore } from '@/stores/auth';
+import {useAuthStore} from '@/stores/auth';
 import type {ToasterProps} from "@nuxt/ui/components/Toaster.vue";
 
 const authStore = useAuthStore();
-const toaster: ToasterProps = { position: 'top-right', expand: false };
+const toaster: ToasterProps = {position: 'top-right', expand: false};
 
 onMounted(() => {
   authStore.fetchUser();
@@ -21,7 +21,9 @@ onMounted(() => {
       </div>
     </nav>
     <UContainer class="mt-3">
-      <RouterView/>
+      <main>
+        <RouterView/>
+      </main>
     </UContainer>
   </UApp>
 </template>
