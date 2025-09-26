@@ -22,25 +22,20 @@ onMounted(() => {
     <UButton to="/" icon="lucide:arrow-left" class="mb-5">Back to blogs</UButton>
     <h1 class="text-3xl font-bold mb-2">{{ currentBlog.title }}</h1>
     <p class="text-gray-500 mb-4">
-      by
-      <span v-for="(author, index) in currentBlog.authors" :key="author.name">
-        {{ author.name }}<span v-if="index < currentBlog.authors.length - 1">, </span>
-      </span>
       on {{ DateTime.fromISO(currentBlog.createdAt).toLocaleString(DateTime.DATE_MED) }}
       <span v-if="currentBlog.updatedAt"
             class="text-gray-500 mb-4">edited on {{
           DateTime.fromISO(currentBlog.updatedAt).toLocaleString(DateTime.DATE_MED)
         }}</span>
     </p>
+
     <UAvatarGroup v-for="(author, key) in currentBlog.authors" :key="key">
       <UTooltip :text="author.name">
         <UAvatar :src="author.avatar?.src" :alt="author.description"/>
       </UTooltip>
     </UAvatarGroup>
 
-    <div class="prose max-w-none">
-      {{ currentBlog.description }}
-    </div>
+    <USeparator type="solid" size="sm" class="my-4" />
 
     <div v-if="currentBlog.blogContent" class="prose max-w-none">
       <VueShowdown
