@@ -24,7 +24,6 @@ interface ApiBlog {
     description: string;
     createdAt: string;
     updatedAt?: string;
-    path: string;
 }
 
 export interface BlogWithContent extends Blog {
@@ -73,8 +72,10 @@ export const useBlogStore = defineStore('blogs', () => {
                     avatar: {
                         src: `https://i.pravatar.cc/32?u=${blogData.author}`
                     }
-                }]
+                }],
+                path: "",
             };
+            console.dir(currentBlog.value);
         } catch (err) {
             console.error(err);
             error.value = "The server seems to be down. Please try again later.";

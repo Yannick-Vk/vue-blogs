@@ -22,9 +22,15 @@ onMounted(() => {
     <UButton to="/" icon="lucide:arrow-left" class="mb-5">Back to blogs</UButton>
     <h1 class="text-3xl font-bold mb-2">{{ currentBlog.title }}</h1>
     <p class="text-gray-500 mb-4">
-      by {{ currentBlog.author }} on {{ DateTime.fromISO(currentBlog.createdAt).toLocaleString(DateTime.DATE_MED) }}
+      by
+      <span v-for="(author, index) in currentBlog.authors" :key="author.name">
+        {{ author.name }}<span v-if="index < currentBlog.authors.length - 1">, </span>
+      </span>
+      on {{ DateTime.fromISO(currentBlog.createdAt).toLocaleString(DateTime.DATE_MED) }}
       <span v-if="currentBlog.updatedAt"
-            class="text-gray-500 mb-4">edited on {{ DateTime.fromISO(currentBlog.updatedAt).toLocaleString(DateTime.DATE_MED) }}</span>
+            class="text-gray-500 mb-4">edited on {{
+          DateTime.fromISO(currentBlog.updatedAt).toLocaleString(DateTime.DATE_MED)
+        }}</span>
     </p>
 
     <div class="prose max-w-none">
