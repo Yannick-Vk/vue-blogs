@@ -23,7 +23,7 @@ defineProps<Props>();
       }"
     />
   </div>
-  <UBlogPosts v-else-if="blogs && blogs.length > 0" >
+  <UBlogPosts v-else-if="blogs && blogs.length > 0" class="mb-8">
     <UBlogPost
         v-for="(post, index) in blogs"
         :key="index"
