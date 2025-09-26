@@ -1,4 +1,4 @@
-﻿import {defineStore} from "pinia";
+import {defineStore} from "pinia";
 import {ref} from "vue";
 import axios from "axios";
 import {api_base_url} from "@/services/Api.ts";
@@ -7,20 +7,20 @@ import type {Author} from "@/types/Author.ts";
 const api = `${api_base_url}/blogs`;
 
 export interface Blog {
-    id: number;
+    id: string;
     title: string;
     authors: Author[];
     description: string;
     createdAt: string;
     updatedAt?: string;
-    path: string;
+    to?: string | object;
 }
 
 // This interface matches the API response
 interface ApiBlog {
-    id: number;
+    id: string;
     title: string;
-    author: string;
+    authors: string[];
     description: string;
     createdAt: string;
     updatedAt?: string;
@@ -45,13 +45,13 @@ export const useBlogStore = defineStore('blogs', () => {
             const response = await axios.get<Array<ApiBlog>>(`${api}`);
             blogs.value = response.data.map(blog => ({
                 ...blog,
-                authors: [{
-                    name: blog.author,
+                to: `/blog/${blog.id}`,
+                authors: blog.authors.map(authorName => ({
+                    name: authorName,
                     avatar: {
-                        src: `https://i.pravatar.cc/64?u=${blog.author}`
+                        src: `https://i.pravatar.cc/32?u=${authorName}`
                     }
-                }],
-                path: `/blog/${blog.id}`,
+                }))
             }));
         } catch (err) {
             console.error(err);
@@ -67,13 +67,12 @@ export const useBlogStore = defineStore('blogs', () => {
             const blogData = response.data;
             currentBlog.value = {
                 ...blogData,
-                authors: [{
-                    name: blogData.author,
+                authors: blogData.authors.map(authorName => ({
+                    name: authorName,
                     avatar: {
-                        src: `https://i.pravatar.cc/32?u=${blogData.author}`
+                        src: `https://i.pravatar.cc/32?u=${authorName}`
                     }
-                }],
-                path: "",
+                }))
             };
             console.dir(currentBlog.value);
         } catch (err) {

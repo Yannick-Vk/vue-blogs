@@ -28,7 +28,7 @@ defineProps<Props>();
         v-for="(post, index) in blogs"
         :key="index"
         v-bind="post"
-        :to="post.path"
+        :to="post.to"
     />
   </UBlogPosts>
   <div v-else>
