@@ -8,16 +8,6 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
-const postsWithTo = computed(() => {
-  if (!props.blogs) {
-    return [];
-  }
-  return props.blogs.map(blog => ({
-    ...blog,
-    to: `/blog/${blog.id}`
-  }));
-});
 </script>
 
 <template>
@@ -34,7 +24,9 @@ const postsWithTo = computed(() => {
       }"
     />
   </div>
-  <UBlogPosts v-else-if="blogs && blogs.length > 0" :posts="postsWithTo" />
+  <UBlogPosts v-else-if="blogs && blogs.length > 0" class="mb-10">
+    <blog-list-item v-for="(blog, index) in blogs" :key="index" :blog="blog" />
+  </UBlogPosts>
   <div v-else>
     <div class="flex justify-center py-4">
       <UIcon name="lucide:loader-circle" class="size-8 animate-spin"></UIcon>

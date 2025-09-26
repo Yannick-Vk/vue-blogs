@@ -13,6 +13,7 @@ export interface Blog {
     description: string;
     createdAt: string;
     updatedAt?: string;
+    cover?: string;
 }
 
 // This interface matches the API response

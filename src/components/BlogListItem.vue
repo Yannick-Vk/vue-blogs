@@ -1,35 +1,22 @@
 ﻿<script setup lang="ts">
-type orientationEnum = "horizontal" | "vertical";
+import type {Blog} from "@/stores/blogStore.ts";
 
-withDefaults(defineProps<{
-  title: string,
-  description: string,
-  orientation?: orientationEnum,
-  to?: string | object,
-  date: string,
-  author: string,
-}>(), {
-  orientation: "horizontal"
-})
+interface Props {
+  blog: Blog
+}
+
+const props = defineProps<Props>();
 </script>
 
 <template>
   <UBlogPost
-      :title="title"
-      :description="description"
-      image="https://nuxt.com/assets/blog/nuxt-icon/cover.png"
-      :date="date"
-      :to="to"
-      orientation="horizontal"
-      variant="outline"
-      :authors="[{
-    name: author,
-    description: 'User Name',
-    avatar: {
-      src: 'https://github.com/antfu.png'
-    },
-    to: 'https://github.com/antfu',
-    target: '_blank'
-  }]"
+      :title="blog.title"
+      :description="blog.description"
+      :image="blog.cover?? 'https://nuxt.com/assets/blog/nuxt-icon/cover.png'"
+      :date="blog.createdAt"
+      :to="'/blog/' + blog.id"
+      orientation="vertical"
+      variant="soft"
+      :authors="blog.authors"
   />
 </template>
