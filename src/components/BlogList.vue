@@ -23,7 +23,14 @@ defineProps<Props>();
       }"
     />
   </div>
-  <UBlogPosts v-else-if="blogs && blogs.length > 0" :posts="blogs" />
+  <UBlogPosts v-else-if="blogs && blogs.length > 0" >
+    <UBlogPost
+        v-for="(post, index) in blogs"
+        :key="index"
+        v-bind="post"
+        :to="post.path"
+    />
+  </UBlogPosts>
   <div v-else>
     <div class="flex justify-center py-4">
       <UIcon name="lucide:loader-circle" class="size-8 animate-spin"></UIcon>

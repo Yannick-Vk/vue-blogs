@@ -13,6 +13,7 @@ export interface Blog {
     description: string;
     createdAt: string;
     updatedAt?: string;
+    path: string;
 }
 
 // This interface matches the API response
@@ -23,6 +24,7 @@ interface ApiBlog {
     description: string;
     createdAt: string;
     updatedAt?: string;
+    path: string;
 }
 
 export interface BlogWithContent extends Blog {
@@ -47,9 +49,10 @@ export const useBlogStore = defineStore('blogs', () => {
                 authors: [{
                     name: blog.author,
                     avatar: {
-                        src: `https://i.pravatar.cc/32?u=${blog.author}`
+                        src: `https://i.pravatar.cc/64?u=${blog.author}`
                     }
-                }]
+                }],
+                path: `/blog/${blog.id}`,
             }));
         } catch (err) {
             console.error(err);
