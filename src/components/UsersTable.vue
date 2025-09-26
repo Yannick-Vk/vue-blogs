@@ -5,6 +5,7 @@ import {h, resolveComponent} from "vue";
 import type {User} from "@/stores/userStore.ts";
 import {useClipboard} from '@vueuse/core'
 import type {Row} from '@tanstack/vue-table'
+import { useRouter } from 'vue-router';
 
 const props = defineProps({
   isLoading: Boolean,
@@ -16,6 +17,7 @@ const UDropdownMenu = resolveComponent('UDropdownMenu')
 
 const toast = useToast()
 const {copy} = useClipboard()
+const router = useRouter()
 
 const columns: TableColumn<User>[] = [
   {
@@ -83,8 +85,8 @@ function getRowItems(row: Row<User>) {
     },
     {
       label: 'View user details',
-      onSelect() {
-        toast.add({title: `Viewing user: ${row.original.username}`})
+      async onSelect() {
+        await router.push(`/users/${row.original.id}`)
       }
     },
   ]

@@ -4,6 +4,8 @@ import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
 import UsersPage from "@/views/UsersPage.vue";
 import RolesPage from "@/views/RolesPage.vue";
+import UserDetailsPage from "@/views/UserDetailsPage.vue";
+import BlogDetail from "@/views/BlogDetail.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,7 +26,7 @@ const router = createRouter({
         }, {
             path: '/blog/:id',
             name: 'blog-detail',
-            component: () => import('@/views/BlogDetail.vue')
+            component: BlogDetail,
         }, {
             path: '/users',
             name: 'users',
@@ -33,6 +35,10 @@ const router = createRouter({
             path: '/roles',
             name: 'roles',
             component: RolesPage,
+        }, {
+            path: '/users/:id',
+            name: 'user-detail',
+            component: UserDetailsPage,
         },
     ],
 })
