@@ -1,7 +1,6 @@
 ﻿<script setup lang="ts">
 import {onMounted, ref} from "vue";
 import {useAuthStore, type User} from "@/stores/auth.ts";
-import {useBlogStore} from "@/stores/blogStore.ts";
 import {storeToRefs} from "pinia";
 import {useUserStore} from "@/stores/userStore.ts";
 
