@@ -15,7 +15,21 @@ export interface Blog {
     updatedAt?: string;
 }
 
+// This interface matches the API response
+interface ApiBlog {
+    id: number;
+    title: string;
+    author: string;
+    description: string;
+    createdAt: string;
+    updatedAt?: string;
+}
+
 export interface BlogWithContent extends Blog {
+    blogContent: string;
+}
+
+interface ApiBlogWithContent extends ApiBlog {
     blogContent: string;
 }
 
@@ -27,8 +41,16 @@ export const useBlogStore = defineStore('blogs', () => {
     async function GetAllBlogs() {
         error.value = null;
         try {
-            const response = await axios.get<Array<Blog>>(`${api}`);
-            blogs.value = response.data;
+            const response = await axios.get<Array<ApiBlog>>(`${api}`);
+            blogs.value = response.data.map(blog => ({
+                ...blog,
+                authors: [{
+                    name: blog.author,
+                    avatar: {
+                        src: `https://i.pravatar.cc/32?u=${blog.author}`
+                    }
+                }]
+            }));
         } catch (err) {
             console.error(err);
             error.value = "The server seems to be down. Please try again later.";
@@ -39,9 +61,17 @@ export const useBlogStore = defineStore('blogs', () => {
         currentBlog.value = null;
         error.value = null;
         try {
-            const response = await axios.get<BlogWithContent>(`${api}/${id}`);
-            console.dir(response.data);
-            currentBlog.value = response.data;
+            const response = await axios.get<ApiBlogWithContent>(`${api}/${id}`);
+            const blogData = response.data;
+            currentBlog.value = {
+                ...blogData,
+                authors: [{
+                    name: blogData.author,
+                    avatar: {
+                        src: `https://i.pravatar.cc/32?u=${blogData.author}`
+                    }
+                }]
+            };
         } catch (err) {
             console.error(err);
             error.value = "The server seems to be down. Please try again later.";
