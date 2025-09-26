@@ -1,14 +1,29 @@
 ﻿<script setup lang="ts">
 import { useRoute } from 'vue-router';
+import {useUserStore} from "@/stores/userStore.ts";
+import {storeToRefs} from "pinia";
+import {onMounted} from "vue";
 
 const route = useRoute();
-const userId = route.params.id;
+const userId = route.params.id as string;
+const userStore = useUserStore();
+const {currentUser} = storeToRefs(userStore);
+
+onMounted(() => {
+  userStore.fetchUser(userId);
+});
+
 </script>
 
 <template>
-  <div>
+  <div v-if="currentUser">
     <h1>User Details Page</h1>
     <p>User ID: {{ userId }}</p>
+    <p>Username: {{currentUser.username}}</p>
+    <p>Email: {{currentUser.email}}</p>
+  </div>
+  <div v-else>
+    Loading user with id {{userId}} ...
   </div>
 </template>
 
@@ -18,7 +33,7 @@ div {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 90vh; /* Full viewport height */
+  height: 70vh; /* Full viewport height */
   text-align: center;
 }
 
