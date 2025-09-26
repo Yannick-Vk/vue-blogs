@@ -2,13 +2,14 @@
 import {ref} from "vue";
 import axios from "axios";
 import {api_base_url} from "@/services/Api.ts";
+import type {Author} from "@/types/Author.ts";
 
 const api = `${api_base_url}/blogs`;
 
 export interface Blog {
     id: number;
     title: string;
-    author: string;
+    authors: Author[];
     description: string;
     createdAt: string;
     updatedAt?: string;

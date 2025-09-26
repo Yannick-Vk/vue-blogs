@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import type {Blog} from "@/stores/blogStore.ts";
 
 interface Props {
@@ -10,28 +10,20 @@ defineProps<Props>();
 </script>
 
 <template>
-  <div v-if="error" class="mx-auto max-w-2xl ">
+  <div v-if="error" class="mx-auto max-w-lg">
     <UAlert
       :title="error"
       color="error"
-      variant="subtle"
+      variant="outline"
       icon="lucide:server-off"
       class="my-4"
       :ui="{
-        title: 'text-2xl',
+        title: 'text-2xl font-bold',
         icon: 'size-8'
       }"
     />
   </div>
-  <UPageList divide v-else-if="blogs && blogs.length > 0">
-    <blog-list-item class="my-3" v-for="blog in blogs" :key="blog.id"
-                    :title="blog.title"
-                    :description="blog.description"
-                    :author="blog.author"
-                    :date="blog.createdAt"
-                    :to="{ name: 'blog-detail', params: { id: blog.id } }"
-    />
-  </UPageList>
+  <UBlogPosts v-else-if="blogs && blogs.length > 0" :posts="blogs" />
   <div v-else>
     <div class="flex justify-center py-4">
       <UIcon name="lucide:loader-circle" class="size-8 animate-spin"></UIcon>
