@@ -6,6 +6,7 @@ import {storeToRefs} from "pinia";
 import {DateTime} from "luxon";
 import 'highlight.js/styles/tokyo-night-dark.css';
 import showdownHighlight from 'showdown-highlight';
+import {VueShowdown} from "vue-showdown";
 
 const route = useRoute();
 const blogStore = useBlogStore();
@@ -94,5 +95,13 @@ onMounted(() => {
 
 .prose .hljs-string {
   color: #8af1b7;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  color: var(--color-primary-800);
+}
+
+.prose h1 {
+  font-size: 2.5rem;
 }
 </style>
