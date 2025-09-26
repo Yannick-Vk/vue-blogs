@@ -1,12 +1,23 @@
 <script setup lang="ts">
 import type {Blog} from "@/stores/blogStore.ts";
+import {computed} from "vue";
 
 interface Props {
   blogs?: Blog[];
   error?: string | null;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
+
+const postsWithTo = computed(() => {
+  if (!props.blogs) {
+    return [];
+  }
+  return props.blogs.map(blog => ({
+    ...blog,
+    to: `/blog/${blog.id}`
+  }));
+});
 </script>
 
 <template>
@@ -23,14 +34,7 @@ defineProps<Props>();
       }"
     />
   </div>
-  <UBlogPosts v-else-if="blogs && blogs.length > 0" class="mb-8">
-    <UBlogPost
-        v-for="(post, index) in blogs"
-        :key="index"
-        v-bind="post"
-        :to="post.to"
-    />
-  </UBlogPosts>
+  <UBlogPosts v-else-if="blogs && blogs.length > 0" :posts="postsWithTo" />
   <div v-else>
     <div class="flex justify-center py-4">
       <UIcon name="lucide:loader-circle" class="size-8 animate-spin"></UIcon>

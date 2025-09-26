@@ -13,7 +13,6 @@ export interface Blog {
     description: string;
     createdAt: string;
     updatedAt?: string;
-    to?: string | object;
 }
 
 // This interface matches the API response
@@ -45,7 +44,6 @@ export const useBlogStore = defineStore('blogs', () => {
             const response = await axios.get<Array<ApiBlog>>(`${api}`);
             blogs.value = response.data.map(blog => ({
                 ...blog,
-                to: `/blog/${blog.id}`,
                 authors: blog.authors.map(authorName => ({
                     name: authorName,
                     avatar: {
