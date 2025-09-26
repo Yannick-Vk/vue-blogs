@@ -7,7 +7,7 @@ import HeroComponent from "@/components/HeroComponent.vue";
 
 const {user} = storeToRefs(useAuthStore());
 const blogStore = useBlogStore();
-const {blogs} = storeToRefs(blogStore);
+const {blogs, error} = storeToRefs(blogStore);
 
 onMounted(() => {
   blogStore.GetAllBlogs();
@@ -18,6 +18,6 @@ onMounted(() => {
   <main>
     <HeroComponent />
 
-    <blog-list :blogs="blogs"/>
+    <blog-list :blogs="blogs" :error="error"/>
   </main>
 </template>
