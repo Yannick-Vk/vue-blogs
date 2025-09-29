@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted} from "vue";
+import {computed, onMounted} from "vue";
 import {useRoute} from "vue-router";
 import {useBlogStore} from "@/stores/blogStore";
 import {storeToRefs} from "pinia";
@@ -22,17 +22,17 @@ onMounted(async () => {
   await blogStore.getBlogById(blogId);
 });
 
-async function loggedInUserIsAuthor() {
-  const authStore = useAuthStore();
-  const user = authStore.user.value;
-  if (!user && !currentBlog.value) {
+const authStore = useAuthStore();
+const {user} = storeToRefs(authStore);
+
+const loggedInUserIsAuthor = computed(() => {
+  if (!user.value || !currentBlog.value?.authors) {
+    console.warn("Not logged in or blog has no value")
     return false;
   }
+  return currentBlog.value.authors.some(author => author.name === user.value.username);
 
-  const authors: Array<string> = currentBlog.value.authors;
-  return authors.includes(user.username);
-
-}
+})
 
 async function deleteBlog() {
   if (currentBlog.value) {
