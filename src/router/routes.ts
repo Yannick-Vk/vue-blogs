@@ -7,6 +7,7 @@ import RolesPage from "@/views/RolesPage.vue";
 import UserDetailsPage from "@/views/UserDetailsPage.vue";
 import BlogDetail from "@/views/BlogDetail.vue";
 import CreateBlogForm from "@/views/CreateBlogForm.vue";
+import {useAuthStore} from "@/stores/auth.ts";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,8 +45,23 @@ const router = createRouter({
             path: '/blog/new',
             name: 'create-blog',
             component: CreateBlogForm,
+            meta: {requiresAuth: true}
         },
     ],
 })
+
+router.beforeEach((to, from, next) => {
+    const authStore = useAuthStore(); // Get access to your auth store
+    // Check if the route requires authentication
+    if (to.meta.requiresAuth && !authStore.isLoggedIn) {
+        // If it requires auth and the user is not authenticated, redirect to login
+        next({name: 'login'});
+    } else if (to.name === 'login' && authStore.isLoggedIn) {
+        // If the user is already logged in and tries to go to log in, redirect to dashboard or home
+        next({name: 'home'});
+    } else {
+        next();
+    }
+});
 
 export default router
