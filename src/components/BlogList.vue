@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type {Blog} from "@/stores/blogStore.ts";
-import {computed} from "vue";
 
 interface Props {
   blogs?: Blog[];

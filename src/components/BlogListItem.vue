@@ -12,7 +12,7 @@ const props = defineProps<Props>();
   <UBlogPost
       :title="blog.title"
       :description="blog.description"
-      :image="blog.cover?? 'https://nuxt.com/assets/blog/nuxt-icon/cover.png'"
+      :image="blog.bannerImage?? 'https://nuxt.com/assets/blog/nuxt-icon/cover.png'"
       :date="blog.createdAt"
       :to="'/blog/' + blog.id"
       orientation="vertical"

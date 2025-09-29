@@ -10,7 +10,7 @@ export interface Blog {
     description: string;
     createdAt: string;
     updatedAt?: string;
-    cover?: string;
+    bannerImage?: File;
 }
 
 // This interface matches the API response
@@ -21,6 +21,7 @@ interface ApiBlog {
     description: string;
     createdAt: string;
     updatedAt?: string;
+    bannerImage: File;
 }
 
 export interface BlogWithContent extends Blog {
