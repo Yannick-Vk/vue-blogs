@@ -16,7 +16,7 @@ export const useUserStore = defineStore('users', () => {
     async function fetchUsers() {
         error.value = null;
         try {
-            const response = await axios.get<Array<User>>('users/', {withCredentials: true});
+            const response = await api.get<Array<User>>('users/', {withCredentials: true});
             users.value = response.data;
         } catch (err) {
             console.error(err);
