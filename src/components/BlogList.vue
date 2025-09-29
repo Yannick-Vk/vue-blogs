@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type {Blog} from "@/stores/blogStore.ts";
+import {type Blog} from "@/stores/blogStore.ts";
 
 interface Props {
   blogs?: Blog[];

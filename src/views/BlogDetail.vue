@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, onMounted} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
 import {useBlogStore} from "@/stores/blogStore";
 import {storeToRefs} from "pinia";
@@ -63,12 +63,27 @@ function editBlog() {
 function formatDate(date: string) {
   return DateTime.fromISO(date).toLocaleString(DateTime.DATE_MED);
 }
+
+const bannerImage = ref<string | null>(null);
+onMounted(async () => {
+  bannerImage.value = await blogStore.getBanner(currentBlog.value?.id ?? "");
+})
 </script>
 
 <template>
   <div v-if="currentBlog" class="p-4">
     <UButton to="/" icon="lucide:arrow-left" class="mb-5">Back to blogs</UButton>
-    <h1 class="text-3xl font-bold mb-2">{{ currentBlog.title }}</h1>
+    <UPageHero
+        :title="currentBlog.title"
+        :description="currentBlog.description"
+        orientation="horizontal"
+    >
+      <img
+          :src="bannerImage?? 'https://nuxt.com/assets/blog/nuxt-icon/cover.png'"
+          alt="App screenshot"
+          class="rounded-lg shadow-2xl ring ring-default"
+      />
+    </UPageHero>
     <p class="text-gray-500 mb-4">
       Created on {{ formatDate(currentBlog.createdAt) }}
       <span v-if="currentBlog.updatedAt"
