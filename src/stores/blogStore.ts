@@ -110,13 +110,12 @@ async function uploadBlog(blogData: { title: string; description: string; blogCo
                 bannerImage: '' // Placeholder as the form does not have this field
             };
 
-            await axios.post(api, payload, {
+            const blogId = await axios.post(api, payload, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
-
-            await getAllBlogs(); // Refetch all blogs to include the new one
+            console.log("Created new blog with id ", blogId);
 
         } catch (err) {
             console.error(err);

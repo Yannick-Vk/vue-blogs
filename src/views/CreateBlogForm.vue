@@ -2,6 +2,7 @@
 import * as z from 'zod'
 import type {FormErrorEvent, FormSubmitEvent} from '@nuxt/ui'
 import {reactive} from "vue";
+import {useBlogStore} from "@/stores/blogStore.ts";
 
 const schema = z.object({
   title: z.string('Title is required'),
@@ -18,19 +19,33 @@ const state = reactive<Partial<Schema>>({
   blogContent: undefined,
 })
 
-const toast = useToast()
+const toast = useToast();
+const blogStore = useBlogStore();
+
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
+  try {
+    await blogStore.uploadBlog(event.data);
+    toast.add({
+      title: `Blog ${event.data.title} uploaded`,
+      description: `Your blog ${event.data.title} has been uploaded successfully`,
+      color: 'success',
+      icon: 'lucide:check',
+    })
+  } catch (err) {
+    console.error(err)
+    let message = "Something went wrong!";
+    if (err instanceof Error) {
+      message = err.message
+    }
 
-
-
-  toast.add({
-    title: `Blog ${event.data.title} uploaded`,
-    description: `Your blog ${event.data.title} has been uploaded successfully`,
-    color: 'success',
-    icon: 'lucide:check',
-  })
-  console.dir(event.data)
+    toast.add({
+      title: `Blog uploaded failed`,
+      description: message,
+      color: 'error',
+      icon: 'lucide:circle-x',
+    })
+  }
 }
 
 function onError(event: FormErrorEvent) {
