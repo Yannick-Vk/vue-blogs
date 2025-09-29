@@ -168,7 +168,7 @@ export const useBlogStore = defineStore('blogs', () => {
             })
             return URL.createObjectURL(response.data);
         } catch (err) {
-            console.warn("no banner for blog", blogId);
+            //console.warn("no banner for blog", blogId);
             return null;
         }
     }
