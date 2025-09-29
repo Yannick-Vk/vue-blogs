@@ -55,10 +55,20 @@ export const useBlogStore = defineStore('blogs', () => {
                         src: `https://i.pravatar.cc/32?u=${author.username}`,
                     }
                 }))
-            }));
+            }))
         } catch (err) {
             console.error(err);
-            error.value = "The server seems to be down. Please try again later.";
+            if (isAxiosError(err)) {
+                let errorMessage = err.message;
+                if (err.response?.data && typeof err.response.data === 'object' && 'message' in err.response.data) {
+                    errorMessage = (err.response.data as { message: string }).message;
+                }
+                error.value = `Could not fetch blogs: ${errorMessage}`;
+            } else if (err instanceof Error) {
+                error.value = `Could not fetch blogs: ${err.message}`;
+            } else {
+                error.value = "Failed to fetch blogs, Unknown error";
+            }
         }
     }
 
@@ -79,7 +89,17 @@ export const useBlogStore = defineStore('blogs', () => {
             };
         } catch (err) {
             console.error(err);
-            error.value = "The server seems to be down. Please try again later.";
+            if (isAxiosError(err)) {
+                let errorMessage = err.message;
+                if (err.response?.data && typeof err.response.data === 'object' && 'message' in err.response.data) {
+                    errorMessage = (err.response.data as { message: string }).message;
+                }
+                error.value = `Could not fetch blog: ${errorMessage}`;
+            } else if (err instanceof Error) {
+                error.value = `Could not fetch blog: ${err.message}`;
+            } else {
+                error.value = "Failed to fetch blog, Unknown error";
+            }
         }
     }
 
@@ -102,7 +122,11 @@ async function uploadBlog(blogData: { title: string; description: string; blogCo
         } catch (err) {
             console.error(err);
             if (isAxiosError(err)) {
-                error.value = `Could not upload blog: ${err.response.data.message || err.message}`;
+                let errorMessage = err.message;
+                if (err.response?.data && typeof err.response.data === 'object' && 'message' in err.response.data) {
+                    errorMessage = (err.response.data as { message: string }).message;
+                }
+                error.value = `Could not upload blog: ${errorMessage}`;
             } else if (err instanceof Error) {
                 error.value = `Could not upload blog: ${err.message}`;
             } else {
@@ -120,7 +144,11 @@ async function uploadBlog(blogData: { title: string; description: string; blogCo
         } catch (err) {
             console.error(err);
             if (isAxiosError(err)) {
-                error.value = `Could not delete blog: ${err.response.data.message || err.message}`;
+                let errorMessage = err.message;
+                if (err.response?.data && typeof err.response.data === 'object' && 'message' in err.response.data) {
+                    errorMessage = (err.response.data as { message: string }).message;
+                }
+                error.value = `Could not delete blog: ${errorMessage}`;
             } else if (err instanceof Error) {
                 error.value = `Could not delete blog: ${err.message}`;
             } else {
