@@ -64,8 +64,9 @@ const items = computed<NavigationMenuItem[]>(() => [
       </UTooltip>
 
       <UButton v-if="authStore.isLoggedIn" @click="logout" icon="lucide:log-out">Logout</UButton>
-      <UButton v-else-if="route.path === '/login'" to="/register" icon="lucide:log-in">Register</UButton>
-      <UButton v-else to="/login" icon="lucide:log-in">Login</UButton>
+      <UButton v-else-if="route.path === '/login'" to="/register" icon="lucide:log-in" class="w-24">Register</UButton>
+      <UButton v-else to="/login" icon="lucide:log-in" class="w-24">Login</UButton>
+
     </template>
 
     <template #body>
