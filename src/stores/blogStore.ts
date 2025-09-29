@@ -70,7 +70,6 @@ export const useBlogStore = defineStore('blogs', () => {
                     }
                 }))
             };
-            console.dir(currentBlog.value);
         } catch (err) {
             console.error(err);
             error.value = "The server seems to be down. Please try again later.";
