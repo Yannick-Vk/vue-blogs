@@ -56,6 +56,10 @@ async function deleteBlog() {
   }
 }
 
+function editBlog() {
+
+}
+
 function formatDate(date: Date) {
   return DateTime.fromISO(date).toLocaleString(DateTime.DATE_MED);
 }
@@ -78,8 +82,9 @@ function formatDate(date: Date) {
       <span>{{ author.name }}</span>
     </div>
 
-    <div v-if="loggedInUserIsAuthor" class="mt-5">
-      <UButton @click="deleteBlog" color="error">Delete blog</UButton>
+    <div v-if="loggedInUserIsAuthor" class="mt-5 flex flex-row gap-5">
+      <UButton @click="deleteBlog" color="error" icon="lucide:trash-2">Delete blog</UButton>
+      <UButton @click="editBlog" color="primary" icon="lucide:clipboard-pen">Edit blog</UButton>
     </div>
 
 
