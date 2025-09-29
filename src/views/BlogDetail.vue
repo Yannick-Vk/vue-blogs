@@ -20,7 +20,6 @@ const toast = useToast();
 onMounted(async () => {
   const blogId = route.params.id as string;
   await blogStore.getBlogById(blogId);
-  console.dir(currentBlog.value);
 });
 
 async function loggedInUserIsAuthor() {
@@ -56,6 +55,10 @@ async function deleteBlog() {
     await router.push(`/`)
   }
 }
+
+function formatDate(date: Date) {
+  return DateTime.fromISO(date).toLocaleString(DateTime.DATE_MED);
+}
 </script>
 
 <template>
@@ -63,11 +66,9 @@ async function deleteBlog() {
     <UButton to="/" icon="lucide:arrow-left" class="mb-5">Back to blogs</UButton>
     <h1 class="text-3xl font-bold mb-2">{{ currentBlog.title }}</h1>
     <p class="text-gray-500 mb-4">
-      Created on {{ DateTime.fromISO(currentBlog.createdAt).toLocaleString(DateTime.DATE_MED) }}
+      Created on {{ formatDate(currentBlog.createdAt) }}
       <span v-if="currentBlog.updatedAt"
-            class="text-gray-500 mb-4">edited on {{
-          DateTime.fromISO(currentBlog.updatedAt).toLocaleString(DateTime.DATE_MED)
-        }}</span>
+            class="text-gray-500 mb-4">edited on {{ formatDate(currentBlog.updatedAt) }}</span>
     </p>
 
     <div v-for="(author, key) in currentBlog.authors" :key="key" class="flex items-center gap-2 mb-2">
