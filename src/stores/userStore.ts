@@ -1,15 +1,12 @@
 ﻿import {defineStore} from "pinia";
 import {ref} from "vue";
-import axios from "axios";
-import {api_base_url} from "@/services/Api.ts";
+import {api} from "@/services/Api.ts";
 
 export interface User {
     id: string;
     username: string;
     email: string;
 }
-
-const api = `${api_base_url}/users`;
 
 export const useUserStore = defineStore('users', () => {
     const users = ref<Array<User>>([])
@@ -19,7 +16,7 @@ export const useUserStore = defineStore('users', () => {
     async function fetchUsers() {
         error.value = null;
         try {
-            const response = await axios.get<Array<User>>(`${api}`, {withCredentials: true});
+            const response = await axios.get<Array<User>>('users/', {withCredentials: true});
             users.value = response.data;
         } catch (err) {
             console.error(err);
@@ -30,7 +27,7 @@ export const useUserStore = defineStore('users', () => {
     async function fetchUser(id: string) {
         error.value = null;
         try {
-            const response = await axios.get<User>(`${api}/${id}`, {withCredentials: true});
+            const response = await api.get<User>(`users/${id}`, {withCredentials: true});
             currentUser.value = response.data;
         } catch (err) {
             console.error(err);
