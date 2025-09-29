@@ -101,7 +101,12 @@ export const useBlogStore = defineStore('blogs', () => {
         }
     }
 
-async function uploadBlog(blogData: { title: string; description: string; blogContent: string; bannerImage: File; }) {
+    async function uploadBlog(blogData: {
+        title: string;
+        description: string;
+        blogContent: string;
+        bannerImage: File;
+    }) {
         error.value = null;
 
         try {
@@ -155,5 +160,29 @@ async function uploadBlog(blogData: { title: string; description: string; blogCo
         }
     }
 
-    return {blogs, currentBlog, error, getAllBlogs, getBlogById, uploadBlog, deleteBlog};
+    async function getBanner(blogId: string) {
+        error.value = null;
+        try {
+            const response = await api.get(`blogs/${blogId}/banner`, {
+                responseType: 'blob'
+            })
+            return URL.createObjectURL(response.data);
+        } catch (err) {
+            console.error(err);
+            if (isAxiosError(err)) {
+                let errorMessage = err.message;
+                if (err.response?.data && typeof err.response.data === 'object' && 'message' in err.response.data) {
+                    errorMessage = (err.response.data as { message: string }).message;
+                }
+                error.value = `Could not get banner: ${errorMessage}`;
+            } else if (err instanceof Error) {
+                error.value = `Could not get banner: ${err.message}`;
+            } else {
+                error.value = "Failed to get banner, Unknown error";
+            }
+            return null;
+        }
+    }
+
+    return {blogs, currentBlog, error, getAllBlogs, getBlogById, uploadBlog, deleteBlog, getBanner};
 })
