@@ -10,7 +10,6 @@ export interface Blog {
     description: string;
     createdAt: string;
     updatedAt?: string;
-    bannerImage?: File;
 }
 
 interface ApiAuthor {
@@ -27,7 +26,6 @@ interface ApiBlog {
     description: string;
     createdAt: string;
     updatedAt?: string;
-    bannerImage: File;
 }
 
 export interface BlogWithContent extends Blog {
