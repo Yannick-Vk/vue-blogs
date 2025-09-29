@@ -1,40 +1,58 @@
 ﻿<script setup lang="ts">
 import * as z from 'zod'
-import type { FormSubmitEvent } from '@nuxt/ui'
+import type {FormSubmitEvent} from '@nuxt/ui'
 import {reactive} from "vue";
 
 const schema = z.object({
-  email: z.email('Invalid email'),
-  password: z.string('Password is required').min(8, 'Must be at least 8 characters')
+  title: z.string('Title is required'),
+  description: z.string('Description is required'),
+  blogContent: z.file('A blog file is required'),
 })
 
 type Schema = z.output<typeof schema>
 
 const state = reactive<Partial<Schema>>({
-  email: undefined,
-  password: undefined
+  title: undefined,
+  description: undefined,
+  blogContent: undefined,
 })
 
 const toast = useToast()
+
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  toast.add({ title: 'Success', description: 'The form has been submitted.', color: 'success' })
+  toast.add({title: 'Success', description: 'The form has been submitted.', color: 'success'})
   console.log(event.data)
 }
 </script>
 
 <template>
-  <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-    <UFormField label="Email" name="email">
-      <UInput v-model="state.email" />
-    </UFormField>
+  <div class="flex flex-col items-center justify-center gap-4 p-4">
+    <UPageCard class="w-full max-w-md">
+      <template #header>
+        <h2 class="text-2xl">Create a new Blog</h2>
+      </template>
 
-    <UFormField label="Password" name="password">
-      <UInput v-model="state.password" type="password" />
-    </UFormField>
+      <template #body>
+        <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+          <UFormField label="Title" name="title">
+            <UInput v-model="state.title" class="w-full"/>
+          </UFormField>
 
-    <UButton type="submit">
-      Submit
-    </UButton>
-  </UForm>
+          <UFormField label="Description" name="description">
+            <UTextarea v-model="state.description" placeholder="Enter description ..." class="w-full"/>
+          </UFormField>
+
+          <UFormField label="Blog file" name="blogContent">
+            <UFileUpload v-model="state.blogContent" accept="md" label="Click or Drop your blog file here"
+                         class="w-full min-h-48"/>
+          </UFormField>
+
+          <UButton type="submit">
+            Submit
+          </UButton>
+        </UForm>
+      </template>
+    </UPageCard>
+  </div>
 </template>
 
