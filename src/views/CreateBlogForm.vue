@@ -6,7 +6,8 @@ import {reactive} from "vue";
 const schema = z.object({
   title: z.string('Title is required'),
   description: z.string('Description is required'),
-  blogContent: z.file('A blog file is required'),
+  blogContent: z.file('A blog file is required')
+      .refine((file: File) => file && file.name.endsWith('.md'), "Only .md files are allowed"),
 })
 
 type Schema = z.output<typeof schema>
