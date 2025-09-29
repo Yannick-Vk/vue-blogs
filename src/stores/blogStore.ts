@@ -80,5 +80,19 @@ export const useBlogStore = defineStore('blogs', () => {
         }
     }
 
-    return {blogs, currentBlog, error, getAllBlogs, getBlogById};
+    async function uploadBlog(blog: any) {
+        error.value = null;
+        try {
+
+        } catch (err) {
+            console.error(err);
+            if (err instanceof Error) {
+                error.value = `Could not upload blog: ${err.message}`;
+            } else {
+                error.value = "Failed to upload blog, Unknow error";
+            }
+        }
+    }
+
+    return {blogs, currentBlog, error, getAllBlogs, getBlogById, uploadBlog};
 })
