@@ -1,5 +1,5 @@
 ﻿import axios, {type AxiosError} from "axios";
-import {useAuthStore} from "@/stores/auth.ts";
+import {type LoginResponse, useAuthStore} from "@/stores/auth.ts";
 
 export const api_base_url = "https://localhost:7134/api/v1";
 
@@ -20,7 +20,8 @@ api.interceptors.response.use(response => response, async (error) => {
         originalRequest._retry = true;
 
         try {
-            await api.post('/auth/refresh');
+            const response = await api.post<LoginResponse>('/auth/refresh');
+            authStore.setLocalStorage(response);
             return api(originalRequest);
         } catch (err) {
             console.error("Unable to refresh token, Logging out", err);

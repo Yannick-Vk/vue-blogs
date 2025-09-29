@@ -1,6 +1,6 @@
 import {computed, ref} from 'vue'
 import {defineStore} from 'pinia'
-import axios from 'axios'
+import axios, {type AxiosResponse} from 'axios'
 import {api_base_url} from "@/services/Api.ts";
 
 axios.defaults.withCredentials = true;
@@ -18,7 +18,7 @@ export class User {
     }
 }
 
-interface LoginResponse {
+export interface LoginResponse {
     id: string;
     username: string;
     email: string;
@@ -49,8 +49,7 @@ export const useAuthStore = defineStore('auth', () => {
         try {
             // This endpoint sets the cookie and returns the user object
             const response = await axios.post<LoginResponse>(`${authApiUrl}/login`, credentials);
-            localStorage.setItem('user', JSON.stringify(response.data));
-            localStorage.setItem('expiration', response.data.expiry);
+            await setLocalStorage(response);
             user.value = new User(response.data)
         } catch (error) {
             user.value = null;
@@ -84,7 +83,12 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
-    return {user, isLoggedIn, login, logout, register, fetchUser}
+    async function setLocalStorage(response: AxiosResponse) {
+        localStorage.setItem('user', JSON.stringify(response.data));
+        localStorage.setItem('expiration', response.data.expiry);
+    }
+
+    return {user, isLoggedIn, login, logout, register, fetchUser, setLocalStorage}
 })
 
 
