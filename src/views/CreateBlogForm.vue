@@ -20,8 +20,13 @@ const state = reactive<Partial<Schema>>({
 const toast = useToast()
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  toast.add({title: 'Success', description: 'The form has been submitted.', color: 'success'})
-  console.log(event.data)
+  toast.add({
+    title: `Blog ${event.data.title} uploaded`,
+    description: `Your blog ${event.data.title} has been uploaded successfully`,
+    color: 'success',
+    icon: 'lucide:check',
+  })
+  console.dir(event.data)
 }
 </script>
 
@@ -35,7 +40,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       <template #body>
         <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
           <UFormField label="Title" name="title">
-            <UInput v-model="state.title" class="w-full"/>
+            <UInput v-model="state.title" class="w-full" placeholder="Blog title"/>
           </UFormField>
 
           <UFormField label="Description" name="description">
@@ -44,7 +49,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
           <UFormField label="Blog file" name="blogContent">
             <UFileUpload v-model="state.blogContent" accept="md" label="Click or Drop your blog file here"
-                         class="w-full min-h-48"/>
+                         color="neutral"
+                         highlight
+                         class="min-h-48 w-96"/>
           </UFormField>
 
           <UButton type="submit">
