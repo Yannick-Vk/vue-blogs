@@ -21,7 +21,7 @@ api.interceptors.response.use(response => response, async (error) => {
 
         try {
             const response = await api.post<LoginResponse>('/auth/refresh');
-            authStore.setLocalStorage(response);
+            await authStore.refresh(response);
             return api(originalRequest);
         } catch (err) {
             console.error("Unable to refresh token, Logging out", err);

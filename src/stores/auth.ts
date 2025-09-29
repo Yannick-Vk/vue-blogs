@@ -49,8 +49,7 @@ export const useAuthStore = defineStore('auth', () => {
         try {
             // This endpoint sets the cookie and returns the user object
             const response = await axios.post<LoginResponse>(`${authApiUrl}/login`, credentials);
-            await setLocalStorage(response);
-            user.value = new User(response.data)
+            await setUserLogin(response);
         } catch (error) {
             user.value = null;
             throw error
@@ -83,12 +82,17 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
-    async function setLocalStorage(response: AxiosResponse) {
-        localStorage.setItem('user', JSON.stringify(response.data));
-        localStorage.setItem('expiration', response.data.expiry);
+    async function refresh(response: AxiosResponse) {
+        await setUserLogin(JSON.stringify(response.data), response.data.expiry);
     }
 
-    return {user, isLoggedIn, login, logout, register, fetchUser, setLocalStorage}
+    async function setUserLogin(user: string, expiration: string) {
+        user.value = new User(user)
+        localStorage.setItem('user', user);
+        localStorage.setItem('expiration', expiration);
+    }
+
+    return {user, isLoggedIn, login, logout, register, fetchUser, refresh};
 })
 
 
