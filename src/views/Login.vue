@@ -11,10 +11,6 @@ const authStore = useAuthStore()
 const router = useRouter()
 const errorBox = ref<string | null>(null)
 
-function isAxiosError(error: unknown): error is AxiosError {
-  return (error as AxiosError).isAxiosError !== undefined;
-}
-
 const schema = z.object({
   username: z.string("Username/Email cannot be empty").trim().nonempty("Username/Email cannot be empty"),
   password: z.string("Username/Email cannot be empty").trim().nonempty("Password cannot be empty"),

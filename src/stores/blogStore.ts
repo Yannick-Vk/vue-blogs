@@ -1,10 +1,7 @@
 import {defineStore} from "pinia";
 import {ref} from "vue";
-import axios from "axios";
-import {api_base_url} from "@/services/Api.ts";
 import type {Author} from "@/types/Author.ts";
-
-const api = `${api_base_url}/blogs`;
+import {api, isAxiosError} from '@/services/Api.ts'
 
 export interface Blog {
     id: string;
@@ -42,7 +39,7 @@ export const useBlogStore = defineStore('blogs', () => {
     async function getAllBlogs() {
         error.value = null;
         try {
-            const response = await axios.get<Array<ApiBlog>>(`${api}`);
+            const response = await api.get<Array<ApiBlog>>(`blogs/`);
             blogs.value = response.data.map(blog => ({
                 ...blog,
                 authors: blog.authors.map(authorName => ({
@@ -62,7 +59,7 @@ export const useBlogStore = defineStore('blogs', () => {
         currentBlog.value = null;
         error.value = null;
         try {
-            const response = await axios.get<ApiBlogWithContent>(`${api}/${id}`);
+            const response = await api.get<ApiBlogWithContent>(`blogs/${id}`);
             const blogData = response.data;
             currentBlog.value = {
                 ...blogData,
@@ -110,7 +107,7 @@ async function uploadBlog(blogData: { title: string; description: string; blogCo
                 bannerImage: '' // Placeholder as the form does not have this field
             };
 
-            const blogId = await axios.post(api, payload, {
+            const blogId = await api.post("/blogs", payload, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -119,7 +116,7 @@ async function uploadBlog(blogData: { title: string; description: string; blogCo
 
         } catch (err) {
             console.error(err);
-            if (axios.isAxiosError(err) && err.response) {
+            if (isAxiosError(err)) {
                 error.value = `Could not upload blog: ${err.response.data.message || err.message}`;
             } else if (err instanceof Error) {
                 error.value = `Could not upload blog: ${err.message}`;
