@@ -3,6 +3,7 @@ import * as z from 'zod'
 import type {FormErrorEvent, FormSubmitEvent} from '@nuxt/ui'
 import {reactive} from "vue";
 import {useBlogStore} from "@/stores/blogStore.ts";
+import router from "@/router/routes.ts";
 
 const schema = z.object({
   title: z.string('Title is required'),
@@ -25,13 +26,24 @@ const blogStore = useBlogStore();
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
-    await blogStore.uploadBlog(event.data);
+    const blogId = await blogStore.uploadBlog(event.data);
     toast.add({
       title: `Blog ${event.data.title} uploaded`,
       description: `Your blog ${event.data.title} has been uploaded successfully`,
       color: 'success',
       icon: 'lucide:check',
+      actions: [{
+        icon: 'lucide:arrow-right',
+        label: 'Go to blog',
+        color: 'neutral',
+        variant: 'outline',
+        onClick: async () => {
+          await router.push(`/blog/${blogId}`)
+        }
+      }],
     })
+
+    await router.push(`/`)
   } catch (err) {
     console.error(err)
     let message = "Something went wrong!";

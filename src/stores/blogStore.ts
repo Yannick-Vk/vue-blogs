@@ -107,12 +107,13 @@ async function uploadBlog(blogData: { title: string; description: string; blogCo
                 bannerImage: '' // Placeholder as the form does not have this field
             };
 
-            const blogId = await api.post("/blogs", payload, {
+            const blogId = await api.post<string>("/blogs", payload, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
-            console.log("Created new blog with id ", blogId);
+            console.log("Created new blog with id", blogId.data);
+            return blogId.data;
 
         } catch (err) {
             console.error(err);
