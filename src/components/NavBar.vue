@@ -25,7 +25,7 @@ const items = computed<NavigationMenuItem[]>(() => [
   {
     label: 'Home',
     to: '/home',
-    active: route.path === '/' || route.path.startsWith('/home')
+    active: route.path === '/' || route.path.startsWith('/home') || route.path.startsWith('/blogs')
   }, {
     label: 'Users',
     to: '/users',
@@ -36,8 +36,8 @@ const items = computed<NavigationMenuItem[]>(() => [
     active: route.path.startsWith('/roles')
   }, {
     label: 'Create Blog',
-    to: '/blogs/new',
-    active: route.path.startsWith('/blogs/new')
+    to: '/blog/new',
+    active: route.path.startsWith('/blog/new')
   },
 ])
 </script>
@@ -46,7 +46,7 @@ const items = computed<NavigationMenuItem[]>(() => [
   <UHeader toggle-side="left">
     <template #title>
       <div class="flex flex-row gap-3">
-        <UIcon name="lucide:home" class="text-primary-700 dark:text-primary-200 size-7" />
+        <UIcon name="lucide:home" class="text-primary-700 dark:text-primary-200 size-7"/>
         <p class="text-primary-700 dark:text-primary-200">Vue Blogger</p>
       </div>
     </template>
@@ -74,7 +74,7 @@ const items = computed<NavigationMenuItem[]>(() => [
     </template>
 
     <template #body>
-      <UNavigationMenu :items="items" orientation="vertical" class="-mx-2.5" />
+      <UNavigationMenu :items="items" orientation="vertical" class="-mx-2.5"/>
     </template>
   </UHeader>
 </template>

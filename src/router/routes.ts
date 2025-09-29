@@ -41,7 +41,7 @@ const router = createRouter({
             name: 'user-detail',
             component: UserDetailsPage,
         }, {
-            path: '/blogs/new',
+            path: '/blog/new',
             name: 'create-blog',
             component: CreateBlogForm,
         },
