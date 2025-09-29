@@ -13,11 +13,17 @@ export interface Blog {
     bannerImage?: File;
 }
 
+interface ApiAuthor {
+    id: string;
+    username: string;
+    email: string;
+}
+
 // This interface matches the API response
 interface ApiBlog {
     id: string;
     title: string;
-    authors: string[];
+    authors: ApiAuthor[];
     description: string;
     createdAt: string;
     updatedAt?: string;
@@ -43,10 +49,10 @@ export const useBlogStore = defineStore('blogs', () => {
             const response = await api.get<Array<ApiBlog>>(`blogs/`);
             blogs.value = response.data.map(blog => ({
                 ...blog,
-                authors: blog.authors.map(authorName => ({
-                    name: authorName,
+                authors: blog.authors.map(author => ({
+                    name: author.username,
                     avatar: {
-                        src: `https://i.pravatar.cc/32?u=${authorName}`
+                        src: `https://i.pravatar.cc/32?u=${author.username}`,
                     }
                 }))
             }));
@@ -64,10 +70,10 @@ export const useBlogStore = defineStore('blogs', () => {
             const blogData = response.data;
             currentBlog.value = {
                 ...blogData,
-                authors: blogData.authors.map(authorName => ({
-                    name: authorName,
+                authors: blogData.authors.map(author => ({
+                    name: author.username,
                     avatar: {
-                        src: `https://i.pravatar.cc/32?u=${authorName}`
+                        src: `https://i.pravatar.cc/32?u=${author.username}`
                     }
                 }))
             };
