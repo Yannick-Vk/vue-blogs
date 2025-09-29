@@ -6,6 +6,7 @@ import UsersPage from "@/views/UsersPage.vue";
 import RolesPage from "@/views/RolesPage.vue";
 import UserDetailsPage from "@/views/UserDetailsPage.vue";
 import BlogDetail from "@/views/BlogDetail.vue";
+import CreateBlogForm from "@/views/CreateBlogForm.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +40,10 @@ const router = createRouter({
             path: '/users/:id',
             name: 'user-detail',
             component: UserDetailsPage,
+        }, {
+            path: '/blogs/new',
+            name: 'create-blog',
+            component: CreateBlogForm,
         },
     ],
 })

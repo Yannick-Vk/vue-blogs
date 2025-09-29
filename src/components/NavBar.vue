@@ -25,7 +25,7 @@ const items = computed<NavigationMenuItem[]>(() => [
   {
     label: 'Home',
     to: '/home',
-    active: route.path === '/' || route.path.startsWith('/home') || route.path.startsWith('/blog')
+    active: route.path === '/' || route.path.startsWith('/home')
   }, {
     label: 'Users',
     to: '/users',
@@ -34,6 +34,10 @@ const items = computed<NavigationMenuItem[]>(() => [
     label: 'Roles',
     to: '/roles',
     active: route.path.startsWith('/roles')
+  }, {
+    label: 'Create Blog',
+    to: '/blogs/new',
+    active: route.path.startsWith('/blogs/new')
   },
 ])
 </script>
