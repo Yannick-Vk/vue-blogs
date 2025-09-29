@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {onMounted} from "vue";
 import {useRoute} from "vue-router";
-import {useBlogStore} from "@/stores/blogStore";
+import {type Blog, useBlogStore} from "@/stores/blogStore";
 import {storeToRefs} from "pinia";
 import {DateTime} from "luxon";
 import 'highlight.js/styles/tokyo-night-dark.css';
@@ -10,12 +10,16 @@ import {VueShowdown} from "vue-showdown";
 
 const route = useRoute();
 const blogStore = useBlogStore();
-const {currentBlog} = storeToRefs(blogStore);
+const currentBlog: Blog = storeToRefs(blogStore);
 
 onMounted(() => {
   const blogId = route.params.id as string;
   blogStore.getBlogById(blogId);
 });
+
+async function deleteBlog() {
+  await blogStore.deleteBlog(currentBlog.id)
+}
 </script>
 
 <template>
@@ -35,6 +39,10 @@ onMounted(() => {
         <UAvatar :src="author.avatar?.src" :alt="author.description" class="mr-2"/>
       </UTooltip>
       <span>{{ author.name }}</span>
+    </div>
+
+    <div>
+      <UButton @click="deleteBlog">Delete blog</UButton>
     </div>
 
 

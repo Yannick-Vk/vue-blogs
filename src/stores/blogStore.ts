@@ -128,5 +128,22 @@ async function uploadBlog(blogData: { title: string; description: string; blogCo
         }
     }
 
-    return {blogs, currentBlog, error, getAllBlogs, getBlogById, uploadBlog};
+    async function deleteBlog(blogId: string) {
+        error.value = null;
+
+        try {
+
+        } catch (err) {
+            console.error(err);
+            if (isAxiosError(err)) {
+                error.value = `Could not delete blog: ${err.response.data.message || err.message}`;
+            } else if (err instanceof Error) {
+                error.value = `Could not delete blog: ${err.message}`;
+            } else {
+                error.value = "Failed to delete blog, Unknown error";
+            }
+        }
+    }
+
+    return {blogs, currentBlog, error, getAllBlogs, getBlogById, uploadBlog, deleteBlog};
 })
