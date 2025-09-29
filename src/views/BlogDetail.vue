@@ -83,8 +83,23 @@ function formatDate(date: Date) {
     </div>
 
     <div v-if="loggedInUserIsAuthor" class="mt-5 flex flex-row gap-5">
-      <UButton @click="deleteBlog" color="error" icon="lucide:trash-2">Delete blog</UButton>
+
       <UButton @click="editBlog" color="primary" icon="lucide:clipboard-pen">Edit blog</UButton>
+
+      <UModal
+          title="Confirm deletion"
+      >
+        <UButton color="error" icon="lucide:trash-2">Delete blog</UButton>
+        <template #body>
+          <p>Confirming delete of blog: `{{currentBlog.title}}`</p>
+          <p>Are you sure you want to delete this blog forever?</p>
+        </template>
+
+        <template #footer="{ close }">
+          <UButton label="Cancel" color="neutral" variant="outline" @click="close" />
+          <UButton label="Delete" color="error" @click="deleteBlog" />
+        </template>
+      </UModal>
     </div>
 
 
