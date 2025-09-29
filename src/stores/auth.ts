@@ -45,11 +45,18 @@ export const useAuthStore = defineStore('auth', () => {
     async function fetchUser() {
     }
 
+    // Helper function to centralize login/registration logic
+    function handleLoginResponse(response: AxiosResponse<LoginResponse>) {
+        const userData = response.data;
+        user.value = new User(userData);
+        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem('expiration', userData.expiry);
+    }
+
     async function login(credentials: { username?: string, password?: string }) {
         try {
-            // This endpoint sets the cookie and returns the user object
             const response = await axios.post<LoginResponse>(`${authApiUrl}/login`, credentials);
-            await setUserLogin(response);
+            handleLoginResponse(response);
         } catch (error) {
             user.value = null;
             throw error
@@ -57,15 +64,11 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     async function register(details: {
-        username?: string,
-        email?: string,
-        password?: string
+        username?: string, email?: string, password?: string
     }) {
         try {
-            const response = await axios.post(`${authApiUrl}/register`, details);
-            localStorage.setItem('user', JSON.stringify(response.data));
-            localStorage.setItem('expiration', response.data.expiry);
-            user.value = new User(response.data)
+            const response = await axios.post<LoginResponse>(`${authApiUrl}/register`, details);
+            handleLoginResponse(response);
         } catch (error) {
             user.value = null;
             throw error
@@ -83,13 +86,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     async function refresh(response: AxiosResponse) {
-        await setUserLogin(JSON.stringify(response.data), response.data.expiry);
-    }
-
-    async function setUserLogin(user: string, expiration: string) {
-        user.value = new User(user)
-        localStorage.setItem('user', user);
-        localStorage.setItem('expiration', expiration);
+        await handleLoginResponse(response);
     }
 
     return {user, isLoggedIn, login, logout, register, fetchUser, refresh};
