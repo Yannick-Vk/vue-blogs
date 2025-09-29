@@ -30,7 +30,7 @@ const loggedInUserIsAuthor = computed(() => {
     console.warn("Not logged in or blog has no value")
     return false;
   }
-  return currentBlog.value.authors.some(author => author.name === user.value.username);
+  return currentBlog.value.authors.some(author => author.name === user.value?.username);
 
 })
 
@@ -60,7 +60,7 @@ function editBlog() {
 
 }
 
-function formatDate(date: Date) {
+function formatDate(date: string) {
   return DateTime.fromISO(date).toLocaleString(DateTime.DATE_MED);
 }
 </script>
@@ -105,12 +105,25 @@ function formatDate(date: Date) {
 
     <USeparator type="solid" size="sm" class="my-4"/>
 
-    <div v-if="currentBlog.blogContent" class="prose max-w-none">
+    <div v-if="currentBlog.content" class="prose max-w-none">
       <VueShowdown
-          :markdown="currentBlog.blogContent"
+          :markdown="currentBlog.content"
           flavor="github"
           :options="{ emoji: true }"
           :extensions="[showdownHighlight({pre: true})]"
+      />
+    </div>
+    <div v-else>
+      <UAlert
+          title="No blog content found"
+          color="error"
+          variant="outline"
+          icon="lucide:server-off"
+          class="my-4"
+          :ui="{
+        title: 'text-2xl font-bold',
+        icon: 'size-8'
+      }"
       />
     </div>
 

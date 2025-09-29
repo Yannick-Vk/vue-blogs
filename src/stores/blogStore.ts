@@ -29,7 +29,7 @@ interface ApiBlog {
 }
 
 export interface BlogWithContent extends Blog {
-    blogContent: string;
+    content: string;
 }
 
 interface ApiBlogWithContent extends ApiBlog {
