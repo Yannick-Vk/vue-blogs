@@ -3,7 +3,7 @@ import * as z from 'zod'
 import type {FormSubmitEvent} from '@nuxt/ui'
 import {useAuthStore} from '@/stores/auth';
 import {useRouter} from 'vue-router';
-import type {AxiosError} from 'axios';
+import {isAxiosError} from '@/services/Api.ts'
 import {ref} from "vue";
 
 const toast = useToast()
@@ -13,7 +13,7 @@ const errorBox = ref<string | null>(null)
 
 const schema = z.object({
   username: z.string("Username/Email cannot be empty").trim().nonempty("Username/Email cannot be empty"),
-  password: z.string("Username/Email cannot be empty").trim().nonempty("Password cannot be empty"),
+  password: z.string("Password cannot be empty").trim().nonempty("Password cannot be empty"),
 })
 
 type Schema = z.output<typeof schema>
@@ -58,6 +58,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     await router.push({name: 'home'})
   } catch (error) {
     let errorMessage = `Unexpected error occurred: ${error}`;
+    console.error(error)
     if (isAxiosError(error) && error.response?.data) {
       errorMessage = error.response.data as string;
     } else {

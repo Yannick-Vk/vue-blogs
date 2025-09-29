@@ -4,11 +4,7 @@ import type {FormSubmitEvent} from '@nuxt/ui'
 import {ref} from "vue";
 import {useAuthStore} from '@/stores/auth';
 import {useRouter} from 'vue-router';
-import type {AxiosError} from 'axios';
-
-function isAxiosError(error: unknown): error is AxiosError {
-  return (error as AxiosError).isAxiosError !== undefined;
-}
+import {isAxiosError} from '@/services/Api.ts'
 
 const schema = z.object({
   username: z.string("Username cannot be empty").trim().nonempty("Username cannot be empty"),
