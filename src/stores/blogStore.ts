@@ -79,32 +79,15 @@ export const useBlogStore = defineStore('blogs', () => {
 async function uploadBlog(blogData: { title: string; description: string; blogContent: File }) {
         error.value = null;
 
-        const fileToBase64 = (file: File): Promise<string> => {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => {
-                    if (typeof reader.result === 'string') {
-                        // The result includes a prefix like "data:text/markdown;base64,"
-                        // We send the whole string for now, but some backends might want just the base64 part.
-                        resolve(reader.result);
-                    } else {
-                        reject(new Error('Failed to read file as base64'));
-                    }
-                };
-                reader.onerror = error => reject(error);
-            });
-        }
-
         try {
-            const base64File = await fileToBase64(blogData.blogContent);
-
             const payload = {
                 title: blogData.title,
                 description: blogData.description,
-                file: base64File,
+                file: await blogData.blogContent.text(),
                 bannerImage: '' // Placeholder as the form does not have this field
             };
+
+            console.log("Payload", payload);
 
             const blogId = await api.post<string>("/blogs", payload, {
                 headers: {
