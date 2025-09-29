@@ -48,7 +48,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           </UFormField>
 
           <UFormField label="Blog file" name="blogContent">
-            <UFileUpload v-model="state.blogContent" accept="md" label="Click or Drop your blog file here"
+            <UFileUpload v-model="state.blogContent" accept=".md" label="Click or Drop your blog file here"
                          color="neutral"
                          highlight
                          class="min-h-48 w-96"/>
