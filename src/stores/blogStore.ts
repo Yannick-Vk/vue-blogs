@@ -80,17 +80,54 @@ export const useBlogStore = defineStore('blogs', () => {
         }
     }
 
-    async function uploadBlog(blog: any) {
+async function uploadBlog(blogData: { title: string; description: string; blogContent: File }) {
         error.value = null;
+
+        const fileToBase64 = (file: File): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    if (typeof reader.result === 'string') {
+                        // The result includes a prefix like "data:text/markdown;base64,"
+                        // We send the whole string for now, but some backends might want just the base64 part.
+                        resolve(reader.result);
+                    } else {
+                        reject(new Error('Failed to read file as base64'));
+                    }
+                };
+                reader.onerror = error => reject(error);
+            });
+        }
+
         try {
+            const base64File = await fileToBase64(blogData.blogContent);
+
+            const payload = {
+                title: blogData.title,
+                description: blogData.description,
+                file: base64File,
+                bannerImage: '' // Placeholder as the form does not have this field
+            };
+
+            await axios.post(api, payload, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            await getAllBlogs(); // Refetch all blogs to include the new one
 
         } catch (err) {
             console.error(err);
-            if (err instanceof Error) {
+            if (axios.isAxiosError(err) && err.response) {
+                error.value = `Could not upload blog: ${err.response.data.message || err.message}`;
+            } else if (err instanceof Error) {
                 error.value = `Could not upload blog: ${err.message}`;
             } else {
-                error.value = "Failed to upload blog, Unknow error";
+                error.value = "Failed to upload blog, Unknown error";
             }
+            throw new Error(error.value);
         }
     }
 

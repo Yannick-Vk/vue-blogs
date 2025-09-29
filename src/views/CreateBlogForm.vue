@@ -21,6 +21,9 @@ const state = reactive<Partial<Schema>>({
 const toast = useToast()
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
+
+
+
   toast.add({
     title: `Blog ${event.data.title} uploaded`,
     description: `Your blog ${event.data.title} has been uploaded successfully`,
