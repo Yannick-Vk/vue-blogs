@@ -1,6 +1,6 @@
 ﻿<script setup lang="ts">
 import * as z from 'zod'
-import type {FormSubmitEvent} from '@nuxt/ui'
+import type {FormErrorEvent, FormSubmitEvent} from '@nuxt/ui'
 import {reactive} from "vue";
 
 const schema = z.object({
@@ -29,6 +29,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   })
   console.dir(event.data)
 }
+
+function onError(event: FormErrorEvent) {
+  if (event.errors.some(value => value.name?.includes("blogContent"))) {
+    state.blogContent = undefined;
+  }
+}
 </script>
 
 <template>
@@ -39,7 +45,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       </template>
 
       <template #body>
-        <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+        <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit" @error="onError">
           <UFormField label="Title" name="title">
             <UInput v-model="state.title" class="w-full" placeholder="Blog title"/>
           </UFormField>
