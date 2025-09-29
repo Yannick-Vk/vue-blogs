@@ -33,14 +33,17 @@ const router = createRouter({
             path: '/users',
             name: 'users',
             component: UsersPage,
+            meta: {requiresAuth: true}
         }, {
             path: '/roles',
             name: 'roles',
             component: RolesPage,
+            meta: {requiresAuth: true}
         }, {
             path: '/users/:id',
             name: 'user-detail',
             component: UserDetailsPage,
+            meta: {requiresAuth: true}
         }, {
             path: '/blog/new',
             name: 'create-blog',
