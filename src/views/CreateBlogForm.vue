@@ -10,6 +10,7 @@ const schema = z.object({
   description: z.string('Description is required'),
   blogContent: z.file('A blog file is required')
       .refine((file: File) => file && file.name.endsWith('.md'), "Only .md files are allowed"),
+  bannerImage: z.file('A banner image is required'),
 })
 
 type Schema = z.output<typeof schema>
@@ -18,6 +19,7 @@ const state = reactive<Partial<Schema>>({
   title: undefined,
   description: undefined,
   blogContent: undefined,
+  bannerImage: undefined,
 })
 
 const toast = useToast();
@@ -86,6 +88,14 @@ function onError(event: FormErrorEvent) {
 
           <UFormField label="Blog file" name="blogContent">
             <UFileUpload v-model="state.blogContent" accept=".md" label="Click or Drop your blog file here"
+                         color="neutral"
+                         highlight
+                         variant="button"
+                         class="min-h-48 w-96"/>
+          </UFormField>
+
+          <UFormField label="Blog file" name="blogContent">
+            <UFileUpload v-model="state.bannerImage" accept="images/*" label="Click or Drop your banner image here"
                          color="neutral"
                          highlight
                          class="min-h-48 w-96"/>
