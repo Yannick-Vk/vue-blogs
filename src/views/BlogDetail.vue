@@ -8,6 +8,7 @@ import 'highlight.js/styles/tokyo-night-dark.css';
 import showdownHighlight from 'showdown-highlight';
 import {VueShowdown} from "vue-showdown";
 import router from "@/router/routes.ts";
+import {useAuthStore} from "@/stores/auth.ts";
 
 const route = useRoute();
 const blogStore = useBlogStore();
@@ -21,6 +22,18 @@ onMounted(async () => {
   await blogStore.getBlogById(blogId);
   console.dir(currentBlog.value);
 });
+
+async function loggedInUserIsAuthor() {
+  const authStore = useAuthStore();
+  const user = authStore.user.value;
+  if (!user && !currentBlog.value) {
+    return false;
+  }
+
+  const authors: Array<string> = currentBlog.value.authors;
+  return authors.includes(user.username);
+
+}
 
 async function deleteBlog() {
   if (currentBlog.value) {
@@ -64,7 +77,7 @@ async function deleteBlog() {
       <span>{{ author.name }}</span>
     </div>
 
-    <div class="mt-5">
+    <div v-if="loggedInUserIsAuthor" class="mt-5">
       <UButton @click="deleteBlog" color="error">Delete blog</UButton>
     </div>
 
