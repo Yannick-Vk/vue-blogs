@@ -168,18 +168,6 @@ export const useBlogStore = defineStore('blogs', () => {
             })
             return URL.createObjectURL(response.data);
         } catch (err) {
-            console.error(err);
-            if (isAxiosError(err)) {
-                let errorMessage = err.message;
-                if (err.response?.data && typeof err.response.data === 'object' && 'message' in err.response.data) {
-                    errorMessage = (err.response.data as { message: string }).message;
-                }
-                error.value = `Could not get banner: ${errorMessage}`;
-            } else if (err instanceof Error) {
-                error.value = `Could not get banner: ${err.message}`;
-            } else {
-                error.value = "Failed to get banner, Unknown error";
-            }
             return null;
         }
     }
