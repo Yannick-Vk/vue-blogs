@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import * as z from 'zod'
 import type {FormErrorEvent, FormSubmitEvent} from '@nuxt/ui'
 import {reactive} from "vue";
@@ -6,11 +6,12 @@ import {useBlogStore} from "@/stores/blogStore.ts";
 import router from "@/router/routes.ts";
 
 const schema = z.object({
-  title: z.string('Title is required'),
-  description: z.string('Description is required'),
-  blogContent: z.file('A blog file is required')
-      .refine((file: File) => file && file.name.endsWith('.md'), "Only .md files are allowed"),
-  bannerImage: z.file('A banner image is required'),
+  title: z.string().min(1, 'Title is required'),
+  description: z.string().min(1, 'Description is required'),
+  blogContent: z.instanceof(File, {message: 'A blog file is required'})
+      .refine((file) => file.name.endsWith('.md'), "Only .md files are allowed"),
+  bannerImage: z.instanceof(File, {message: 'A banner image is required'})
+      .refine((file) => file.type.startsWith('image/'), "Only image files are allowed"),
 })
 
 type Schema = z.output<typeof schema>
@@ -25,10 +26,53 @@ const state = reactive<Partial<Schema>>({
 const toast = useToast();
 const blogStore = useBlogStore();
 
+const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            if (typeof reader.result === 'string') {
+                const base64String = reader.result.split(',')[1];
+                if (base64String) {
+                    resolve(base64String);
+                } else {
+                    reject(new Error('Failed to extract base64 content from file'));
+                }
+            } else {
+                reject(new Error('Failed to read file as base64'));
+            }
+        };
+        reader.onerror = error => reject(error);
+    });
+}
+
+const readTextFile = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsText(file, 'UTF-8');
+        reader.onload = () => {
+            if (typeof reader.result === 'string') {
+                resolve(reader.result);
+            } else {
+                reject(new Error('Failed to read file as text'));
+            }
+        };
+        reader.onerror = error => reject(error);
+    });
+}
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
-    const blogId = await blogStore.uploadBlog(event.data);
+    const content = await readTextFile(event.data.blogContent)
+
+    const blogData = {
+      title: event.data.title,
+      description: event.data.description,
+      blogContent: content,
+      bannerImage: event.data.bannerImage,
+    }
+
+    const blogId = await blogStore.uploadBlog(blogData);
     toast.add({
       title: `Blog ${event.data.title} uploaded`,
       description: `Your blog ${event.data.title} has been uploaded successfully`,
@@ -63,8 +107,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 }
 
 function onError(event: FormErrorEvent) {
-  if (event.errors.some(value => value.name?.includes("blogContent"))) {
+  if (event.errors.some(value => value.path.includes("blogContent"))) {
     state.blogContent = undefined;
+  }
+  if (event.errors.some(value => value.path.includes("bannerImage"))) {
+    state.bannerImage = undefined;
   }
 }
 </script>
@@ -90,12 +137,11 @@ function onError(event: FormErrorEvent) {
             <UFileUpload v-model="state.blogContent" accept=".md" label="Click or Drop your blog file here"
                          color="neutral"
                          highlight
-                         variant="button"
                          class="min-h-48 w-96"/>
           </UFormField>
 
-          <UFormField label="Blog file" name="blogContent">
-            <UFileUpload v-model="state.bannerImage" accept="images/*" label="Click or Drop your banner image here"
+          <UFormField label="Banner Image" name="bannerImage">
+            <UFileUpload v-model="state.bannerImage" accept="image/*" label="Click or Drop your banner image here"
                          color="neutral"
                          highlight
                          class="min-h-48 w-96"/>
@@ -109,4 +155,3 @@ function onError(event: FormErrorEvent) {
     </UPageCard>
   </div>
 </template>
-

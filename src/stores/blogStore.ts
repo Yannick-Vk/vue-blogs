@@ -76,24 +76,19 @@ export const useBlogStore = defineStore('blogs', () => {
         }
     }
 
-async function uploadBlog(blogData: { title: string; description: string; blogContent: File }) {
+async function uploadBlog(blogData: { title: string; description: string; blogContent: string; bannerImage: File; }) {
         error.value = null;
 
         try {
-            const payload = {
-                title: blogData.title,
-                description: blogData.description,
-                file: await blogData.blogContent.text(),
-                bannerImage: '' // Placeholder as the form does not have this field
-            };
+            const formData = new FormData();
+            formData.append('Title', blogData.title);
+            formData.append('Description', blogData.description);
+            formData.append('File', blogData.blogContent);
+            formData.append('BannerImage', blogData.bannerImage);
 
-            console.log("Payload", payload);
+            console.dir(formData);
 
-            const blogId = await api.post<string>("/blogs", payload, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+            const blogId = await api.post<string>("/blogs", formData);
             console.log("Created new blog with id", blogId.data);
             return blogId.data;
 
