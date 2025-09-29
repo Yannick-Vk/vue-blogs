@@ -1,24 +1,47 @@
 <script setup lang="ts">
 import {onMounted} from "vue";
 import {useRoute} from "vue-router";
-import {type Blog, useBlogStore} from "@/stores/blogStore";
+import {useBlogStore} from "@/stores/blogStore";
 import {storeToRefs} from "pinia";
 import {DateTime} from "luxon";
 import 'highlight.js/styles/tokyo-night-dark.css';
 import showdownHighlight from 'showdown-highlight';
 import {VueShowdown} from "vue-showdown";
+import router from "@/router/routes.ts";
 
 const route = useRoute();
 const blogStore = useBlogStore();
-const currentBlog: Blog = storeToRefs(blogStore);
+const {currentBlog} = storeToRefs(blogStore);
+const error = blogStore.error;
 
-onMounted(() => {
+const toast = useToast();
+
+onMounted(async () => {
   const blogId = route.params.id as string;
-  blogStore.getBlogById(blogId);
+  await blogStore.getBlogById(blogId);
+  console.dir(currentBlog.value);
 });
 
 async function deleteBlog() {
-  await blogStore.deleteBlog(currentBlog.id)
+  if (currentBlog.value) {
+    const blog = await blogStore.deleteBlog(currentBlog.value.id)
+    if (error) {
+      toast.add({
+        title: 'Failed to delete blog!',
+        icon: "lucide:circle-x",
+        description: `Failed to delete blog '${error}'`,
+        color: 'error'
+      })
+      return;
+    }
+    toast.add({
+      title: 'Delete Successful!',
+      icon: "lucide:lucide:trash-2",
+      description: `Successfully delete blog '${blog.title}'`,
+      color: 'success'
+    })
+    await router.push(`/`)
+  }
 }
 </script>
 
@@ -41,8 +64,8 @@ async function deleteBlog() {
       <span>{{ author.name }}</span>
     </div>
 
-    <div>
-      <UButton @click="deleteBlog">Delete blog</UButton>
+    <div class="mt-5">
+      <UButton @click="deleteBlog" color="error">Delete blog</UButton>
     </div>
 
 

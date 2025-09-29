@@ -130,9 +130,9 @@ async function uploadBlog(blogData: { title: string; description: string; blogCo
 
     async function deleteBlog(blogId: string) {
         error.value = null;
-
         try {
-
+            const blog = await api.delete<Blog>(`blogs/${blogId}`)
+            return blog.data;
         } catch (err) {
             console.error(err);
             if (isAxiosError(err)) {
