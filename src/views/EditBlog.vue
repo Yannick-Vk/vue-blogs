@@ -8,6 +8,7 @@ import * as z from 'zod'
 import type {FormSubmitEvent} from '@nuxt/ui'
 import {useUserStore} from "@/stores/userStore.ts";
 import type {User} from "@/stores/auth.ts";
+import {useAuthStore} from "@/stores/auth.ts";
 import type {Author} from "@/types/Author.ts";
 
 const route = useRoute();
@@ -17,6 +18,8 @@ const error = blogStore.error;
 
 const userStore = useUserStore();
 const {users} = storeToRefs(userStore);
+const authStore = useAuthStore();
+const {user: loggedInUser} = storeToRefs(authStore);
 
 const usersWithAuthorStatus = computed(() => {
   if (!users.value) {
@@ -25,7 +28,8 @@ const usersWithAuthorStatus = computed(() => {
   const authorIds = new Set(currentBlog.value?.authors?.map((author: Author) => author.name || author) || []);
   return users.value.map((user: User) => ({
     ...user,
-    isAuthor: authorIds.has(user.username)
+    isAuthor: authorIds.has(user.username),
+    disabled: user.id === loggedInUser.value?.id
   }));
 });
 
@@ -122,7 +126,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     await blogStore.getBlogById(currentBlog.value.id);
 
   } catch (e) {
-    toast.add({title: 'Update Failed', description: blogStore.error?? "", color: 'error'});
+    toast.add({title: 'Update Failed', description: blogStore.error ?? "", color: 'error'});
   }
 }
 </script>
@@ -131,7 +135,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   <div v-if="currentBlog" class="p-4">
     <UBreadcrumb :items="items"/>
     <div class="flex flex-col items-center justify-center gap-4 p-4">
-      <Authors :users="usersWithAuthorStatus" />
+      <Authors :users="usersWithAuthorStatus"/>
       <UPageCard class="w-full max-w-md">
         <template #header>
           <h2 class="text-2xl">Update blog</h2>
@@ -176,5 +180,4 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 </template>
 
 <style scoped>
-
 </style>

@@ -8,6 +8,7 @@ const toast = useToast();
 
 interface UserWithAuthor extends User {
   isAuthor: boolean;
+  disabled: boolean;
 }
 
 const props = defineProps<{
@@ -51,6 +52,7 @@ const columns: TableColumn<UserWithAuthor>[] = [
     cell: ({row}) =>
         h(UCheckbox, {
           modelValue: row.getIsSelected(),
+          disabled: row.original.disabled,
           'onUpdate:modelValue': (value: boolean | 'indeterminate') => row.toggleSelected(!!value),
           'aria-label': 'Select row'
         })
@@ -58,7 +60,6 @@ const columns: TableColumn<UserWithAuthor>[] = [
   {
     accessorKey: 'id',
     header: 'Id',
-    cell: ({row}) => row.getValue('id')
   },
   {
     accessorKey: 'username',
