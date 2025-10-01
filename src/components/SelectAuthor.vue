@@ -1,11 +1,13 @@
 ﻿<script setup lang="ts">
-import {reactive, ref} from "vue";
+import {reactive} from "vue";
 import * as z from "zod";
 import type {FormSubmitEvent} from "@nuxt/ui";
 
 const toast = useToast();
 
-const items = ref(['Jeff', 'Billy', 'Mark', 'Susan'])
+const props = defineProps({
+  users: Array<string>,
+})
 
 const schema = z.object({
   user: z.string("Please select a user to add as authors"),
@@ -24,7 +26,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   } catch (err) {
 
   }
-};
+}
 
 </script>
 
