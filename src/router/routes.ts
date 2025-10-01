@@ -79,13 +79,15 @@ router.beforeEach((to, from, next) => {
     }
 });
 
+// Disables a given route if the user does not have an admin role and returns to their original page
+// If browsed directly, redirects to 'root'
 async function isAdmin(to, from, next) {
     const authStore = useAuthStore();
     if (authStore.isAdmin) {
         next();
         return;
     }
-    next({ name: 'home' }); // Redirect to home if not admin
+    next(from);
 }
 
 export default router
