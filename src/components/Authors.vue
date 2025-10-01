@@ -37,6 +37,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 const UButton = resolveComponent('UButton')
 const UCheckbox = resolveComponent('UCheckbox')
 
+const setIcon = (isAuthor: boolean) => {
+  return isAuthor? "lucide:minus" : "lucide:plus";
+};
+
 const columns: TableColumn<UserWithAuthor>[] = [
   {
     id: 'select',
@@ -44,6 +48,8 @@ const columns: TableColumn<UserWithAuthor>[] = [
         h(UCheckbox, {
           modelValue: row.getIsSelected(),
           disabled: row.original.disabled,
+          icon: setIcon(row.original.isAuthor),
+          color: row.original.isAuthor? "error": "success",
           'onUpdate:modelValue': (value: boolean | 'indeterminate') => row.toggleSelected(!!value),
           'aria-label': 'Select row'
         })
