@@ -33,7 +33,7 @@ const usersWithAuthorStatus = computed(() => {
   }));
 });
 
-const items = ref<BreadcrumbItem[]>([
+const items = computed<BreadcrumbItem[]>(() => [
   {
     label: 'Home',
     icon: 'lucide:home',

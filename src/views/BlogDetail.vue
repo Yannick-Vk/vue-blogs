@@ -18,15 +18,15 @@ const error = blogStore.error;
 
 const toast = useToast();
 
-const items = ref<BreadcrumbItem[]>([
+const items = computed<BreadcrumbItem[]>(() => [
   {
     label: 'Home',
     icon: 'lucide:home',
     to: '/'
-  },  {
+  }, {
     label: 'Blog',
     icon: 'lucide:app-window',
-    to: `/blog/${currentBlog.value?.id?? "unknown"}`
+    to: `/blog/${currentBlog.value?.id ?? "unknown"}`
   },
 ])
 
