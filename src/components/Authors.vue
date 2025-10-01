@@ -67,7 +67,8 @@ const columns: TableColumn<UserWithAuthor>[] = [
     accessorKey: 'isAuthor',
     header: 'Is Author?',
     cell: ({row}) => h(UIcon, {
-      name: row.original.isAuthor? "lucide:check" : "",
+      name: row.original.isAuthor? "lucide:circle-check" : "lucide:circle-x",
+      class: ["size-7", row.original.isAuthor? "is-author-icon" : "is-not-author-icon"],
     })
   },
 ]
@@ -87,5 +88,12 @@ const columns: TableColumn<UserWithAuthor>[] = [
 :deep(tr:has(button[disabled])) {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+:deep(.is-author-icon) {
+  color: var(--color-success);
+}
+:deep(.is-not-author-icon) {
+  color: var(--color-error);
 }
 </style>
