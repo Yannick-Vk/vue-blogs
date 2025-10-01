@@ -55,7 +55,7 @@ export const useBlogStore = defineStore('blogs', () => {
                 }))
             }))
         } catch (err) {
-            console.error(err);
+            //console.error(err);
             if (isAxiosError(err)) {
                 let errorMessage = err.message;
                 if (err.response?.data && typeof err.response.data === 'object' && 'message' in err.response.data) {
@@ -63,7 +63,7 @@ export const useBlogStore = defineStore('blogs', () => {
                 }
                 error.value = `Could not fetch blogs: ${errorMessage}`;
             } else if (err instanceof Error) {
-                error.value = `Could not fetch blogs: ${err.message}`;
+                error.value = `Could not connect to the server. Please try again later`;
             } else {
                 error.value = "Failed to fetch blogs, Unknown error";
             }
