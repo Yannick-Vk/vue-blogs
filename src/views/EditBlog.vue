@@ -118,7 +118,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   <div v-if="currentBlog" class="p-4">
     <UBreadcrumb :items="items"/>
     <div class="flex flex-col items-center justify-center gap-4 p-4">
-      <SelectAuthor :users="users" />
+      <Authors :users="users" />
       <UPageCard class="w-full max-w-md">
         <template #header>
           <h2 class="text-2xl">Update blog</h2>
