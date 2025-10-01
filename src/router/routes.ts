@@ -39,7 +39,8 @@ const router = createRouter({
             path: '/users',
             name: 'users',
             component: UsersPage,
-            meta: {requiresAuth: true}
+            meta: {requiresAuth: true},
+            beforeEnter: [isAdmin]
         }, {
             path: '/roles',
             name: 'roles',
