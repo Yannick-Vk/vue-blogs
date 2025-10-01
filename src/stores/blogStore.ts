@@ -78,6 +78,7 @@ export const useBlogStore = defineStore('blogs', () => {
             const blogData = response.data;
             currentBlog.value = {
                 ...blogData,
+                content: blogData.blogContent,
                 authors: blogData.authors.map(author => ({
                     name: author.username,
                     avatar: {
