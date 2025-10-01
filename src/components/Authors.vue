@@ -70,15 +70,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         .map(id => Number(id)); // Convert string keys to numbers
 
     const selectedUsers = selectedIds.map(index => props.users[index])
-    console.table(selectedUsers);
-
-    const userIds = selectedUsers.map(user => user.id);
-    console.table(userIds);
+    const userIds = selectedUsers.map(user => user.id)
 
     emit('submitComplete', userIds)
-
   } catch (err) {
-
+    console.error(err)
   }
 }
 </script>

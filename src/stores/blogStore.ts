@@ -210,6 +210,9 @@ export const useBlogStore = defineStore('blogs', () => {
     async function updateAuthors(blogId: string, userIds: string[]) {
         error.value = null;
         try {
+            if(userIds.length <= 0) {
+                throw new Error("No users supplied");
+            }
             await api.post(`/Blogs/${blogId}/authors/add`, userIds);
         } catch (err) {
             console.error(err);
