@@ -36,6 +36,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
 const UButton = resolveComponent('UButton')
 const UCheckbox = resolveComponent('UCheckbox')
+const UIcon = resolveComponent('UIcon')
 
 const columns: TableColumn<UserWithAuthor>[] = [
   {
@@ -65,6 +66,9 @@ const columns: TableColumn<UserWithAuthor>[] = [
   {
     accessorKey: 'isAuthor',
     header: 'Is Author?',
+    cell: ({row}) => h(UIcon, {
+      name: row.original.isAuthor? "lucide:check" : "",
+    })
   },
 ]
 
