@@ -29,7 +29,7 @@ interface ApiBlog {
 }
 
 export interface BlogWithContent extends Blog {
-    content: string;
+    blogContent: string;
 }
 
 interface ApiBlogWithContent extends ApiBlog {
@@ -78,7 +78,6 @@ export const useBlogStore = defineStore('blogs', () => {
             const blogData = response.data;
             currentBlog.value = {
                 ...blogData,
-                content: blogData.blogContent,
                 authors: blogData.authors.map(author => ({
                     name: author.username,
                     avatar: {
