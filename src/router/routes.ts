@@ -71,7 +71,7 @@ router.beforeEach((to, from, next) => {
         // If it requires auth and the user is not authenticated, redirect to login
         next({name: 'login'});
     } else if (to.name === 'login' && authStore.isLoggedIn) {
-        // If the user is already logged in and tries to go to log in, redirect to dashboard or home
+        // If the user is already logged in and tries to go to log in, redirect to home
         next({name: 'home'});
     } else {
         next();
