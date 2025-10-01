@@ -1,5 +1,5 @@
 ﻿<script setup lang="ts">
-import {reactive, resolveComponent} from "vue";
+import {h, reactive, resolveComponent} from "vue";
 import * as z from "zod";
 import type {FormSubmitEvent, TableColumn} from "@nuxt/ui";
 import type {User} from "@/stores/userStore.ts";
@@ -30,8 +30,27 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 }
 
 const UButton = resolveComponent('UButton')
+const UCheckbox = resolveComponent('UCheckbox')
 
 const columns: TableColumn<User>[] = [
+  {
+    id: 'select',
+    header: ({table}) =>
+        h(UCheckbox, {
+          modelValue: table.getIsSomePageRowsSelected()
+              ? 'indeterminate'
+              : table.getIsAllPageRowsSelected(),
+          'onUpdate:modelValue': (value: boolean | 'indeterminate') =>
+              table.toggleAllPageRowsSelected(!!value),
+          'aria-label': 'Select all'
+        }),
+    cell: ({row}) =>
+        h(UCheckbox, {
+          modelValue: row.getIsSelected(),
+          'onUpdate:modelValue': (value: boolean | 'indeterminate') => row.toggleSelected(!!value),
+          'aria-label': 'Select row'
+        })
+  },
   {
     accessorKey: 'id',
     header: 'Id',
@@ -45,24 +64,15 @@ const columns: TableColumn<User>[] = [
     accessorKey: 'email',
     header: 'Email'
   },
-  {
-    accessorKey: 'remove',
-    header: 'Remove',
-  },
 ]
 
 </script>
 
 <template>
-  <UTable :data="props.users" :columns="columns" class="flex-1"/>
-
   <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-    <UFormField label="User" name="user">
-      <UInputMenu v-model="state.user" placeholder="Select a user" :items="props.users.map(user => user.username)"/>
-    </UFormField>
-
+    <UTable :data="props.users" :columns="columns" class="flex-1"/>
     <UButton type="submit">
-      Submit
+      Change authors
     </UButton>
   </UForm>
 </template>
