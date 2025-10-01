@@ -39,7 +39,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     <template #body>
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <UFormField label="User" name="user">
-          <UInputMenu v-model="state.user" placeholder="Select a user" :items="items" />
+          <UInputMenu v-model="state.user" placeholder="Select a user" :items="props.users" />
         </UFormField>
 
         <UButton type="submit">
