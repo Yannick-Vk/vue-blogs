@@ -35,12 +35,12 @@ onMounted(async () => {
 });
 
 const schema = z.object({
-  title: z.string(''),
-  description: z.string(''),
-  blogContent: z.instanceof(File, {message: 'A blog file is required'})
-      .refine((file) => file.name.endsWith('.md'), "Only .md files are allowed"),
-  bannerImage: z.instanceof(File, {message: 'A banner image is required'})
-      .refine((file) => file.type.startsWith('image/'), "Only image files are allowed"),
+  title: z.string().optional(),
+  description: z.string().optional(),
+  blogContent: z.instanceof(File)
+      .refine((file) => file.name.endsWith('.md'), "Only .md files are allowed").optional(),
+  bannerImage: z.instanceof(File)
+      .refine((file) => file.type.startsWith('image/'), "Only image files are allowed").optional(),
 })
 
 type Schema = z.output<typeof schema>
