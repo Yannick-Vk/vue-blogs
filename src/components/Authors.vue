@@ -6,9 +6,13 @@ import type {User} from "@/stores/userStore.ts";
 
 const toast = useToast();
 
-const props = defineProps({
-  users: Array<User>,
-})
+interface UserWithAuthor extends User {
+  isAuthor: boolean;
+}
+
+const props = defineProps<{
+  users?: UserWithAuthor[]
+}>()
 
 const schema = z.object({
   user: z.string("Please select a user to add as authors"),
@@ -32,7 +36,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 const UButton = resolveComponent('UButton')
 const UCheckbox = resolveComponent('UCheckbox')
 
-const columns: TableColumn<User>[] = [
+const columns: TableColumn<UserWithAuthor>[] = [
   {
     id: 'select',
     header: ({table}) =>
@@ -63,6 +67,10 @@ const columns: TableColumn<User>[] = [
   {
     accessorKey: 'email',
     header: 'Email'
+  },
+  {
+    accessorKey: 'isAuthor',
+    header: 'Is Author?',
   },
 ]
 

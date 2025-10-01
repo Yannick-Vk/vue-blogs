@@ -1,5 +1,5 @@
 ﻿<script setup lang="ts">
-import {onMounted, reactive, ref, watch} from "vue";
+import {computed, onMounted, reactive, ref, watch} from "vue";
 import type {BreadcrumbItem} from "@nuxt/ui/components/Breadcrumb.vue";
 import {useRoute} from "vue-router";
 import {useBlogStore} from "@/stores/blogStore.ts";
@@ -7,6 +7,8 @@ import {storeToRefs} from "pinia";
 import * as z from 'zod'
 import type {FormSubmitEvent} from '@nuxt/ui'
 import {useUserStore} from "@/stores/userStore.ts";
+import type {User} from "@/stores/auth.ts";
+import type {Author} from "@/types/Author.ts";
 
 const route = useRoute();
 const blogStore = useBlogStore();
@@ -15,6 +17,17 @@ const error = blogStore.error;
 
 const userStore = useUserStore();
 const {users} = storeToRefs(userStore);
+
+const usersWithAuthorStatus = computed(() => {
+  if (!users.value) {
+    return [];
+  }
+  const authorIds = new Set(currentBlog.value?.authors?.map((author: Author) => author.name || author) || []);
+  return users.value.map((user: User) => ({
+    ...user,
+    isAuthor: authorIds.has(user.username)
+  }));
+});
 
 const items = ref<BreadcrumbItem[]>([
   {
@@ -118,7 +131,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   <div v-if="currentBlog" class="p-4">
     <UBreadcrumb :items="items"/>
     <div class="flex flex-col items-center justify-center gap-4 p-4">
-      <Authors :users="users" />
+      <Authors :users="usersWithAuthorStatus" />
       <UPageCard class="w-full max-w-md">
         <template #header>
           <h2 class="text-2xl">Update blog</h2>
