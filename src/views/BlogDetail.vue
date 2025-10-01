@@ -60,8 +60,12 @@ async function deleteBlog() {
   }
 }
 
-function editBlog() {
-
+async function editBlog() {
+  if (!currentBlog.value) {
+    console.warn("Not logged in or blog has no value")
+    return;
+  }
+  await router.push(`/blog/${currentBlog.value.id}/edit`);
 }
 
 function formatDate(date: string) {

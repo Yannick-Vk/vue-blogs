@@ -8,6 +8,7 @@ import UserDetailsPage from "@/views/UserDetailsPage.vue";
 import BlogDetail from "@/views/BlogDetail.vue";
 import CreateBlogForm from "@/views/CreateBlogForm.vue";
 import {useAuthStore} from "@/stores/auth.ts";
+import EditBlog from "@/views/EditBlog.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,6 +30,10 @@ const router = createRouter({
             path: '/blog/:id',
             name: 'blog-detail',
             component: BlogDetail,
+        }, {
+            path: '/blog/:id/edit',
+            name: 'blog-edit',
+            component: EditBlog,
         }, {
             path: '/users',
             name: 'users',
