@@ -207,5 +207,26 @@ export const useBlogStore = defineStore('blogs', () => {
         }
     }
 
+    async function updateAuthors(blogId: string, userIds: string[]) {
+        error.value = null;
+        try {
+            await api.post(`/Blogs/${blogId}/authors/add`, userIds);
+        } catch (err) {
+            console.error(err);
+            if (isAxiosError(err)) {
+                let errorMessage = err.message;
+                if (err.response?.data && typeof err.response.data === 'object' && 'message' in err.response.data) {
+                    errorMessage = (err.response.data as { message: string }).message;
+                }
+                error.value = `Could not add Authors to blog: ${errorMessage}`;
+            } else if (err instanceof Error) {
+                error.value = `Could not add Authors to blog: ${err.message}`;
+            } else {
+                error.value = "Failed to add Authors, Unknown error";
+            }
+            throw new Error(error.value);
+        }
+    }
+
     return {blogs, currentBlog, error, getAllBlogs, getBlogById, uploadBlog, deleteBlog, getBanner, updateBlog};
 })
