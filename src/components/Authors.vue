@@ -1,6 +1,5 @@
 ﻿<script setup lang="ts">
-import {h, reactive, resolveComponent} from "vue";
-import * as z from "zod";
+import {h, resolveComponent, useTemplateRef} from "vue";
 import type {FormSubmitEvent, TableColumn} from "@nuxt/ui";
 import type {User} from "@/stores/userStore.ts";
 
@@ -14,25 +13,6 @@ interface UserWithAuthor extends User {
 const props = defineProps<{
   users?: UserWithAuthor[]
 }>()
-
-const schema = z.object({
-  user: z.string("Please select a user to add as authors"),
-})
-
-type Schema = z.output<typeof schema>
-
-const state = reactive<Partial<Schema>>({
-  user: undefined,
-});
-
-async function onSubmit(event: FormSubmitEvent<Schema>) {
-  try {
-    const user = event.data.user;
-    toast.add({title: 'Success', description: `Added ${user} to authors`, color: 'success'});
-  } catch (err) {
-
-  }
-}
 
 const UButton = resolveComponent('UButton')
 const UCheckbox = resolveComponent('UCheckbox')
@@ -67,17 +47,32 @@ const columns: TableColumn<UserWithAuthor>[] = [
     accessorKey: 'isAuthor',
     header: 'Is Author?',
     cell: ({row}) => h(UIcon, {
-      name: row.original.isAuthor? "lucide:circle-check" : "lucide:circle-x",
-      class: ["size-7", row.original.isAuthor? "is-author-icon" : "is-not-author-icon"],
+      name: row.original.isAuthor ? "lucide:circle-check" : "lucide:circle-x",
+      class: ["size-7", row.original.isAuthor ? "is-author-icon" : "is-not-author-icon"],
     })
   },
 ]
+const table = useTemplateRef('table')
 
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+  console.table(table?.tableApi?.getFilteredSelectedRowModel())
+  try {
+
+  } catch (err) {
+
+  }
+}
 </script>
 
 <template>
-  <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-    <UTable :data="props.users" :columns="columns" class="flex-1"/>
+  <UForm class="space-y-4" @submit="onSubmit">
+    <UTable ref="table" :data="props.users" :columns="columns" class="flex-1"/>
+
+    <div class="px-4 py-3.5 border-t border-accented text-sm text-muted">
+      {{ table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0 }} of
+      {{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }} row(s) selected.
+    </div>
+
     <UButton type="submit">
       Change authors
     </UButton>
@@ -93,6 +88,7 @@ const columns: TableColumn<UserWithAuthor>[] = [
 :deep(.is-author-icon) {
   color: var(--color-success);
 }
+
 :deep(.is-not-author-icon) {
   color: var(--color-error);
 }
