@@ -48,6 +48,7 @@ export const useBlogStore = defineStore('blogs', () => {
             blogs.value = response.data.map(blog => ({
                 ...blog,
                 authors: blog.authors.map(author => ({
+                    id: author.id,
                     name: author.username,
                     avatar: {
                         src: `https://i.pravatar.cc/32?u=${author.username}`,
@@ -79,6 +80,7 @@ export const useBlogStore = defineStore('blogs', () => {
             currentBlog.value = {
                 ...blogData,
                 authors: blogData.authors.map(author => ({
+                    id: author.id,
                     name: author.username,
                     avatar: {
                         src: `https://i.pravatar.cc/32?u=${author.username}`
@@ -211,7 +213,7 @@ export const useBlogStore = defineStore('blogs', () => {
         error.value = null;
         try {
             userIds = userIds.filter(id => id.trim().length > 0)
-            if(userIds.length <= 0) {
+            if (userIds.length <= 0) {
                 throw new Error("No users supplied");
             }
             const blog: Blog = currentBlog.value;
@@ -219,7 +221,21 @@ export const useBlogStore = defineStore('blogs', () => {
                 throw new Error("Invalid blog Id");
             }
 
-            await api.post(`/Blogs/${blog.id}/authors/add`, userIds);
+            const currentAuthorIds = new Set(blog.authors.map(a => a.id));
+
+            const toAdd = userIds.filter(id => !currentAuthorIds.has(id));
+            const toRemove = userIds.filter(id => currentAuthorIds.has(id));
+
+            // TODO: Implement API calls
+            if (toAdd.length > 0) {
+                await api.post(`/blogs/${blog.id}/authors/add`, toAdd);
+            }
+            if (toRemove.length > 0) {
+                 await api.post(`/blogs/${blog.id}/authors/remove`, toRemove);
+            }
+
+
+
         } catch (err) {
             console.error(err);
             if (isAxiosError(err)) {
@@ -237,5 +253,16 @@ export const useBlogStore = defineStore('blogs', () => {
         }
     }
 
-    return {blogs, currentBlog, error, getAllBlogs, getBlogById, uploadBlog, deleteBlog, getBanner, updateBlog, updateAuthors};
+    return {
+        blogs,
+        currentBlog,
+        error,
+        getAllBlogs,
+        getBlogById,
+        uploadBlog,
+        deleteBlog,
+        getBanner,
+        updateBlog,
+        updateAuthors
+    };
 })
