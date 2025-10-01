@@ -9,6 +9,7 @@ import BlogDetail from "@/views/BlogDetail.vue";
 import CreateBlogForm from "@/views/CreateBlogForm.vue";
 import {useAuthStore} from "@/stores/auth.ts";
 import EditBlog from "@/views/EditBlog.vue";
+import MyBlogs from "@/views/MyBlogs.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -53,6 +54,11 @@ const router = createRouter({
             path: '/blog/new',
             name: 'create-blog',
             component: CreateBlogForm,
+            meta: {requiresAuth: true}
+        },  {
+            path: '/me/blogs',
+            name: 'my-blogs',
+            component: MyBlogs,
             meta: {requiresAuth: true}
         },
     ],

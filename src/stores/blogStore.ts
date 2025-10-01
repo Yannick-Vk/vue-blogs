@@ -230,7 +230,7 @@ export const useBlogStore = defineStore('blogs', () => {
                 await api.post(`/blogs/${blog.id}/authors/add`, toAdd);
             }
             if (toRemove.length > 0) {
-                 await api.post(`/blogs/${blog.id}/authors/remove`, toRemove);
+                await api.post(`/blogs/${blog.id}/authors/remove`, toRemove);
             }
             // Update the current state
             await getBlogById(blog.id);
@@ -251,6 +251,38 @@ export const useBlogStore = defineStore('blogs', () => {
         }
     }
 
+    async function getBlogsByUser(userId: string) {
+        error.value = null;
+        try {
+            const response = await api.get<Array<ApiBlog>>(`/blogs/author/me`);
+            console.log(response.data);
+            blogs.value = response.data.map(blog => ({
+                ...blog,
+                authors: blog.authors.map(author => ({
+                    id: author.id,
+                    name: author.username,
+                    avatar: {
+                        src: `https://i.pravatar.cc/32?u=${author.username}`,
+                    }
+                }))
+            }))
+        } catch (err) {
+            console.error(err);
+            if (isAxiosError(err)) {
+                let errorMessage = err.message;
+                if (err.response?.data && typeof err.response.data === 'object' && 'message' in err.response.data) {
+                    errorMessage = (err.response.data as { message: string }).message;
+                }
+                error.value = `Could not get blogs: ${errorMessage}`;
+            } else if (err instanceof Error) {
+                error.value = `Could not get blogs: ${err.message}`;
+            } else {
+                error.value = "Failed to get blogs, Unknown error";
+            }
+            throw new Error(error.value);
+        }
+    }
+
     return {
         blogs,
         currentBlog,
@@ -261,6 +293,7 @@ export const useBlogStore = defineStore('blogs', () => {
         deleteBlog,
         getBanner,
         updateBlog,
-        updateAuthors
+        updateAuthors,
+        getBlogsByUser
     };
 })

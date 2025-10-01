@@ -39,6 +39,10 @@ const items = computed<NavigationMenuItem[]>(() => [
       label: 'Create Blog',
       to: '/blog/new',
       active: route.path.startsWith('/blog/new')
+    }, {
+      label: 'My Blogs',
+      to: '/me/blogs',
+      active: route.path.startsWith('/me/blogs')
     },
   ] : []),
 ])
