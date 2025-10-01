@@ -1,5 +1,5 @@
 ﻿<script setup lang="ts">
-import {h, resolveComponent, useTemplateRef} from "vue";
+import {h, ref, resolveComponent, useTemplateRef} from "vue";
 import type {FormSubmitEvent, TableColumn} from "@nuxt/ui";
 import type {User} from "@/stores/userStore.ts";
 
@@ -53,9 +53,17 @@ const columns: TableColumn<UserWithAuthor>[] = [
   },
 ]
 const table = useTemplateRef('table')
+const rowSelection = ref<Record<string, boolean>>({})
+
+function onSelect(row: TableRow<UserWithAuthor>, e?: Event) {
+  /* If you decide to also select the column you can do this  */
+  row.toggleSelected(!row.getIsSelected())
+
+  console.log(e)
+}
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  console.table(table?.tableApi?.getFilteredSelectedRowModel())
+  console.table(rowSelection.value)
   try {
 
   } catch (err) {
@@ -66,7 +74,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
 <template>
   <UForm class="space-y-4" @submit="onSubmit">
-    <UTable ref="table" :data="props.users" :columns="columns" class="flex-1"/>
+    <UTable ref="table" v-model:row-selection="rowSelection" :data="props.users" :columns="columns" @select="onSelect"
+            class="flex-1"/>
 
     <div class="px-4 py-3.5 border-t border-accented text-sm text-muted">
       {{ table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0 }} of
