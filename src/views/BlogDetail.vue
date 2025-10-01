@@ -20,8 +20,12 @@ const toast = useToast();
 onMounted(async () => {
   const blogId = route.params.id as string;
   await blogStore.getBlogById(blogId);
+  const id = currentBlog.value?.id;
+  if (id) {
+    bannerImage.value = await blogStore.getBanner(id);
+  }
 });
-
+const bannerImage = ref<string | null>(null);
 const authStore = useAuthStore();
 const {user} = storeToRefs(authStore);
 
@@ -49,7 +53,7 @@ async function deleteBlog() {
     toast.add({
       title: 'Delete Successful!',
       icon: "lucide:lucide:trash-2",
-      description: `Successfully delete blog '${blog.title}'`,
+      description: `Successfully delete blog '${blog!.title}'`,
       color: 'success'
     })
     await router.push(`/`)
@@ -63,11 +67,6 @@ function editBlog() {
 function formatDate(date: string) {
   return DateTime.fromISO(date).toLocaleString(DateTime.DATE_MED);
 }
-
-const bannerImage = ref<string | null>(null);
-onMounted(async () => {
-  bannerImage.value = await blogStore.getBanner(currentBlog.value?.id ?? "");
-})
 </script>
 
 <template>
@@ -83,42 +82,42 @@ onMounted(async () => {
           alt="App screenshot"
           class="rounded-lg shadow-2xl ring ring-default"
       />
+      <template #body>
+        <p class="text-gray-500 mb-4">
+          Created on {{ formatDate(currentBlog.createdAt) }}
+          <span v-if="currentBlog.updatedAt"
+                class="text-gray-500 mb-4">edited on {{ formatDate(currentBlog.updatedAt) }}</span>
+        </p>
+
+        <div v-for="(author, key) in currentBlog.authors" :key="key" class="flex items-center gap-2 mb-2">
+          <UTooltip :text="author.name">
+            <UAvatar :src="author.avatar?.src" :alt="author.description" class="mr-2"/>
+          </UTooltip>
+          <span>{{ author.name }}</span>
+        </div>
+      </template>
+      <template #links>
+        <div v-if="loggedInUserIsAuthor" class="mt-5 flex flex-row gap-5">
+
+          <UButton @click="editBlog" color="primary" icon="lucide:clipboard-pen">Edit blog</UButton>
+
+          <UModal
+              title="Confirm deletion"
+          >
+            <UButton color="error" icon="lucide:trash-2">Delete blog</UButton>
+            <template #body>
+              <p>Confirming delete of blog: `{{ currentBlog.title }}`</p>
+              <p>Are you sure you want to delete this blog forever?</p>
+            </template>
+
+            <template #footer="{ close }">
+              <UButton label="Cancel" color="neutral" variant="outline" @click="close"/>
+              <UButton label="Delete" color="error" @click="deleteBlog"/>
+            </template>
+          </UModal>
+        </div>
+      </template>
     </UPageHero>
-    <p class="text-gray-500 mb-4">
-      Created on {{ formatDate(currentBlog.createdAt) }}
-      <span v-if="currentBlog.updatedAt"
-            class="text-gray-500 mb-4">edited on {{ formatDate(currentBlog.updatedAt) }}</span>
-    </p>
-
-    <div v-for="(author, key) in currentBlog.authors" :key="key" class="flex items-center gap-2 mb-2">
-      <UTooltip :text="author.name">
-        <UAvatar :src="author.avatar?.src" :alt="author.description" class="mr-2"/>
-      </UTooltip>
-      <span>{{ author.name }}</span>
-    </div>
-
-    <div v-if="loggedInUserIsAuthor" class="mt-5 flex flex-row gap-5">
-
-      <UButton @click="editBlog" color="primary" icon="lucide:clipboard-pen">Edit blog</UButton>
-
-      <UModal
-          title="Confirm deletion"
-      >
-        <UButton color="error" icon="lucide:trash-2">Delete blog</UButton>
-        <template #body>
-          <p>Confirming delete of blog: `{{currentBlog.title}}`</p>
-          <p>Are you sure you want to delete this blog forever?</p>
-        </template>
-
-        <template #footer="{ close }">
-          <UButton label="Cancel" color="neutral" variant="outline" @click="close" />
-          <UButton label="Delete" color="error" @click="deleteBlog" />
-        </template>
-      </UModal>
-    </div>
-
-
-    <USeparator type="solid" size="sm" class="my-4"/>
 
     <div v-if="currentBlog.content" class="prose max-w-none">
       <VueShowdown
