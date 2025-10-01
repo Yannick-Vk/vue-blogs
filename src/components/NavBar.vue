@@ -27,15 +27,18 @@ const items = computed<NavigationMenuItem[]>(() => [
     to: '/home',
     active: route.path === '/' || route.path.startsWith('/home') || route.path.startsWith('/blogs')
   }, ...(authStore.isLoggedIn ? [
+    ...(authStore.isAdmin ? [
+      {
+        label: 'Users',
+        to: '/users',
+        active: route.path.startsWith('/users')
+      }, {
+        label: 'Roles',
+        to: '/roles',
+        active: route.path.startsWith('/roles')
+      },
+    ] : []),
     {
-      label: 'Users',
-      to: '/users',
-      active: route.path.startsWith('/users')
-    }, {
-      label: 'Roles',
-      to: '/roles',
-      active: route.path.startsWith('/roles')
-    }, {
       label: 'Create Blog',
       to: '/blog/new',
       active: route.path.startsWith('/blog/new')
