@@ -6,11 +6,15 @@ import {useBlogStore} from "@/stores/blogStore.ts";
 import {storeToRefs} from "pinia";
 import * as z from 'zod'
 import type {FormSubmitEvent} from '@nuxt/ui'
+import {useUserStore} from "@/stores/userStore.ts";
 
 const route = useRoute();
 const blogStore = useBlogStore();
 const {currentBlog} = storeToRefs(blogStore);
 const error = blogStore.error;
+
+const userStore = useUserStore();
+const {users} = storeToRefs(userStore);
 
 const items = ref<BreadcrumbItem[]>([
   {
@@ -32,6 +36,7 @@ const items = ref<BreadcrumbItem[]>([
 onMounted(async () => {
   const blogId = route.params.id as string;
   await blogStore.getBlogById(blogId);
+  await userStore.fetchUsers();
 });
 
 const schema = z.object({
@@ -113,7 +118,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   <div v-if="currentBlog" class="p-4">
     <UBreadcrumb :items="items"/>
     <div class="flex flex-col items-center justify-center gap-4 p-4">
-      <SelectAuthor />
+      <SelectAuthor :users="users" />
       <UPageCard class="w-full max-w-md">
         <template #header>
           <h2 class="text-2xl">Update blog</h2>

@@ -2,11 +2,12 @@
 import {reactive} from "vue";
 import * as z from "zod";
 import type {FormSubmitEvent} from "@nuxt/ui";
+import type {User} from "@/stores/userStore.ts";
 
 const toast = useToast();
 
 const props = defineProps({
-  users: Array<string>,
+  users: Array<User>,
 })
 
 const schema = z.object({
@@ -39,7 +40,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     <template #body>
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <UFormField label="User" name="user">
-          <UInputMenu v-model="state.user" placeholder="Select a user" :items="props.users" />
+          <UInputMenu v-model="state.user" placeholder="Select a user" :items="props.users.map(user => user.username)" />
         </UFormField>
 
         <UButton type="submit">
