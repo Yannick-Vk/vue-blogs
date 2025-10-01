@@ -1,7 +1,7 @@
 import {computed, ref} from 'vue'
 import {defineStore} from 'pinia'
 import axios, {type AxiosResponse} from 'axios'
-import {api_base_url} from "@/services/Api.ts";
+import {api, api_base_url} from "@/services/Api.ts";
 
 axios.defaults.withCredentials = true;
 
@@ -89,8 +89,14 @@ export const useAuthStore = defineStore('auth', () => {
         await handleLoginResponse(response);
     }
 
-    const isAdmin = computed(() => {
-        return false;
+    const isAdmin = computed(async () => {
+        try {
+            const response = await api.get('/roles/me/Admin')
+            console.dir('Is user Admin?', response.data)
+            return response.data;
+        } catch (err) {
+            return false;
+        }
     });
 
     return {user, isLoggedIn, login, logout, register, fetchUser, refresh, isAdmin};
