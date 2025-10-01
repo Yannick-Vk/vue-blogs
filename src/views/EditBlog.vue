@@ -1,5 +1,5 @@
 ﻿<script setup lang="ts">
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watch} from "vue";
 import type {BreadcrumbItem} from "@nuxt/ui/components/Breadcrumb.vue";
 import {useRoute} from "vue-router";
 import {useBlogStore} from "@/stores/blogStore.ts";
@@ -50,6 +50,13 @@ const state = reactive<Partial<Schema>>({
   description: undefined,
   blogContent: undefined,
   bannerImage: undefined,
+})
+
+watch(currentBlog, (blog) => {
+  if (blog) {
+    state.title = blog.title
+    state.description = blog.description
+  }
 })
 
 const toast = useToast()
