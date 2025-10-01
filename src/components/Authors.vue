@@ -58,12 +58,13 @@ const rowSelection = ref<Record<string, boolean>>({})
 function onSelect(row: TableRow<UserWithAuthor>, e?: Event) {
   /* If you decide to also select the column you can do this  */
   row.toggleSelected(!row.getIsSelected())
-
-  console.log(e)
 }
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  console.table(rowSelection.value)
+  const selectedIds = Object.keys(rowSelection.value)
+      .filter(id => rowSelection.value[id])
+      .map(id => Number(id)); // Convert string keys to numbers
+  console.table(selectedIds);
   try {
 
   } catch (err) {
