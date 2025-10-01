@@ -22,7 +22,7 @@ const items = ref<BreadcrumbItem[]>([
     icon: 'lucide:app-window',
     to: `/blog/${currentBlog.value?.id ?? "unknown"}`
   }, {
-    label: 'Blog',
+    label: 'Edit',
     icon: 'lucide:edit',
     to: `/blog/${currentBlog.value?.id ?? "unknown"}/edit`
   },
@@ -113,6 +113,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   <div v-if="currentBlog" class="p-4">
     <UBreadcrumb :items="items"/>
     <div class="flex flex-col items-center justify-center gap-4 p-4">
+      <SelectUser />
       <UPageCard class="w-full max-w-md">
         <template #header>
           <h2 class="text-2xl">Update blog</h2>
@@ -146,6 +147,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
               Submit
             </UButton>
           </UForm>
+
         </template>
       </UPageCard>
     </div>
