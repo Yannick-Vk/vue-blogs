@@ -233,9 +233,8 @@ export const useBlogStore = defineStore('blogs', () => {
             if (toRemove.length > 0) {
                  await api.post(`/blogs/${blog.id}/authors/remove`, toRemove);
             }
-
-
-
+            // Update the current state
+            await getBlogById(blog.id);
         } catch (err) {
             console.error(err);
             if (isAxiosError(err)) {
