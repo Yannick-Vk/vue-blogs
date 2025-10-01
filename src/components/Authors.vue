@@ -68,6 +68,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     const selectedUsers = selectedIds.map(index => props.users[index])
     console.table(selectedUsers);
 
+    const userIds = selectedUsers.map(user => user.id);
+    console.table(userIds);
+
   } catch (err) {
 
   }
