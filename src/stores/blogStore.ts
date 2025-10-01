@@ -251,7 +251,7 @@ export const useBlogStore = defineStore('blogs', () => {
         }
     }
 
-    async function getBlogsByUser(userId: string) {
+    async function getBlogsByUser() {
         error.value = null;
         try {
             const response = await api.get<Array<ApiBlog>>(`/blogs/author/me`);
