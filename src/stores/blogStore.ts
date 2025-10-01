@@ -255,7 +255,6 @@ export const useBlogStore = defineStore('blogs', () => {
         error.value = null;
         try {
             const response = await api.get<Array<ApiBlog>>(`/blogs/author/me`);
-            console.log(response.data);
             blogs.value = response.data.map(blog => ({
                 ...blog,
                 authors: blog.authors.map(author => ({

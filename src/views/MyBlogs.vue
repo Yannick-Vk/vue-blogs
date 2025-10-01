@@ -6,9 +6,8 @@ import {onMounted} from "vue";
 const blogStore = useBlogStore();
 const {blogs} = storeToRefs(blogStore);
 
-
 onMounted(async () => {
-  await blogStore.getBlogsByUser("")
+  await blogStore.getBlogsByUser();
 })
 </script>
 
