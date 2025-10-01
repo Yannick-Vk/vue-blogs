@@ -132,7 +132,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
 async function updateAuthors(userIds: string[]) {
   try {
-    await blogStore.updateAuthors(currentBlog.value.id, userIds);
+    await blogStore.updateAuthors(userIds);
     toast.add({title: 'Updated Authors', description: 'Your blog has been successfully updated.', color: 'success'});
   } catch (err) {
     console.error(err)

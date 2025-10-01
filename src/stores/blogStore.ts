@@ -207,15 +207,19 @@ export const useBlogStore = defineStore('blogs', () => {
         }
     }
 
-    async function updateAuthors(blogId: string, userIds: string[]) {
+    async function updateAuthors(userIds: string[]) {
         error.value = null;
         try {
-            userIds.filter(id => id.trim().length > 0)
+            userIds = userIds.filter(id => id.trim().length > 0)
             if(userIds.length <= 0) {
                 throw new Error("No users supplied");
             }
+            const blog: Blog = currentBlog.value;
+            if (!blog) {
+                throw new Error("Invalid blog Id");
+            }
 
-            await api.post(`/Blogs/${blogId}/authors/add`, userIds);
+            await api.post(`/Blogs/${blog.id}/authors/add`, userIds);
         } catch (err) {
             console.error(err);
             if (isAxiosError(err)) {
