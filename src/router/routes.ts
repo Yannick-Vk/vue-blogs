@@ -44,7 +44,8 @@ const router = createRouter({
             path: '/roles',
             name: 'roles',
             component: RolesPage,
-            meta: {requiresAuth: true}
+            meta: {requiresAuth: true},
+            beforeEnter: [isAdmin]
         }, {
             path: '/users/:id',
             name: 'user-detail',
@@ -55,7 +56,7 @@ const router = createRouter({
             name: 'create-blog',
             component: CreateBlogForm,
             meta: {requiresAuth: true}
-        },  {
+        }, {
             path: '/me/blogs',
             name: 'my-blogs',
             component: MyBlogs,
@@ -77,5 +78,14 @@ router.beforeEach((to, from, next) => {
         next();
     }
 });
+
+async function isAdmin(to, from, next) {
+    const authStore = useAuthStore();
+    if (authStore.isAdmin) {
+        next();
+        return;
+    }
+    next({ name: 'home' }); // Redirect to home if not admin
+}
 
 export default router

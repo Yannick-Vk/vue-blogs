@@ -89,7 +89,11 @@ export const useAuthStore = defineStore('auth', () => {
         await handleLoginResponse(response);
     }
 
-    return {user, isLoggedIn, login, logout, register, fetchUser, refresh};
+    const isAdmin = computed(() => {
+        return false;
+    });
+
+    return {user, isLoggedIn, login, logout, register, fetchUser, refresh, isAdmin};
 })
 
 
