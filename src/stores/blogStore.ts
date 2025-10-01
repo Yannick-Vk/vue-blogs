@@ -173,5 +173,39 @@ export const useBlogStore = defineStore('blogs', () => {
         }
     }
 
-    return {blogs, currentBlog, error, getAllBlogs, getBlogById, uploadBlog, deleteBlog, getBanner};
+    async function updateBlog(blogId: string, blogData: {
+        title?: string;
+        description?: string;
+        blogContent?: string;
+        bannerImage?: File;
+    }) {
+        error.value = null;
+        try {
+            const formData = new FormData();
+            formData.append('Id', blogId);
+
+            if (blogData.title !== undefined) formData.append('Title', blogData.title);
+            if (blogData.description !== undefined) formData.append('Description', blogData.description);
+            if (blogData.blogContent !== undefined) formData.append('BlogContent', blogData.blogContent);
+            if (blogData.bannerImage) formData.append('BannerImage', blogData.bannerImage);
+
+            await api.patch(`/blogs`, formData);
+        } catch (err) {
+            console.error(err);
+            if (isAxiosError(err)) {
+                let errorMessage = err.message;
+                if (err.response?.data && typeof err.response.data === 'object' && 'message' in err.response.data) {
+                    errorMessage = (err.response.data as { message: string }).message;
+                }
+                error.value = `Could not update blog: ${errorMessage}`;
+            } else if (err instanceof Error) {
+                error.value = `Could not update blog: ${err.message}`;
+            } else {
+                error.value = "Failed to update blog, Unknown error";
+            }
+            throw new Error(error.value);
+        }
+    }
+
+    return {blogs, currentBlog, error, getAllBlogs, getBlogById, uploadBlog, deleteBlog, getBanner, updateBlog};
 })

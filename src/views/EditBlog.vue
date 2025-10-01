@@ -62,8 +62,50 @@ watch(currentBlog, (blog) => {
 const toast = useToast()
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  toast.add({title: 'Updated blog!', description: 'Blog updated', color: 'success'})
-  console.log(event.data)
+  if (!currentBlog.value) {
+    toast.add({title: 'Error', description: 'Cannot update, blog not loaded.', color: 'error'});
+    return;
+  }
+
+  const changedData: {
+    title?: string;
+    description?: string;
+    blogContent?: string;
+    bannerImage?: File;
+  } = {};
+
+  if (event.data.title !== undefined && event.data.title !== currentBlog.value.title) {
+    changedData.title = event.data.title;
+  }
+  if (event.data.description !== undefined && event.data.description !== currentBlog.value.description) {
+    changedData.description = event.data.description;
+  }
+  if (event.data.bannerImage) {
+    changedData.bannerImage = event.data.bannerImage;
+  }
+
+  if (event.data.blogContent) {
+    const content = await event.data.blogContent.text();
+    if (content !== currentBlog.value.blogContent) {
+      changedData.blogContent = content;
+    }
+  }
+
+  try {
+    if (Object.keys(changedData).length === 0) {
+      toast.add({title: 'No Changes', description: 'No fields were changed.', color: 'secondary'});
+      return;
+    }
+
+    await blogStore.updateBlog(currentBlog.value.id, changedData);
+    toast.add({title: 'Blog Updated', description: 'Your blog has been successfully updated.', color: 'success'});
+
+    // Refresh the blog data to show the latest changes
+    await blogStore.getBlogById(currentBlog.value.id);
+
+  } catch (e) {
+    toast.add({title: 'Update Failed', description: blogStore.error?? "", color: 'error'});
+  }
 }
 </script>
 
