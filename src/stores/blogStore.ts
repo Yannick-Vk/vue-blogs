@@ -228,5 +228,5 @@ export const useBlogStore = defineStore('blogs', () => {
         }
     }
 
-    return {blogs, currentBlog, error, getAllBlogs, getBlogById, uploadBlog, deleteBlog, getBanner, updateBlog};
+    return {blogs, currentBlog, error, getAllBlogs, getBlogById, uploadBlog, deleteBlog, getBanner, updateBlog, updateAuthors};
 })

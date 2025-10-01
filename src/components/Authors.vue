@@ -14,6 +14,10 @@ const props = defineProps<{
   users?: UserWithAuthor[]
 }>()
 
+const emit = defineEmits<{
+  submitComplete: [userIds: string[]],
+}>()
+
 const UButton = resolveComponent('UButton')
 const UCheckbox = resolveComponent('UCheckbox')
 const UIcon = resolveComponent('UIcon')
@@ -70,6 +74,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
     const userIds = selectedUsers.map(user => user.id);
     console.table(userIds);
+
+    emit('submitComplete', userIds)
 
   } catch (err) {
 

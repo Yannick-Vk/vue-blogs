@@ -129,13 +129,17 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     toast.add({title: 'Update Failed', description: blogStore.error ?? "", color: 'error'});
   }
 }
+
+async function updateAuthors(userIds: string[]) {
+  await blogStore.updateAuthors(userIds);
+}
 </script>
 
 <template>
   <div v-if="currentBlog" class="p-4">
     <UBreadcrumb :items="items"/>
     <div class="flex flex-col items-center justify-center gap-4 p-4">
-      <Authors :users="usersWithAuthorStatus"/>
+      <Authors :users="usersWithAuthorStatus" @submit-complete="updateAuthors" />
       <UPageCard class="w-full max-w-md">
         <template #header>
           <h2 class="text-2xl">Update blog</h2>
