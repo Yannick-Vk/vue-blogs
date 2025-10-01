@@ -9,6 +9,7 @@ import showdownHighlight from 'showdown-highlight';
 import {VueShowdown} from "vue-showdown";
 import router from "@/router/routes.ts";
 import {useAuthStore} from "@/stores/auth.ts";
+import type {BreadcrumbItem} from "@nuxt/ui/components/Breadcrumb.vue";
 
 const route = useRoute();
 const blogStore = useBlogStore();
@@ -16,6 +17,18 @@ const {currentBlog} = storeToRefs(blogStore);
 const error = blogStore.error;
 
 const toast = useToast();
+
+const items = ref<BreadcrumbItem[]>([
+  {
+    label: 'Home',
+    icon: 'lucide:home',
+    to: '/'
+  },  {
+    label: 'Blog',
+    icon: 'lucide:app-window',
+    to: `/blog/${currentBlog.value?.id?? "unknown"}`
+  },
+])
 
 onMounted(async () => {
   const blogId = route.params.id as string;
@@ -75,7 +88,7 @@ function formatDate(date: string) {
 
 <template>
   <div v-if="currentBlog" class="p-4">
-    <UButton to="/" icon="lucide:arrow-left" class="mb-5">Back to blogs</UButton>
+    <UBreadcrumb separator-icon="lucide:chevron-right" :items="items"/>
     <UPageHero
         :title="currentBlog.title"
         :description="currentBlog.description"
