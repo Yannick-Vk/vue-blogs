@@ -226,7 +226,6 @@ export const useBlogStore = defineStore('blogs', () => {
             const toAdd = userIds.filter(id => !currentAuthorIds.has(id));
             const toRemove = userIds.filter(id => currentAuthorIds.has(id));
 
-            // TODO: Implement API calls
             if (toAdd.length > 0) {
                 await api.post(`/blogs/${blog.id}/authors/add`, toAdd);
             }
