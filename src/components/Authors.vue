@@ -40,15 +40,6 @@ const UCheckbox = resolveComponent('UCheckbox')
 const columns: TableColumn<UserWithAuthor>[] = [
   {
     id: 'select',
-    header: ({table}) =>
-        h(UCheckbox, {
-          modelValue: table.getIsSomePageRowsSelected()
-              ? 'indeterminate'
-              : table.getIsAllPageRowsSelected(),
-          'onUpdate:modelValue': (value: boolean | 'indeterminate') =>
-              table.toggleAllPageRowsSelected(!!value),
-          'aria-label': 'Select all'
-        }),
     cell: ({row}) =>
         h(UCheckbox, {
           modelValue: row.getIsSelected(),
