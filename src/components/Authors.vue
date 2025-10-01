@@ -61,11 +61,12 @@ function onSelect(row: TableRow<UserWithAuthor>, e?: Event) {
 }
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  const selectedIds = Object.keys(rowSelection.value)
-      .filter(id => rowSelection.value[id])
-      .map(id => Number(id)); // Convert string keys to numbers
-  console.table(selectedIds);
   try {
+    const selectedIds = Object.keys(rowSelection.value)
+        .map(id => Number(id)); // Convert string keys to numbers
+
+    const selectedUsers = selectedIds.map(index => props.users[index])
+    console.table(selectedUsers);
 
   } catch (err) {
 
