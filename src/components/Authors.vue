@@ -80,5 +80,8 @@ const columns: TableColumn<UserWithAuthor>[] = [
 </template>
 
 <style scoped>
-
+:deep(tr:has(button[disabled])) {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 </style>
