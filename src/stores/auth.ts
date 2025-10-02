@@ -92,7 +92,6 @@ export const useAuthStore = defineStore('auth', () => {
     const isAdmin = computed(async () => {
         try {
             const response = await api.get('/roles/me/Admin')
-            console.dir('Is user Admin?', response.data)
             return response.data;
         } catch (err) {
             return false;
