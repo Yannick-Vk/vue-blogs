@@ -40,6 +40,7 @@ export const useBlogStore = defineStore('blogs', () => {
     const blogs = ref<Array<Blog>>([]);
     const currentBlog = ref<BlogWithContent | null>(null);
     const error = ref<string | null>(null);
+    const loading = ref(false);
 
     async function getAllBlogs() {
         error.value = null;
@@ -216,7 +217,7 @@ export const useBlogStore = defineStore('blogs', () => {
             if (userIds.length <= 0) {
                 throw new Error("No users supplied");
             }
-            const blog: Blog = currentBlog.value;
+            const blog: Blog | null = currentBlog.value;
             if (!blog) {
                 throw new Error("Invalid blog Id");
             }
@@ -252,6 +253,7 @@ export const useBlogStore = defineStore('blogs', () => {
     }
 
     async function getBlogsByUser() {
+        loading.value = true;
         error.value = null;
         try {
             const response = await api.get<Array<ApiBlog>>(`/blogs/author/me`);
@@ -279,6 +281,8 @@ export const useBlogStore = defineStore('blogs', () => {
                 error.value = "Failed to get blogs, Unknown error";
             }
             throw new Error(error.value);
+        } finally {
+            loading.value = false;
         }
     }
 
@@ -286,6 +290,7 @@ export const useBlogStore = defineStore('blogs', () => {
         blogs,
         currentBlog,
         error,
+        loading,
         getAllBlogs,
         getBlogById,
         uploadBlog,
