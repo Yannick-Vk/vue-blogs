@@ -1,28 +1,27 @@
 <script setup lang="ts">
 import {useBlogStore} from "@/stores/blogStore.ts";
 import {storeToRefs} from "pinia";
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import BlogLoadingSkeleton from "@/components/BlogLoadingSkeleton.vue";
 
 const blogStore = useBlogStore();
 const {blogs, loading} = storeToRefs(blogStore);
 const searchTerm = ref<string>("");
-const filteredBlogs = ref(blogs);
 
 onMounted(async () => {
   await blogStore.getBlogsByUser();
 })
 
-function search() {
-  console.log("searching blogs for title containing:", searchTerm.value);
-  searchTerm.value = searchTerm.value.trim();
-  if (searchTerm.value.length < 1) {
-    filteredBlogs.value = blogs.value;
-    return;
+const filteredBlogs = computed(() => {
+  const term = searchTerm.value.trim().toLowerCase();
+  if (term.length < 1) {
+    return blogs.value;
   }
-  searchTerm.value = searchTerm.value.toLowerCase();
+  return blogs.value.filter((blog) => blog.title.toLowerCase().includes(term));
+});
 
-  filteredBlogs.value = blogs.value.filter((blog) => blog.title.toLowerCase().includes(searchTerm.value));
+function clearSearch() {
+    searchTerm.value = '';
 }
 </script>
 
@@ -32,9 +31,9 @@ function search() {
   </div>
   <div v-else-if="blogs.length > 0">
     <UCard variant="subtle" class="mb-5 text-center">
-      <h2 class="text-2xl">My blogs</h2>
+      <h2 class="text-2xl text-primary">My blogs</h2>
       <p>You've created {{blogs.length}} blogs!</p>
-      <UForm @submit="search" class="mt-5 flex flex-row gap-5 justify-center">
+      <div class="mt-5 flex flex-row gap-5 justify-center">
         <UInput
             v-model="searchTerm"
             placeholder="Type something..."
@@ -49,15 +48,22 @@ function search() {
                 size="sm"
                 icon="lucide:circle-x"
                 aria-label="Clear input"
-                @click="searchTerm = ''"
+                @click="clearSearch"
             />
           </template>
         </UInput>
-        <UButton type="submit" color="neutral" variant="subtle" icon="lucide:search">Search</UButton>
-      </UForm>
+      </div>
 
     </UCard>
-    <BlogList :blogs="filteredBlogs"/>
+    <div v-if="filteredBlogs.length > 0">
+      <BlogList :blogs="filteredBlogs"/>
+    </div>
+    <div v-else>
+      <UCard variant="subtle">
+        <h2 class="text-2xl text-primary mb-5">No results</h2>
+        <p>No blogs found matching your search term.</p>
+      </UCard>
+    </div>
   </div>
   <div v-else>
     <UCard variant="subtle">
