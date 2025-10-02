@@ -7,6 +7,7 @@ import BlogLoadingSkeleton from "@/components/BlogLoadingSkeleton.vue";
 const blogStore = useBlogStore();
 const {blogs, loading} = storeToRefs(blogStore);
 const searchTerm = ref<string>("");
+const filteredBlogs = ref(blogs);
 
 onMounted(async () => {
   await blogStore.getBlogsByUser();
@@ -14,6 +15,14 @@ onMounted(async () => {
 
 function search() {
   console.log("searching blogs for title containing:", searchTerm.value);
+  searchTerm.value = searchTerm.value.trim();
+  if (searchTerm.value.length < 1) {
+    filteredBlogs.value = blogs.value;
+    return;
+  }
+  searchTerm.value = searchTerm.value.toLowerCase();
+
+  filteredBlogs.value = blogs.value.filter((blog) => blog.title.toLowerCase().includes(searchTerm.value));
 }
 </script>
 
@@ -48,9 +57,9 @@ function search() {
       </UForm>
 
     </UCard>
-    <BlogList :blogs="blogs"/>
+    <BlogList :blogs="filteredBlogs"/>
   </div>
-  <div v-else class="no-blogs-message">
+  <div v-else>
     <UCard variant="subtle">
       <h2 class="text-2xl text-primary mb-5">You have no blogs yet.</h2>
       <p>Click the button below to create your first blog post!</p>
@@ -60,8 +69,4 @@ function search() {
 </template>
 
 <style scoped>
-.no-blogs-message {
-  text-align: center;
-  margin-top: 50px;
-}
 </style>
