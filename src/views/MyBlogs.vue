@@ -25,13 +25,13 @@ function search() {
     <UCard variant="subtle" class="mb-5 text-center">
       <h2 class="text-2xl">My blogs</h2>
       <p>You've created {{blogs.length}} blogs!</p>
-      <UForm @submit="search" >
+      <UForm @submit="search" class="mt-5 flex flex-row gap-5 justify-center">
         <UInput
             v-model="searchTerm"
             placeholder="Type something..."
             :ui="{ trailing: 'pe-1' }"
             size="xl"
-            class="mt-5"
+            icon="lucide:search"
         >
           <template v-if="searchTerm?.length" #trailing>
             <UButton
@@ -44,7 +44,7 @@ function search() {
             />
           </template>
         </UInput>
-        <UButton type="submit" color="neutral" variant="link">Search</UButton>
+        <UButton type="submit" color="neutral" variant="subtle" icon="lucide:search">Search</UButton>
       </UForm>
 
     </UCard>
