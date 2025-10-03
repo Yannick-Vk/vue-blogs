@@ -150,8 +150,11 @@ const items = computed<BreadcrumbItem[]>(() => [
         <p>Username: {{ currentUser.username }}</p>
         <p>Email: {{ currentUser.email }}</p>
       </div>
-      <div>
+      <div v-if="roles.length > 0">
         <UTable :data="roles" :columns="columns" class="flex-1"/>
+      </div>
+      <div v-else>
+        <UAlert title="User doesn't have any roles" color="primary" variant="subtle" class="my-5"/>
       </div>
       <div>
         <UForm @submit="addRoles" class="mt-5">
