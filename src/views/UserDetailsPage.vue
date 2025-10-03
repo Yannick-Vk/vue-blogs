@@ -81,8 +81,9 @@ function _closeModal(): void {
   open.value = false;
 }
 
-function confirmDelete(): void {
-
+async function confirmDelete(): void {
+  open.value = false;
+  await userStore.removeRole();
 }
 
 </script>

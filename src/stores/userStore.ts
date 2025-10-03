@@ -8,9 +8,8 @@ export interface User {
     email: string;
 }
 
-export interface Role {
-    name: string;
-}
+import type { Role } from '@/types/Role.ts';
+import {useRoleStore} from "@/stores/roleStore.ts";
 
 export const useUserStore = defineStore('users', () => {
     const users = ref<Array<User>>([])
@@ -40,10 +39,20 @@ export const useUserStore = defineStore('users', () => {
         }
     }
 
-    async function getRoles(id: string) {
+    async function getRoles(username: string) {
         error.value = null;
         try {
-            const response = await api.get<Array<string>>(`users/${id}/roles`);
+
+        } catch (err) {
+            console.error(err);
+            error.value = "The server seems to be down. Please try again.";
+        }
+    }
+
+    async function removeRole(roleName: string) {
+        error.value = null;
+        try {
+            const response = await api.get<>(`roles/remove-from-user`);
             roles.value = response.data.map(role => ({name: role}));
         } catch (err) {
             console.error(err);
@@ -51,5 +60,5 @@ export const useUserStore = defineStore('users', () => {
         }
     }
 
-    return {users, error, currentUser, roles, fetchUsers, fetchUser, getRoles};
+    return {users, error, currentUser, roles, fetchUsers, fetchUser, getRoles, removeRole};
 });
