@@ -5,6 +5,7 @@ import {storeToRefs} from "pinia";
 import {h, onMounted, ref, resolveComponent} from "vue";
 import type {TableColumn} from "@nuxt/ui";
 import type {Row} from "@tanstack/vue-table";
+import {useRoleStore} from "@/stores/roleStore.ts";
 
 const toast = useToast();
 
@@ -18,6 +19,7 @@ const UDropdownMenu = resolveComponent('UDropdownMenu')
 
 const open = ref<boolean>(false);
 const roleToRemove = ref<Role | null>(null);
+const allRoles = ref<string[]>([]);
 
 onMounted(async () => {
   await userStore.fetchUser(userId);
@@ -25,6 +27,10 @@ onMounted(async () => {
     console.warn("No user found.");
     return;
   }
+  const roleStore = useRoleStore();
+  await roleStore.fetchAllRoles();
+  allRoles.value = roleStore.roles.map((role: Role) => role.name);
+
   await userStore.getRoles(currentUser.value.username);
 });
 
@@ -100,6 +106,21 @@ async function confirmDelete(): void {
   }
 }
 
+const selectedRoles = ref<Role[]>([]);
+
+async function addRoles() {
+  for (let role of selectedRoles.value) {
+    await userStore.addRole(role);
+  }
+
+  toast.add({
+    title: `Successfully added role(s)`,
+    description: `Successfully added ${selectedRoles.value.join(", ")} to ${currentUser.value.username}`,
+    color: "success",
+    icon: "lucide:circle-check"
+  });
+
+}
 </script>
 
 <template>
@@ -113,6 +134,13 @@ async function confirmDelete(): void {
       </div>
       <div>
         <UTable :data="roles" :columns="columns" class="flex-1"/>
+      </div>
+      <div>
+        <UForm @submit="addRoles" class="mt-5">
+          <USelect v-model="selectedRoles" multiple :items="allRoles" class="w-48"/>
+
+          <UButton type="submit" class="ml-5"> Add roles</UButton>
+        </UForm>
       </div>
 
       <UModal
