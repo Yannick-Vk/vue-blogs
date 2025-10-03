@@ -1,14 +1,14 @@
 ﻿<script setup lang="ts">
 import {computed, defineComponent, h, onMounted, ref, resolveComponent} from "vue";
 import {useRoleStore} from '../stores/roleStore.ts'
+import type {User} from "@/stores/userStore.ts";
 import {useUserStore} from "@/stores/userStore.ts";
 import {storeToRefs} from "pinia";
-import type {SelectMenuItem, TableColumn} from "@nuxt/ui";
+import type {TableColumn} from "@nuxt/ui";
 import type {Role} from "@/types/Role.ts";
 import type {Row} from "@tanstack/vue-table";
 import router from "@/router/routes.ts";
 import type {BreadcrumbItem} from "@nuxt/ui/components/Breadcrumb.vue";
-import type {User} from "@/stores/userStore.ts";
 
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
@@ -161,11 +161,10 @@ const items = computed<BreadcrumbItem[]>(() => [
     <UTable :columns="columns" :data="roles"/>
 
     <UModal
+        title="Adding user"
+        :description="`Select a user to add to ${roleName?? ``}`"
         v-model:open="open"
     >
-      <template #header>
-        Please select a user to add to {{ roleName }}
-      </template>
       <template #body>
         <USelectMenu v-model="selectedUser" :avatar="value?.avatar" :items="userItems" class="w-48"/>
       </template>
