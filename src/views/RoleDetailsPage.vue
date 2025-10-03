@@ -2,7 +2,6 @@
 import {useRoute} from "vue-router";
 import {computed, h, onMounted, ref, resolveComponent} from "vue";
 import type {BreadcrumbItem} from "@nuxt/ui/components/Breadcrumb.vue";
-import {storeToRefs} from "pinia";
 import {useRoleStore} from "@/stores/roleStore.ts";
 import type {TableColumn} from "@nuxt/ui";
 import type {Row} from "@tanstack/vue-table";
@@ -12,11 +11,11 @@ const toast = useToast();
 const route = useRoute();
 const roleName = route.params.id as string;
 const roleStore = useRoleStore();
-const {users} = storeToRefs(roleStore);
+const users = ref<User[]>([]);
 const userToRemove = ref<User | null>(null);
 
 onMounted(async () => {
-  await roleStore.getUsersWithRole(roleName);
+  users.value = await roleStore.getUsersWithRole(roleName);
 })
 
 const UButton = resolveComponent('UButton')
@@ -84,10 +83,10 @@ async function confirmDelete(): void {
   }
 
   await roleStore.removeRoleFromUser(userToRemove.value.username, roleName);
-  await roleStore.getUsersWithRole(roleName);
+  users.value = await roleStore.getUsersWithRole(roleName);
   toast.add({
-    title: `Removed user ${userToRemove.value.name}`,
-    description: `Successfully removed ${userToRemove.value.name} from role ${userToRemove.value.username}`,
+    title: `Removed user ${userToRemove.value.username}`,
+    description: `Successfully removed ${userToRemove.value.username} from role ${roleName}`,
     color: "success",
     icon: "lucide:trash-2"
   })
