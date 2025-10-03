@@ -1,10 +1,12 @@
 ﻿<script setup lang="ts">
 import {useRoute} from 'vue-router';
-import {type Role, type User, useUserStore} from "@/stores/userStore.ts";
+import {type Role, useUserStore} from "@/stores/userStore.ts";
 import {storeToRefs} from "pinia";
-import {h, ref, onMounted, resolveComponent} from "vue";
+import {h, onMounted, ref, resolveComponent} from "vue";
 import type {TableColumn} from "@nuxt/ui";
 import type {Row} from "@tanstack/vue-table";
+
+const toast = useToast();
 
 const route = useRoute();
 const userId = route.params.id as string;
@@ -15,7 +17,7 @@ const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 
 const open = ref<boolean>(false);
-const roleToRemove = ref<Role| null>(null);
+const roleToRemove = ref<Role | null>(null);
 
 onMounted(async () => {
   await userStore.fetchUser(userId);
@@ -83,7 +85,19 @@ function _closeModal(): void {
 
 async function confirmDelete(): void {
   open.value = false;
-  await userStore.removeRole(roleToRemove);
+  if (!roleToRemove.value) {
+    return;
+  }
+
+  await userStore.removeRole(roleToRemove.value.name);
+  if (!userStore.error) {
+    toast.add({
+      title: `Removed role ${roleToRemove.value.name}`,
+      description: `Successfully removed ${roleToRemove.value.name} from user ${currentUser.value.username}`,
+      color: "success",
+      icon: "lucide:trash-2"
+    })
+  }
 }
 
 </script>

@@ -27,13 +27,12 @@ export const useRoleStore = defineStore('role', () => {
     async function removeRoleFromUser(username: string,  roleName: string) {
         try {
             await api.post(`roles/remove-from-user`, {
-                roleName: roleName,
                 username: username,
+                roleName: roleName,
             });
-
             await getUserRoles(username);
         } catch (err) {
-            //console.error(err);
+            console.error(err);
         }
     }
 

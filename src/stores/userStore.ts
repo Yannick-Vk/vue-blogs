@@ -51,18 +51,18 @@ export const useUserStore = defineStore('users', () => {
         }
     }
 
-    async function removeRole(roleName: string) {
+    async function removeRole(role: string) {
         error.value = null;
         try {
             if(!currentUser.value) {
                 throw new Error("User is not logged in!");
             }
             const roleStore = useRoleStore();
-            await roleStore.removeRoleFromUser(currentUser.value.username, roleName);
+            await roleStore.removeRoleFromUser(currentUser.value.username, role);
             roles.value = roleStore.roles;
         } catch (err) {
             console.error(err);
-            error.value = "The server seems to be down. Please try again.";
+            error.value = "Failed to remove role";
         }
     }
 
