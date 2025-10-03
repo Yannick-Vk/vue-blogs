@@ -43,7 +43,7 @@ export const useUserStore = defineStore('users', () => {
         error.value = null;
         try {
             const roleStore = useRoleStore();
-            await roleStore.getRoles(username);
+            await roleStore.getUserRoles(username);
             roles.value = roleStore.roles;
         } catch (err) {
             console.error(err);
@@ -54,8 +54,12 @@ export const useUserStore = defineStore('users', () => {
     async function removeRole(roleName: string) {
         error.value = null;
         try {
-            const response = await api.get(`roles/remove-from-user`);
-            roles.value = response.data.map(role => ({name: role}));
+            if(!currentUser.value) {
+                throw new Error("User is not logged in!");
+            }
+            const roleStore = useRoleStore();
+            await roleStore.removeRoleFromUser(currentUser.value.username, roleName);
+            roles.value = roleStore.roles;
         } catch (err) {
             console.error(err);
             error.value = "The server seems to be down. Please try again.";
