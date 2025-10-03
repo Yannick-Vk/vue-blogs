@@ -1,6 +1,7 @@
 ﻿<script setup lang="ts">
 import {computed, defineComponent, h, onMounted, ref, resolveComponent} from "vue";
 import {useRoleStore} from '../stores/roleStore.ts'
+import {useUserStore} from "@/stores/userStore.ts";
 import {storeToRefs} from "pinia";
 import type {SelectMenuItem, TableColumn} from "@nuxt/ui";
 import type {Role} from "@/types/Role.ts";
@@ -13,12 +14,15 @@ const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 
 const roleStore = useRoleStore();
-const {roles, users} = storeToRefs(roleStore);
+const userStore = useUserStore();
+const {roles} = storeToRefs(roleStore);
+const {users} = storeToRefs(userStore);
 
 const roleName = ref<string>("");
 
 onMounted(async () => {
   await roleStore.fetchAllRoles();
+  await userStore.fetchUsers();
 })
 
 /**
@@ -39,8 +43,8 @@ const RoleUserCount = defineComponent({
 
     onMounted(async () => {
       try {
-        await roleStore.getUsersWithRole(props.roleName);
-        count.value = users.value?.length || 0;
+        const roleUsers = await roleStore.getUsersWithRole(props.roleName);
+        count.value = roleUsers?.length || 0;
       } catch (e) {
         console.error(`Failed to get user count for role ${props.roleName}`, e);
         count.value = 0;
@@ -126,15 +130,15 @@ async function _confirmModal(): void {
   console.log("Chose user", selectedUser.value)
 }
 
-const userItems = users.value.map((user: User) => {
+const userItems = computed(() => users.value.map((user: User) => {
   return {
     label: user.username,
     value: user.id,
     avatar: {
-      src: `https://i.pravatar.cc/32?u=${user.username}`,
+      src: `https://i.pravatar.cc/64?u=${user.username}`,
     }
   }
-}) satisfies SelectMenuItem[];
+}));
 
 const selectedUser = ref(null)
 

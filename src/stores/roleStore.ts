@@ -52,10 +52,12 @@ export const useRoleStore = defineStore('role', () => {
 
     async function getUsersWithRole(roleName: string) {
         try {
-            const response = await api.get(`roles/${roleName}`);
+            const response = await api.get<User[]>(`roles/${roleName}`);
             users.value = response.data;
+            return response.data;
         } catch (err) {
             console.error(err);
+            return [];
         }
     }
 
