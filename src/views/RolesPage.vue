@@ -1,11 +1,12 @@
 ﻿<script setup lang="ts">
-import {h, onMounted, ref, resolveComponent} from "vue";
+import {computed, h, onMounted, ref, resolveComponent} from "vue";
 import {useRoleStore} from '../stores/roleStore.ts'
 import {storeToRefs} from "pinia";
 import type {TableColumn} from "@nuxt/ui";
 import type {Role} from "@/types/Role.ts";
 import type {Row} from "@tanstack/vue-table";
 import router from "@/router/routes.ts";
+import type {BreadcrumbItem} from "@nuxt/ui/components/Breadcrumb.vue";
 
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
@@ -66,9 +67,21 @@ function getRowItems(row: Row<Role>) {
   ]
 }
 
+const items = computed<BreadcrumbItem[]>(() => [
+  {
+    label: 'Home',
+    icon: 'lucide:home',
+    to: '/'
+  }, {
+    label: 'Roles',
+    icon: 'lucide:users',
+    to: `/roles`
+  },
+])
 </script>
 
 <template>
+  <UBreadcrumb :items="items" class="mb-5"/>
   <div v-if="roles.length > 0">
     <UTable :columns="columns" :data="roles"/>
   </div>
