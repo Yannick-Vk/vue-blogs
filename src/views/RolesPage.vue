@@ -127,7 +127,7 @@ function _closeModal(): void {
 
 async function _confirmModal(): void {
   open.value = false;
-  console.log("Chose user", selectedUser.value)
+  await roleStore.addRoleToUser(selectedUser.value.label, roleName.value);
 }
 
 const userItems = computed(() => users.value.map((user: User) => {

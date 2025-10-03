@@ -44,7 +44,6 @@ export const useRoleStore = defineStore('role', () => {
                 username: username,
                 roleName: roleName,
             });
-            await getUserRoles(username);
         } catch (err) {
             console.error(err);
         }
