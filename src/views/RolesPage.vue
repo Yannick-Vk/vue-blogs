@@ -1,5 +1,5 @@
 ﻿<script setup lang="ts">
-import {computed, h, onMounted, ref, resolveComponent} from "vue";
+import {computed, defineComponent, h, onMounted, ref, resolveComponent} from "vue";
 import {useRoleStore} from '../stores/roleStore.ts'
 import {storeToRefs} from "pinia";
 import type {TableColumn} from "@nuxt/ui";
@@ -12,16 +12,54 @@ const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 
 const roleStore = useRoleStore();
-const {roles} = storeToRefs(roleStore);
+const {roles, users} = storeToRefs(roleStore);
 
 onMounted(async () => {
   await roleStore.fetchAllRoles();
+})
+
+/**
+ * This component fetches and displays the number of users for a given role.
+ * It's designed for use in a list where each instance is independent.
+ * IMPORTANT: This requires your `roleStore.getUsersWithRole` action to be modified
+ * to `return` the array of users instead of updating a shared state property.
+ * For example: `async getUsersWithRole(roleName) { const users = await ...; return users; }`
+ */
+const RoleUserCount = defineComponent({
+  props: {
+    roleName: {type: String, required: true}
+  },
+  setup(props) {
+    const count = ref(0);
+    const isLoading = ref(true);
+    const roleStore = useRoleStore();
+
+    onMounted(async () => {
+      try {
+        await roleStore.getUsersWithRole(props.roleName);
+        count.value = users.value?.length || 0;
+      } catch (e) {
+        console.error(`Failed to get user count for role ${props.roleName}`, e);
+        count.value = 0;
+      } finally {
+        isLoading.value = false;
+      }
+    });
+
+    return () => isLoading.value ? '...' : `${count.value} users`;
+  }
 })
 
 const columns: TableColumn<Role>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
+  }, {
+    accessorKey: 'count',
+    header: 'Amount of users',
+    cell: ({row}) => {
+      return h(RoleUserCount, {roleName: row.original.name});
+    }
   },
   {
     id: 'actions',
