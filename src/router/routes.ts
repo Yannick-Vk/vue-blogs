@@ -79,9 +79,9 @@ router.beforeEach((to, from, next) => {
     const authStore = useAuthStore(); // Get access to your auth store
     // Check if the route requires authentication
     if (to.meta.requiresAuth && !authStore.isLoggedIn) {
-        // If it requires auth and the user is not authenticated, redirect to login
+        // If it requires auth and the user is not authenticated, redirect to log in
         next({name: 'login'});
-    } else if (to.name === 'login' && authStore.isLoggedIn) {
+    } else if ((to.name === 'login' || to.name === "register") && authStore.isLoggedIn) {
         // If the user is already logged in and tries to go to log in, redirect to home
         next({name: 'home'});
     } else {
