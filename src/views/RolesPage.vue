@@ -170,12 +170,12 @@ const items = computed<BreadcrumbItem[]>(() => [
         v-model:open="open"
     >
       <template #body>
-        <USelectMenu v-model="selectedUser" :avatar="selectedUserObject?.avatar" :items="userItems" class="w-48"/>
+        <USelectMenu v-model="selectedUser" :avatar="selectedUserObject?.avatar" :items="userItems" class="w-full" placeholder="Select a user"/>
       </template>
       <template #footer>
         <div class="flex items-center justify-start gap-3">
           <UButton color="neutral" @click="_closeModal">Cancel</UButton>
-          <UButton color="error" @click="_confirmModal">Confirm</UButton>
+          <UButton color="success" @click="_confirmModal">Confirm</UButton>
         </div>
       </template>
     </UModal>
