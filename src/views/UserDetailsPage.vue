@@ -92,7 +92,7 @@ function getRowItems(row: Row<Role>) {
       </div>
 
       <UModal
-          title="`Removing role ${roleToRemove} from ${currentUser.value.username}`"
+          :title="`Removing role '${roleToRemove?.name}' from ${currentUser.username}`"
           description="Are you sure you want to remove this role?"
           v-model:open="open"
       >
