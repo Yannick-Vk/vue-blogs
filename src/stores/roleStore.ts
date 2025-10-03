@@ -1,26 +1,32 @@
 import {defineStore} from 'pinia';
 import {ref} from 'vue';
 import type {Role} from '@/types/Role';
-import Api, {api} from '@/services/Api';
+import {api} from '@/services/Api';
 
 export const useRoleStore = defineStore('role', () => {
     const roles = ref<Role[]>([]);
 
-    export async function fetchAllRoles() {
+    async function fetchAllRoles() {
         try {
-            const response = await Api.get<Role[]>('/roles'); // Assuming a '/roles' endpoint
+            const response = await api.get<Role[]>('/roles');
             roles.value = response.data;
         } catch (error) {
             console.error('Error fetching roles:', error);
         }
     }
 
-    export async function getRoles(username: string) {
+    async function getUserRoles(username: string) {
         try {
-            const response = await api.get<Array<string>>(`users/${username}/roles`);
-            roles.value = response.data.map(role => ({name: role}));
+            const response = await api.get<string[]>(`users/${username}/roles`);
+            roles.value = response.data.map(roleName => ({id: roleName, name: roleName}));
         } catch (err) {
             console.error(err);
         }
+    }
+
+    return {
+        roles,
+        fetchAllRoles,
+        getRoles: getUserRoles
     }
 });

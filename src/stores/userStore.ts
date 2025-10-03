@@ -42,7 +42,9 @@ export const useUserStore = defineStore('users', () => {
     async function getRoles(username: string) {
         error.value = null;
         try {
-
+            const roleStore = useRoleStore();
+            await roleStore.getRoles(username);
+            roles.value = roleStore.roles;
         } catch (err) {
             console.error(err);
             error.value = "The server seems to be down. Please try again.";
@@ -52,7 +54,7 @@ export const useUserStore = defineStore('users', () => {
     async function removeRole(roleName: string) {
         error.value = null;
         try {
-            const response = await api.get<>(`roles/remove-from-user`);
+            const response = await api.get(`roles/remove-from-user`);
             roles.value = response.data.map(role => ({name: role}));
         } catch (err) {
             console.error(err);
