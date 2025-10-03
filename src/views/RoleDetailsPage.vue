@@ -8,6 +8,7 @@ import type {TableColumn} from "@nuxt/ui";
 import type {Row} from "@tanstack/vue-table";
 import type {User} from "@/stores/userStore.ts";
 
+const toast = useToast();
 const route = useRoute();
 const roleName = route.params.id as string;
 const roleStore = useRoleStore();
@@ -82,15 +83,15 @@ async function confirmDelete(): void {
     return;
   }
 
-  //await roleStore.removeUser(userToRemove.value);
-  if (!userStore.error) {
-    toast.add({
-      title: `Removed user ${userToRemove.value.name}`,
-      description: `Successfully removed ${userToRemove.value.name} from role ${currentUser.value.username}`,
-      color: "success",
-      icon: "lucide:trash-2"
-    })
-  }
+  await roleStore.removeRoleFromUser(userToRemove.value.username, roleName);
+  await roleStore.getUsersWithRole(roleName);
+  toast.add({
+    title: `Removed user ${userToRemove.value.name}`,
+    description: `Successfully removed ${userToRemove.value.name} from role ${userToRemove.value.username}`,
+    color: "success",
+    icon: "lucide:trash-2"
+  })
+
 }
 
 const items = computed<BreadcrumbItem[]>(() => [
