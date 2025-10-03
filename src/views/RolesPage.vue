@@ -142,6 +142,10 @@ const userItems = computed(() => users.value.map((user: User) => {
 
 const selectedUser = ref(null)
 
+const selectedUserObject = computed(() => {
+  return userItems.value.find(item => item.value === selectedUser.value);
+});
+
 const items = computed<BreadcrumbItem[]>(() => [
   {
     label: 'Home',
@@ -166,7 +170,7 @@ const items = computed<BreadcrumbItem[]>(() => [
         v-model:open="open"
     >
       <template #body>
-        <USelectMenu v-model="selectedUser" :avatar="value?.avatar" :items="userItems" class="w-48"/>
+        <USelectMenu v-model="selectedUser" :avatar="selectedUserObject?.avatar" :items="userItems" class="w-48"/>
       </template>
       <template #footer>
         <div class="flex items-center justify-start gap-3">
