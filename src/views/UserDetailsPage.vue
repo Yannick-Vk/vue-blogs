@@ -2,7 +2,7 @@
 import {useRoute} from 'vue-router';
 import {type Role, type User, useUserStore} from "@/stores/userStore.ts";
 import {storeToRefs} from "pinia";
-import {h, onMounted, resolveComponent} from "vue";
+import {h, ref, onMounted, resolveComponent} from "vue";
 import type {TableColumn} from "@nuxt/ui";
 import type {Row} from "@tanstack/vue-table";
 
@@ -13,6 +13,9 @@ const {currentUser, roles} = storeToRefs(userStore);
 
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
+
+const open = ref<boolean>(false);
+const roleToRemove = ref<Role| null>(null);
 
 onMounted(async () => {
   await userStore.fetchUser(userId);
@@ -58,7 +61,7 @@ const columns: TableColumn<Role>[] = [
   },
 ]
 
-function getRowItems(row: Row<User>) {
+function getRowItems(row: Row<Role>) {
   return [
     {
       type: 'label',
@@ -67,7 +70,8 @@ function getRowItems(row: Row<User>) {
     {
       label: 'Remove role from user',
       async onSelect() {
-        console.log("Removing role from user!");
+        open.value = !open.value;
+        roleToRemove.value = row.original;
       }
     },
   ]
@@ -86,6 +90,16 @@ function getRowItems(row: Row<User>) {
       <div>
         <UTable :data="roles" :columns="columns" class="flex-1"/>
       </div>
+
+      <UModal
+          title="`Removing role ${roleToRemove} from ${currentUser.value.username}`"
+          description="Are you sure you want to remove this role?"
+          v-model:open="open"
+      >
+        <template #body>
+          <Placeholder class="h-48"/>
+        </template>
+      </UModal>
     </div>
     <div v-else>
       Loading user with id {{ userId }} ...
