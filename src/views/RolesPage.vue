@@ -2,17 +2,20 @@
 import {computed, defineComponent, h, onMounted, ref, resolveComponent} from "vue";
 import {useRoleStore} from '../stores/roleStore.ts'
 import {storeToRefs} from "pinia";
-import type {TableColumn} from "@nuxt/ui";
+import type {SelectMenuItem, TableColumn} from "@nuxt/ui";
 import type {Role} from "@/types/Role.ts";
 import type {Row} from "@tanstack/vue-table";
 import router from "@/router/routes.ts";
 import type {BreadcrumbItem} from "@nuxt/ui/components/Breadcrumb.vue";
+import type {User} from "@/stores/userStore.ts";
 
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 
 const roleStore = useRoleStore();
 const {roles, users} = storeToRefs(roleStore);
+
+const roleName = ref<string>("");
 
 onMounted(async () => {
   await roleStore.fetchAllRoles();
@@ -101,9 +104,39 @@ function getRowItems(row: Row<Role>) {
       async onSelect() {
         await router.push(`/roles/${row.original.name}`);
       }
+    }, {
+      label: 'Add user',
+      async onSelect() {
+        open.value = true;
+        roleName.value = row.original.name;
+        console.log("Adding new user to role", roleName.value);
+      }
     },
   ]
 }
+
+const open = ref<boolean>(false);
+
+function _closeModal(): void {
+  open.value = false;
+}
+
+async function _confirmModal(): void {
+  open.value = false;
+  console.log("Chose user", selectedUser.value)
+}
+
+const userItems = users.value.map((user: User) => {
+  return {
+    label: user.username,
+    value: user.id,
+    avatar: {
+      src: `https://i.pravatar.cc/32?u=${user.username}`,
+    }
+  }
+}) satisfies SelectMenuItem[];
+
+const selectedUser = ref(null)
 
 const items = computed<BreadcrumbItem[]>(() => [
   {
@@ -122,6 +155,23 @@ const items = computed<BreadcrumbItem[]>(() => [
   <UBreadcrumb :items="items" class="mb-5"/>
   <div v-if="roles.length > 0">
     <UTable :columns="columns" :data="roles"/>
+
+    <UModal
+        v-model:open="open"
+    >
+      <template #header>
+        Please select a user to add to {{ roleName }}
+      </template>
+      <template #body>
+        <USelectMenu v-model="selectedUser" :avatar="value?.avatar" :items="userItems" class="w-48"/>
+      </template>
+      <template #footer>
+        <div class="flex items-center justify-start gap-3">
+          <UButton color="neutral" @click="_closeModal">Cancel</UButton>
+          <UButton color="error" @click="_confirmModal">Confirm</UButton>
+        </div>
+      </template>
+    </UModal>
   </div>
   <div v-else>
     <UAlert title="No roles have been loaded" variant="subtle" color="error" class="my-5"/>
