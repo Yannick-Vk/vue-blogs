@@ -8,10 +8,15 @@ export interface User {
     email: string;
 }
 
+export interface Role {
+    name: string;
+}
+
 export const useUserStore = defineStore('users', () => {
     const users = ref<Array<User>>([])
     const currentUser = ref<User | null>(null)
     const error = ref<string | null>(null);
+    const roles = ref<Array<Role>>([]);
 
     async function fetchUsers() {
         error.value = null;
@@ -35,5 +40,16 @@ export const useUserStore = defineStore('users', () => {
         }
     }
 
-    return {users, error, currentUser, fetchUsers, fetchUser};
+    async function getRoles(id: string) {
+        error.value = null;
+        try {
+            const response = await api.get<Array<string>>(`users/${id}/roles`);
+            roles.value = response.data.map(role => ({name: role}));
+        } catch (err) {
+            console.error(err);
+            error.value = "The server seems to be down. Please try again.";
+        }
+    }
+
+    return {users, error, currentUser, roles, fetchUsers, fetchUser, getRoles};
 });

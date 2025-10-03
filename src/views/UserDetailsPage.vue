@@ -1,6 +1,6 @@
 ﻿<script setup lang="ts">
 import {useRoute} from 'vue-router';
-import {type User, useUserStore} from "@/stores/userStore.ts";
+import {type Role, useUserStore} from "@/stores/userStore.ts";
 import {storeToRefs} from "pinia";
 import {onMounted, ref} from "vue";
 import type {TableColumn} from "@nuxt/ui";
@@ -8,23 +8,22 @@ import type {TableColumn} from "@nuxt/ui";
 const route = useRoute();
 const userId = route.params.id as string;
 const userStore = useUserStore();
-const {currentUser} = storeToRefs(userStore);
+const {currentUser, roles} = storeToRefs(userStore);
 
-onMounted(() => {
-  userStore.fetchUser(userId);
+onMounted(async () => {
+  await userStore.fetchUser(userId);
+  if (!currentUser.value) {
+    console.warn("No user found.");
+    return;
+  }
+  await userStore.getRoles(currentUser.value.username);
 });
 
-const data = ref<User[]>([])
 
-const columns: TableColumn<User>[] = [
+const columns: TableColumn<Role>[] = [
   {
-    accessorKey: 'id',
-    header: '#',
-    cell: ({row}) => row.getValue('id')
-  },
-  {
-    accessorKey: 'email',
-    header: 'Email'
+    accessorKey: 'name',
+    header: 'Name',
   },
 ]
 
@@ -40,7 +39,7 @@ const columns: TableColumn<User>[] = [
         <p>Email: {{ currentUser.email }}</p>
       </div>
       <div>
-        <UTable :data="data" :columns="columns" class="flex-1"/>
+        <UTable :data="roles" :columns="columns" class="flex-1"/>
       </div>
     </div>
     <div v-else>
