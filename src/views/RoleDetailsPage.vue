@@ -113,7 +113,7 @@ const items = computed<BreadcrumbItem[]>(() => [
 
 <template>
   <UBreadcrumb :items="items" class="mb-5"/>
-  <h2 class="text-2xl text-primary-300">{{ roleName }}</h2>
+  <h2 class="text-2xl text-primary">{{ roleName }}</h2>
   <div v-if="users.length > 0">
     <p>This role has {{ users.length }} Users.</p>
     <UTable :data="users" :columns="columns" class="flex-1"/>
