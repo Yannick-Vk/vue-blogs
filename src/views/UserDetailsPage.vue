@@ -76,6 +76,15 @@ function getRowItems(row: Row<Role>) {
     },
   ]
 }
+
+function _closeModal(): void {
+  open.value = false;
+}
+
+function confirmDelete(): void {
+
+}
+
 </script>
 
 <template>
@@ -97,7 +106,10 @@ function getRowItems(row: Row<Role>) {
           v-model:open="open"
       >
         <template #body>
-          <Placeholder class="h-48"/>
+          <div class="flex items-center justify-start gap-3">
+            <UButton color="neutral" @click="_closeModal">Cancel</UButton>
+            <UButton color="error" @click="confirmDelete">Remove</UButton>
+          </div>
         </template>
       </UModal>
     </div>
