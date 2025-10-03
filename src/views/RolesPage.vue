@@ -138,7 +138,7 @@ const userItems = computed(() => users.value.map((user: User) => {
       src: `https://i.pravatar.cc/64?u=${user.username}`,
     }
   }
-}));
+}).sort((a, b) => a.label.localeCompare(b.label)));
 
 const selectedUser = ref(null)
 
