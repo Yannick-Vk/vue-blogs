@@ -5,6 +5,7 @@ import {storeToRefs} from "pinia";
 import type {TableColumn} from "@nuxt/ui";
 import type {Role} from "@/types/Role.ts";
 import type {Row} from "@tanstack/vue-table";
+import router from "@/router/routes.ts";
 
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
@@ -59,7 +60,7 @@ function getRowItems(row: Row<Role>) {
     {
       label: 'See users',
       async onSelect() {
-
+        await router.push(`/roles/${row.original.name}`);
       }
     },
   ]

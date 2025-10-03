@@ -10,6 +10,7 @@ import CreateBlogForm from "@/views/CreateBlogForm.vue";
 import {useAuthStore} from "@/stores/auth.ts";
 import EditBlog from "@/views/EditBlog.vue";
 import MyBlogs from "@/views/MyBlogs.vue";
+import RoleDetailsPage from "@/views/RoleDetailsPage.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,6 +35,7 @@ const router = createRouter({
         }, {
             path: '/blog/:id/edit',
             name: 'blog-edit',
+            meta: {requiresAuth: true},
             component: EditBlog,
         }, {
             path: '/users',
@@ -48,10 +50,17 @@ const router = createRouter({
             meta: {requiresAuth: true},
             beforeEnter: [isAdmin]
         }, {
+            path: '/roles/:id',
+            name: 'role-details',
+            component: RoleDetailsPage,
+            meta: {requiresAuth: true},
+            beforeEnter: [isAdmin]
+        }, {
             path: '/users/:id',
             name: 'user-detail',
             component: UserDetailsPage,
-            meta: {requiresAuth: true}
+            meta: {requiresAuth: true},
+            beforeEnter: [isAdmin]
         }, {
             path: '/blog/new',
             name: 'create-blog',
