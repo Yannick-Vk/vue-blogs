@@ -40,7 +40,7 @@ const RoleUserCount = defineComponent({
     const count = ref(0);
     const isLoading = ref(true);
     const roleStore = useRoleStore();
-    const { roles } = storeToRefs(roleStore); // Get roles from store to watch it
+    const {roles} = storeToRefs(roleStore); // Get roles from store to watch it
 
     const fetchCount = async () => {
       isLoading.value = true;
@@ -60,7 +60,7 @@ const RoleUserCount = defineComponent({
     // Watch for changes in the global roles array to re-fetch the count
     watch(roles, () => {
       fetchCount();
-    }, { deep: true }); // deep: true might be needed if the content of roles changes, not just the array reference
+    }, {deep: true}); // deep: true might be needed if the content of roles changes, not just the array reference
 
     return () => isLoading.value ? '...' : `${count.value} users`;
   }
@@ -122,13 +122,19 @@ function getRowItems(row: Row<Role>) {
       async onSelect() {
         open.value = true;
         roleName.value = row.original.name;
-        console.log("Adding new user to role", roleName.value);
       }
     },
   ]
 }
 
 const open = ref<boolean>(false);
+const usersWithCurrentRole = ref<User[]>([]);
+
+watch(roleName, async (newRoleName) => {
+  if (newRoleName) {
+    usersWithCurrentRole.value = await roleStore.getUsersWithRole(newRoleName) || [];
+  }
+}, { immediate: true });
 
 function _closeModal(): void {
   open.value = false;
@@ -139,9 +145,13 @@ async function _confirmModal(): void {
   await roleStore.addRoleToUser(selectedUser.value.label, roleName.value);
   await roleStore.fetchAllRoles();
   await userStore.fetchUsers();
+  usersWithCurrentRole.value = await roleStore.getUsersWithRole(roleName.value) || [];
+  selectedUser.value = null; // Reset after an user has been added
 }
 
-const userItems = computed(() => users.value.map((user: User) => {
+const userItems = computed(() => users.value
+  .filter((user: User) => !usersWithCurrentRole.value.some(u => u.id === user.id))
+  .map((user: User) => {
   return {
     label: user.username,
     value: user.id,
@@ -181,7 +191,8 @@ const items = computed<BreadcrumbItem[]>(() => [
         v-model:open="open"
     >
       <template #body>
-        <USelectMenu v-model="selectedUser" :avatar="selectedUserObject?.avatar" :items="userItems" class="w-full" placeholder="Select a user"/>
+        <USelectMenu v-model="selectedUser" :avatar="selectedUserObject?.avatar" :items="userItems" class="w-full"
+                     placeholder="Select a user"/>
       </template>
       <template #footer>
         <div class="flex items-center justify-start gap-3">
