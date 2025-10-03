@@ -1,5 +1,5 @@
 ﻿<script setup lang="ts">
-import {computed, defineComponent, h, onMounted, ref, resolveComponent} from "vue";
+import {computed, defineComponent, h, onMounted, ref, resolveComponent, watch} from "vue";
 import {useRoleStore} from '../stores/roleStore.ts'
 import type {User} from "@/stores/userStore.ts";
 import {useUserStore} from "@/stores/userStore.ts";
@@ -40,8 +40,10 @@ const RoleUserCount = defineComponent({
     const count = ref(0);
     const isLoading = ref(true);
     const roleStore = useRoleStore();
+    const { roles } = storeToRefs(roleStore); // Get roles from store to watch it
 
-    onMounted(async () => {
+    const fetchCount = async () => {
+      isLoading.value = true;
       try {
         const roleUsers = await roleStore.getUsersWithRole(props.roleName);
         count.value = roleUsers?.length || 0;
@@ -51,7 +53,14 @@ const RoleUserCount = defineComponent({
       } finally {
         isLoading.value = false;
       }
-    });
+    };
+
+    onMounted(fetchCount);
+
+    // Watch for changes in the global roles array to re-fetch the count
+    watch(roles, () => {
+      fetchCount();
+    }, { deep: true }); // deep: true might be needed if the content of roles changes, not just the array reference
 
     return () => isLoading.value ? '...' : `${count.value} users`;
   }
@@ -128,6 +137,8 @@ function _closeModal(): void {
 async function _confirmModal(): void {
   open.value = false;
   await roleStore.addRoleToUser(selectedUser.value.label, roleName.value);
+  await roleStore.fetchAllRoles();
+  await userStore.fetchUsers();
 }
 
 const userItems = computed(() => users.value.map((user: User) => {
