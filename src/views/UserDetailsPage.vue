@@ -1,8 +1,9 @@
 ﻿<script setup lang="ts">
-import { useRoute } from 'vue-router';
-import {useUserStore} from "@/stores/userStore.ts";
+import {useRoute} from 'vue-router';
+import {type User, useUserStore} from "@/stores/userStore.ts";
 import {storeToRefs} from "pinia";
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
+import type {TableColumn} from "@nuxt/ui";
 
 const route = useRoute();
 const userId = route.params.id as string;
@@ -13,36 +14,40 @@ onMounted(() => {
   userStore.fetchUser(userId);
 });
 
+const data = ref<User[]>([])
+
+const columns: TableColumn<User>[] = [
+  {
+    accessorKey: 'id',
+    header: '#',
+    cell: ({row}) => row.getValue('id')
+  },
+  {
+    accessorKey: 'email',
+    header: 'Email'
+  },
+]
+
 </script>
 
 <template>
-  <div v-if="currentUser">
-    <h1>User Details Page</h1>
-    <p>User ID: {{ userId }}</p>
-    <p>Username: {{currentUser.username}}</p>
-    <p>Email: {{currentUser.email}}</p>
-  </div>
-  <div v-else>
-    Loading user with id {{userId}} ...
+  <div class="flex flex-col justify-center">
+    <div v-if="currentUser">
+      <div>
+        <h1 class="text-2xl">User Details Page</h1>
+        <p>User ID: {{ userId }}</p>
+        <p>Username: {{ currentUser.username }}</p>
+        <p>Email: {{ currentUser.email }}</p>
+      </div>
+      <div>
+        <UTable :data="data" :columns="columns" class="flex-1"/>
+      </div>
+    </div>
+    <div v-else>
+      Loading user with id {{ userId }} ...
+    </div>
   </div>
 </template>
 
 <style scoped>
-div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 70vh; /* Full viewport height */
-  text-align: center;
-}
-
-h1 {
-  font-size: 2.5em;
-  margin-bottom: 20px;
-}
-
-p {
-  font-size: 1.5em;
-}
 </style>
