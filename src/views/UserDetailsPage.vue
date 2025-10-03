@@ -2,10 +2,11 @@
 import {useRoute} from 'vue-router';
 import {type Role, useUserStore} from "@/stores/userStore.ts";
 import {storeToRefs} from "pinia";
-import {h, onMounted, ref, resolveComponent} from "vue";
+import {computed, h, onMounted, ref, resolveComponent} from "vue";
 import type {TableColumn} from "@nuxt/ui";
 import type {Row} from "@tanstack/vue-table";
 import {useRoleStore} from "@/stores/roleStore.ts";
+import type {BreadcrumbItem} from "@nuxt/ui/components/Breadcrumb.vue";
 
 const toast = useToast();
 
@@ -121,10 +122,27 @@ async function addRoles() {
   });
 
 }
+
+const items = computed<BreadcrumbItem[]>(() => [
+  {
+    label: 'Home',
+    icon: 'lucide:home',
+    to: '/'
+  }, {
+    label: 'Users',
+    icon: 'lucide:users',
+    to: `/users`
+  }, {
+    label: 'Edit',
+    icon: 'lucide:user-pen',
+    to: `/users/${currentUser.value.id}`
+  },
+])
 </script>
 
 <template>
   <div class="flex flex-col justify-center">
+    <UBreadcrumb :items="items" class="mb-5"/>
     <div v-if="currentUser">
       <div>
         <h1 class="text-2xl">User Details Page</h1>
