@@ -3,10 +3,12 @@ import type {NavigationMenuItem} from '@nuxt/ui'
 import {computed} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {useAuthStore} from "@/stores/auth.ts";
+import {storeToRefs} from 'pinia'
 
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
+const {user} = storeToRefs(authStore)
 
 const toast = useToast()
 
@@ -76,7 +78,7 @@ const items = computed<NavigationMenuItem[]>(() => [
         />
       </UTooltip>
 
-      <UButton v-if="authStore.isLoggedIn" @click="logout" icon="lucide:log-out">Logout</UButton>
+      <ProfileHeader v-if="authStore.isLoggedIn" @logout="logout" :user="user"/>
       <UButton v-else-if="route.path === '/login'" to="/register" icon="lucide:log-in" class="w-24">Register</UButton>
       <UButton v-else to="/login" icon="lucide:log-in" class="w-24">Login</UButton>
 
