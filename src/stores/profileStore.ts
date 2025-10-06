@@ -2,10 +2,11 @@
 import {api} from "@/services/Api.ts";
 
 export const useProfileStore = defineStore('profile', () => {
-    async function changeEmail(newEmail: string) {
+    async function changeEmail(newEmail: string, password: string) {
         try {
             await api.put(`/me/change/email`, {
-                email: newEmail
+                email: newEmail,
+                password: password
             })
         } catch (error) {
             throw error;
