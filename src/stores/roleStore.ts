@@ -11,7 +11,7 @@ export const useRoleStore = defineStore('role', () => {
     async function fetchAllRoles() {
         try {
             const response = await api.get<Role[]>('/roles');
-            roles.value = response.data;
+            roles.value = response.data.sort((a, b) => a.name.localeCompare(b.name));
         } catch (error) {
             console.error('Error fetching roles:', error);
         }
@@ -20,7 +20,10 @@ export const useRoleStore = defineStore('role', () => {
     async function getUserRoles(username: string) {
         try {
             const response = await api.get<string[]>(`users/${username}/roles`);
-            roles.value = response.data.map(roleName => ({id: roleName, name: roleName}));
+            roles.value = response.data.map(roleName => ({
+                id: roleName,
+                name: roleName
+            })).sort((a, b) => a.name.localeCompare(b.name));
         } catch (err) {
             console.error(err);
         }
