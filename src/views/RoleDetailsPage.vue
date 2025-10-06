@@ -15,12 +15,23 @@ const users = ref<User[]>([]);
 const userToRemove = ref<User | null>(null);
 
 onMounted(async () => {
-  users.value = await roleStore.getUsersWithRole(roleName);
+  const userList: User[] = await roleStore.getUsersWithRole(roleName);
+  users.value = userList.sort((a, b) => a.username.localeCompare(b.username));
 })
 
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
+const UAvatar = resolveComponent('UAvatar')
 const columns: TableColumn<User>[] = [
+  {
+    accessorKey: "avatar",
+    header: "Avatar",
+    cell: ({row}) => {
+      return h(UAvatar, {
+        src: `https://i.pravatar.cc/64?u=${row.original.username}`,
+      });
+    }
+  },
   {
     accessorKey: 'username',
     header: 'Username',
