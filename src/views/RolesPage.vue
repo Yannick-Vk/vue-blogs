@@ -176,6 +176,16 @@ const selectedUserObject = computed(() => {
   return userItems.value.find(item => item.value === selectedUser.value);
 });
 
+const searchTerm = ref<string>("");
+
+const filteredRoles = computed(() => {
+  const term = searchTerm.value.trim().toLowerCase();
+  if (term.length < 1) {
+    return roles.value;
+  }
+  return roles.value.filter((role) => role.name.toLowerCase().includes(term));
+});
+
 const items = computed<BreadcrumbItem[]>(() => [
   {
     label: 'Home',
@@ -192,24 +202,37 @@ const items = computed<BreadcrumbItem[]>(() => [
 <template>
   <UBreadcrumb :items="items" class="mb-5"/>
   <div v-if="roles.length > 0">
-    <UTable :columns="columns" :data="roles"/>
 
-    <UModal
-        title="Adding user"
-        :description="`Select a user to add to ${roleName?? ``}`"
-        v-model:open="open"
-    >
-      <template #body>
-        <USelectMenu v-model="selectedUser" :avatar="selectedUserObject?.avatar" :items="userItems" class="w-full"
-                     placeholder="Select a user"/>
-      </template>
-      <template #footer>
-        <div class="flex items-center justify-start gap-3">
-          <UButton color="neutral" @click="_closeModal">Cancel</UButton>
-          <UButton color="success" @click="_confirmModal">Confirm</UButton>
-        </div>
-      </template>
-    </UModal>
+    <UCard variant="subtle" color="primary" class="my-3 flex flex-row gap-3 justify-center">
+      <p class="text-lg mb-3">Search roles: </p>
+      <SearchBox v-model:search-term="searchTerm" title="Search roles..."/>
+    </UCard>
+    <div v-if="filteredRoles.length > 0">
+      <UTable :columns="columns" :data="filteredRoles"/>
+
+      <UModal
+          title="Adding user"
+          :description="`Select a user to add to ${roleName?? ``}`"
+          v-model:open="open"
+      >
+        <template #body>
+          <USelectMenu v-model="selectedUser" :avatar="selectedUserObject?.avatar" :items="userItems" class="w-full"
+                       placeholder="Select a user"/>
+        </template>
+        <template #footer>
+          <div class="flex items-center justify-start gap-3">
+            <UButton color="neutral" @click="_closeModal">Cancel</UButton>
+            <UButton color="success" @click="_confirmModal">Confirm</UButton>
+          </div>
+        </template>
+      </UModal>
+    </div>
+    <div v-else>
+      <UCard variant="subtle">
+        <h2 class="text-2xl text-primary mb-5">No results</h2>
+        <p>No roles found matching your search term.</p>
+      </UCard>
+    </div>
   </div>
   <div v-else>
     <UAlert title="No roles have been loaded" variant="subtle" color="error" class="my-5"/>
