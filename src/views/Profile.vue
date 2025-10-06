@@ -5,7 +5,8 @@ import {useProfileStore} from "@/stores/profileStore.ts";
 import {storeToRefs} from "pinia";
 import {useUserStore} from "@/stores/userStore.ts";
 import {isAxiosError} from "@/services/Api.ts";
-import ChangeEmailForm from "@/views/ChangeEmailForm.vue";
+import ChangeEmailForm from "@/components/ChangeEmailForm.vue";
+import ChangePasswordForm from "@/components/ChangePasswordForm.vue";
 
 const profileStore = useProfileStore();
 const userStore = useUserStore();
@@ -87,7 +88,10 @@ onMounted(async () => {
         }"
           size="3xl"
       />
-      <ChangeEmailForm @submit="changeEmail" />
+      <div class="flex flex-row gap-5 justify-between">
+        <ChangeEmailForm @submit="changeEmail"/>
+        <ChangePasswordForm @submit="changePassword"/>
+      </div>
 
     </div>
 

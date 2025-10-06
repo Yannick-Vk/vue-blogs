@@ -13,5 +13,13 @@ export const useProfileStore = defineStore('profile', () => {
         }
     }
 
-    return {changeEmail}
+    async function changePassword(newEmail: string, password: string) {
+        try {
+            console.log("Trying to change password");
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    return {changeEmail, changePassword};
 })
