@@ -93,7 +93,7 @@ router.beforeEach((to, from, next) => {
 // If browsed directly, redirects to 'root'
 async function isAdmin(to, from, next) {
     const authStore = useAuthStore();
-    if (authStore.isAdmin) {
+    if (await authStore.isAdmin) {
         next();
         return;
     }
