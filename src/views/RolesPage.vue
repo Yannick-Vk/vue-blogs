@@ -124,8 +124,8 @@ function getRowItems(row: Row<Role>) {
       label: 'Add user',
       icon: 'lucide:user-plus',
       async onSelect() {
-        open.value = true;
         roleName.value = row.original.name;
+        openAddUserModal.value = true;
       }
     },
     {
@@ -133,13 +133,15 @@ function getRowItems(row: Row<Role>) {
       color: 'error',
       icon: 'lucide:trash-2',
       async onSelect() {
-        console.log("Trying to delete role", row.original.name);
+        roleName.value = row.original.name;
+        openDeleteUserModal.value = true;
       }
     },
   ]
 }
 
-const open = ref<boolean>(false);
+const openAddUserModal = ref<boolean>(false);
+const openDeleteUserModal = ref<boolean>(false);
 const usersWithCurrentRole = ref<User[]>([]);
 
 watch(roleName, async (newRoleName) => {
@@ -148,12 +150,12 @@ watch(roleName, async (newRoleName) => {
   }
 }, {immediate: true});
 
-function _closeModal(): void {
-  open.value = false;
+function _closeAddUserModal(): void {
+  openAddUserModal.value = false;
 }
 
-async function _confirmModal(): void {
-  open.value = false;
+async function _confirmAddUserModal(): void {
+  openAddUserModal.value = false;
   await roleStore.addRoleToUser(selectedUser.value.label, roleName.value);
   await roleStore.fetchAllRoles();
   await userStore.fetchUsers();
@@ -167,6 +169,17 @@ async function _confirmModal(): void {
   })
 
   selectedUser.value = null; // Reset after a user has been added
+}
+
+function _closeDeleteUserModal(): void {
+  openDeleteUserModal.value = false;
+}
+
+async function _confirmDeleteUserModal(): void {
+  openDeleteUserModal.value = false;
+  console.log("removing role", roleName.value);
+  await roleStore.removeRole(roleName.value);
+  await roleStore.fetchAllRoles();
 }
 
 const userItems = computed(() => users.value
@@ -247,7 +260,7 @@ const items = computed<BreadcrumbItem[]>(() => [
       <UModal
           title="Adding user"
           :description="`Select a user to add to ${roleName?? ``}`"
-          v-model:open="open"
+          v-model:open="openAddUserModal"
       >
         <template #body>
           <USelectMenu v-model="selectedUser" :avatar="selectedUserObject?.avatar" :items="userItems" class="w-full"
@@ -255,8 +268,20 @@ const items = computed<BreadcrumbItem[]>(() => [
         </template>
         <template #footer>
           <div class="flex items-center justify-start gap-3">
-            <UButton color="neutral" @click="_closeModal">Cancel</UButton>
-            <UButton color="success" @click="_confirmModal">Confirm</UButton>
+            <UButton color="neutral" @click="_closeAddUserModal">Cancel</UButton>
+            <UButton color="success" @click="_confirmAddUserModal">Confirm</UButton>
+          </div>
+        </template>
+      </UModal>
+      <UModal
+          :title="`Removing role ${roleName?? ''}`"
+          :description="`Are you sure you want to remove role '${roleName?? ''}'`"
+          v-model:open="openDeleteUserModal"
+      >
+        <template #footer>
+          <div class="flex items-center justify-start gap-3">
+            <UButton color="neutral" @click="_closeDeleteUserModal">Cancel</UButton>
+            <UButton color="error" @click="_confirmDeleteUserModal">Confirm deletion</UButton>
           </div>
         </template>
       </UModal>
