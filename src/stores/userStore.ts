@@ -67,18 +67,12 @@ export const useUserStore = defineStore('users', () => {
     }
 
     async function addRole(role: string) {
-        error.value = null;
-        try {
-            if (!currentUser.value) {
-                throw new Error("User is not logged in!");
-            }
-            const roleStore = useRoleStore();
-            await roleStore.addRoleToUser(currentUser.value.username, role);
-            roles.value = roleStore.roles;
-        } catch (err) {
-            console.error(err);
-            error.value = `Failed to add role ${role}`;
+        if (!currentUser.value) {
+            throw new Error("User is not logged in!");
         }
+        const roleStore = useRoleStore();
+        await roleStore.addRoleToUser(currentUser.value.username, role);
+        roles.value = roleStore.roles;
     }
 
     return {users, error, currentUser, roles, fetchUsers, fetchUser, getRoles, removeRole, addRole};

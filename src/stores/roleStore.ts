@@ -40,10 +40,11 @@ export const useRoleStore = defineStore('role', () => {
 
     async function addRoleToUser(username: string, roleName: string) {
         try {
-            await api.post(`roles/add-to-user`, {
+            const json = {
                 username: username,
                 roleName: roleName,
-            });
+            };
+            await api.post(`roles/add-to-user`, json);
         } catch (err) {
             console.error(err);
         }

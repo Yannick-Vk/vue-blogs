@@ -29,7 +29,6 @@ onMounted(async () => {
     console.warn("No user found.");
     return;
   }
-  console.dir(currentUser.value);
   const roleStore = useRoleStore();
   await roleStore.fetchAllRoles();
   allRoles.value = roleStore.roles.map((role: Role) => role.name);
@@ -109,20 +108,29 @@ async function confirmDelete() {
   }
 }
 
-const selectedRoles = ref<Role[]>([]);
+const selectedRoles = ref<string[]>([]);
 
 async function addRoles() {
-  for (let role of selectedRoles.value) {
-    await userStore.addRole(role.name);
+  try {
+    for (let role of selectedRoles.value) {
+      await userStore.addRole(role);
+    }
+    await userStore.getRoles(currentUser.value.username); // Fetch user roles again
+    toast.add({
+      title: `Successfully added role(s)`,
+      description: `Successfully added ${selectedRoles.value.join(", ")} to ${currentUser.value?.username}`,
+      color: "success",
+      icon: "lucide:circle-check"
+    });
+  } catch (error) {
+    console.error(error);
+    toast.add({
+      title: `Failed to add role(s)`,
+      description: `Failed adding roles to ${currentUser.value?.username}`,
+      color: "error",
+      icon: "lucide:circle-x"
+    });
   }
-
-  toast.add({
-    title: `Successfully added role(s)`,
-    description: `Successfully added ${selectedRoles.value.join(", ")} to ${currentUser.value?.username}`,
-    color: "success",
-    icon: "lucide:circle-check"
-  });
-
 }
 
 const items = computed<BreadcrumbItem[]>(() => [
