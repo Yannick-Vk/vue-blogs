@@ -73,10 +73,12 @@ function getRowItems(row: Row<User>) {
     },
     {
       label: 'Remove user from role',
+      color: 'error',
+      icon: 'lucide:trash-2',
       async onSelect() {
         open.value = true;
         userToRemove.value = row.original;
-      }
+      },
     },
   ]
 }
