@@ -8,6 +8,7 @@ import type {Row} from "@tanstack/vue-table";
 import {useRoleStore} from "@/stores/roleStore.ts";
 import type {BreadcrumbItem} from "@nuxt/ui/components/Breadcrumb.vue";
 import type {Role} from "@/types/Role.ts";
+import router from "@/router/routes.ts";
 
 const toast = useToast();
 
@@ -77,12 +78,22 @@ function getRowItems(row: Row<Role>) {
       label: 'Actions'
     },
     {
+      label: "See role details",
+      icon: 'lucide:users',
+      async onSelect() {
+        await router.push('/roles/' + row.original.name);
+      },
+    },
+    {
       label: 'Remove role from user',
+      color: 'error',
+      icon: 'lucide:trash-2',
       async onSelect() {
         open.value = !open.value;
         roleToRemove.value = row.original;
-      }
+      },
     },
+
   ]
 }
 
