@@ -104,6 +104,16 @@ async function confirmDelete(): void {
 
 }
 
+const searchTerm = ref<string>("");
+
+const filteredUsers = computed(() => {
+  const term = searchTerm.value.trim().toLowerCase();
+  if (term.length < 1) {
+    return users.value;
+  }
+  return users.value.filter((user: User) => user.username.toLowerCase().includes(term));
+});
+
 const items = computed<BreadcrumbItem[]>(() => [
   {
     label: 'Home',
@@ -127,19 +137,31 @@ const items = computed<BreadcrumbItem[]>(() => [
   <h2 class="text-2xl text-primary">{{ roleName }}</h2>
   <div v-if="users.length > 0">
     <p>This role has {{ users.length }} Users.</p>
-    <UTable :data="users" :columns="columns" class="flex-1"/>
-    <UModal
-        :title="`Removing user '${userToRemove?.username}' from ${roleName}`"
-        description="Are you sure you want to remove this user?"
-        v-model:open="open"
-    >
-      <template #body>
-        <div class="flex items-center justify-start gap-3">
-          <UButton color="neutral" @click="_closeModal">Cancel</UButton>
-          <UButton color="error" @click="confirmDelete">Remove</UButton>
-        </div>
-      </template>
-    </UModal>
+    <UCard variant="subtle" color="primary" class="my-3 flex flex-row gap-3 justify-center">
+      <p class="text-lg mb-3">Search users: </p>
+      <SearchBox v-model:search-term="searchTerm" title="Search users..."/>
+    </UCard>
+    <div v-if="filteredUsers.length > 0">
+      <UTable :data="filteredUsers" :columns="columns" class="flex-1"/>
+      <UModal
+          :title="`Removing user '${userToRemove?.username}' from ${roleName}`"
+          description="Are you sure you want to remove this user?"
+          v-model:open="open"
+      >
+        <template #body>
+          <div class="flex items-center justify-start gap-3">
+            <UButton color="neutral" @click="_closeModal">Cancel</UButton>
+            <UButton color="error" @click="confirmDelete">Remove</UButton>
+          </div>
+        </template>
+      </UModal>
+    </div>
+    <div v-else>
+      <UCard variant="subtle">
+        <h2 class="text-2xl text-primary mb-5">No results</h2>
+        <p>No users found matching your search term.</p>
+      </UCard>
+    </div>
   </div>
   <div v-else>
     <UAlert title="Role doesn't have any users" color="primary" variant="subtle" class="my-5"/>
