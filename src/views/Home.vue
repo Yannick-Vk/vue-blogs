@@ -25,8 +25,7 @@ const filteredBlogs = computed(() => {
 <template>
   <HeroComponent/>
   <UCard variant="subtle" color="primary" class="my-3 flex flex-row gap-3 justify-center">
-    <p class="text-lg mb-3">Search blogs: </p>
-    <SearchBox v-model:search-term="searchTerm" title="Search blogs..."/>
+    <SearchBox v-model:search-term="searchTerm" title="Search blogs..." class="w-96"/>
   </UCard>
   <div v-if="filteredBlogs.length > 0">
     <blog-list :blogs="filteredBlogs" :error="error"/>

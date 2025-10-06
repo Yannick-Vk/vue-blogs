@@ -140,8 +140,7 @@ const items = computed<BreadcrumbItem[]>(() => [
   <div v-if="users.length > 0">
     <p>This role has {{ users.length }} Users.</p>
     <UCard variant="subtle" color="primary" class="my-3 flex flex-row gap-3 justify-center">
-      <p class="text-lg mb-3">Search users: </p>
-      <SearchBox v-model:search-term="searchTerm" title="Search users..."/>
+      <SearchBox v-model:search-term="searchTerm" title="Search users..." class="w-96"/>
     </UCard>
     <div v-if="filteredUsers.length > 0">
       <UTable :data="filteredUsers" :columns="columns" class="flex-1"/>

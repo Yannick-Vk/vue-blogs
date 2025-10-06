@@ -119,14 +119,14 @@ function getRowItems(row: Row<Role>) {
       icon: 'lucide:users',
       async onSelect() {
         await router.push(`/roles/${row.original.name}`);
-      }
+      },
     }, {
       label: 'Add user',
       icon: 'lucide:user-plus',
       async onSelect() {
         roleName.value = row.original.name;
         openAddUserModal.value = true;
-      }
+      },
     },
     {
       label: 'Remove Role',
@@ -135,7 +135,7 @@ function getRowItems(row: Row<Role>) {
       async onSelect() {
         roleName.value = row.original.name;
         openDeleteUserModal.value = true;
-      }
+      },
     },
   ]
 }
@@ -250,8 +250,7 @@ const items = computed<BreadcrumbItem[]>(() => [
       <AddRoleForm @submit="createRole"/>
     </UCard>
     <UCard variant="subtle" color="primary" class="my-3 flex flex-row gap-3 justify-center">
-      <p class="text-lg mb-3">Search roles: </p>
-      <SearchBox v-model:search-term="searchTerm" title="Search roles..."/>
+      <SearchBox v-model:search-term="searchTerm" title="Search roles..." class="w-96"/>
 
     </UCard>
     <div v-if="filteredRoles.length > 0">

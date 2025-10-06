@@ -41,8 +41,7 @@ const items = computed<BreadcrumbItem[]>(() => [
   <UBreadcrumb :items="items" class="mb-5"/>
   <h1 class="text-3xl color-primary-700 my-5">Users</h1>
   <UCard variant="subtle" color="primary" class="my-3 flex flex-row gap-3 justify-center">
-    <p class="text-lg mb-3">Search roles: </p>
-    <SearchBox v-model:search-term="searchTerm" title="Search roles..."/>
+    <SearchBox v-model:search-term="searchTerm" title="Search roles..." class="w-96"/>
   </UCard>
   <div v-if="filteredUsers.length > 0">
     <UsersTable :is-loading="false" :data="filteredUsers"/>
