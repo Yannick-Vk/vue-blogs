@@ -30,6 +30,7 @@ const authApiUrl = `${api_base_url}/auth`;
 export const useAuthStore = defineStore('auth', () => {
     const user = ref<User | null>(null)
     const isAdmin = ref(false);
+    let adminCheckPromise: Promise<boolean> | null = null;
 
     async function checkIsAdmin() {
         if (!user.value) {
@@ -52,7 +53,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     if (storedUser && expiration && new Date(expiration) > new Date()) {
         user.value = JSON.parse(storedUser);
-        const _ = checkIsAdmin()
+        adminCheckPromise = checkIsAdmin()
     }
 
     // The user is authenticated if the user object is not null
@@ -68,7 +69,7 @@ export const useAuthStore = defineStore('auth', () => {
         user.value = new User(userData);
         localStorage.setItem('user', JSON.stringify(userData));
         localStorage.setItem('expiration', userData.expiry);
-        const _ = checkIsAdmin();
+        adminCheckPromise = checkIsAdmin();
     }
 
     async function login(credentials: { username?: string, password?: string }) {
@@ -108,7 +109,7 @@ export const useAuthStore = defineStore('auth', () => {
         handleLoginResponse(response);
     }
 
-    return {user, isLoggedIn, login, logout, register, fetchUser, refresh, isAdmin};
+    return {user, isLoggedIn, login, logout, register, fetchUser, refresh, isAdmin, adminCheckPromise, checkIsAdmin};
 })
 
 

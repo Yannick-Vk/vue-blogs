@@ -89,15 +89,28 @@ router.beforeEach((to, from, next) => {
     }
 });
 
-// Disables a given route if the user does not have an admin role and returns to their original page
-// If browsed directly, redirects to 'root'
 async function isAdmin(to, from, next) {
     const authStore = useAuthStore();
-    if (await authStore.isAdmin) {
-        next();
-        return;
+
+    // Await the promise if it exists. It's created on login/app load.
+    if (authStore.adminCheckPromise) {
+        await authStore.adminCheckPromise;
+    } else if (authStore.isLoggedIn) {
+        // If logged in but promise is missing (e.g. HMR), run check.
+        await authStore.checkIsAdmin();
     }
-    next(from);
+
+    if (authStore.isAdmin) {
+        next(); // User is admin, proceed.
+    } else {
+        // User is not admin.
+        // Redirect to the page they came from, or home if it's a direct navigation.
+        if (from.fullPath && from.fullPath !== '/') {
+            next(from);
+        } else {
+            next({name: 'home'});
+        }
+    }
 }
 
 export default router

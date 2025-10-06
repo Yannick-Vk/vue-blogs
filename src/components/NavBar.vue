@@ -1,14 +1,13 @@
 ﻿<script setup lang="ts">
 import type {NavigationMenuItem} from '@nuxt/ui'
-import {computed} from "vue";
+import {computed, toRef} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {useAuthStore} from "@/stores/auth.ts";
-import {storeToRefs} from 'pinia'
 
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
-const {user} = storeToRefs(authStore)
+const user = toRef(authStore, 'user')
 
 const toast = useToast()
 
