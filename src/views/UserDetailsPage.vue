@@ -1,12 +1,13 @@
 ﻿<script setup lang="ts">
 import {useRoute} from 'vue-router';
-import {type Role, useUserStore} from "@/stores/userStore.ts";
+import {useUserStore} from "@/stores/userStore.ts";
 import {storeToRefs} from "pinia";
 import {computed, h, onMounted, ref, resolveComponent} from "vue";
 import type {TableColumn} from "@nuxt/ui";
 import type {Row} from "@tanstack/vue-table";
 import {useRoleStore} from "@/stores/roleStore.ts";
 import type {BreadcrumbItem} from "@nuxt/ui/components/Breadcrumb.vue";
+import type {Role} from "@/types/Role.ts";
 
 const toast = useToast();
 
@@ -28,6 +29,7 @@ onMounted(async () => {
     console.warn("No user found.");
     return;
   }
+  console.dir(currentUser.value);
   const roleStore = useRoleStore();
   await roleStore.fetchAllRoles();
   allRoles.value = roleStore.roles.map((role: Role) => role.name);
@@ -90,7 +92,7 @@ function _closeModal(): void {
   open.value = false;
 }
 
-async function confirmDelete(): void {
+async function confirmDelete() {
   open.value = false;
   if (!roleToRemove.value) {
     return;
@@ -100,7 +102,7 @@ async function confirmDelete(): void {
   if (!userStore.error) {
     toast.add({
       title: `Removed role ${roleToRemove.value.name}`,
-      description: `Successfully removed ${roleToRemove.value.name} from user ${currentUser.value.username}`,
+      description: `Successfully removed ${roleToRemove.value.name} from user ${currentUser.value?.username}`,
       color: "success",
       icon: "lucide:trash-2"
     })
@@ -111,12 +113,12 @@ const selectedRoles = ref<Role[]>([]);
 
 async function addRoles() {
   for (let role of selectedRoles.value) {
-    await userStore.addRole(role);
+    await userStore.addRole(role.name);
   }
 
   toast.add({
     title: `Successfully added role(s)`,
-    description: `Successfully added ${selectedRoles.value.join(", ")} to ${currentUser.value.username}`,
+    description: `Successfully added ${selectedRoles.value.join(", ")} to ${currentUser.value?.username}`,
     color: "success",
     icon: "lucide:circle-check"
   });
@@ -135,7 +137,7 @@ const items = computed<BreadcrumbItem[]>(() => [
   }, {
     label: 'Edit',
     icon: 'lucide:user-pen',
-    to: `/users/${currentUser.value.id}`
+    to: `/users/${currentUser.value?.id}`
   },
 ])
 </script>

@@ -1,6 +1,8 @@
 ﻿import {defineStore} from "pinia";
 import {ref} from "vue";
 import {api} from "@/services/Api.ts";
+import type {Role} from '@/types/Role.ts';
+import {useRoleStore} from "@/stores/roleStore.ts";
 
 export interface User {
     id: string;
@@ -8,8 +10,6 @@ export interface User {
     email: string;
 }
 
-import type { Role } from '@/types/Role.ts';
-import {useRoleStore} from "@/stores/roleStore.ts";
 
 export const useUserStore = defineStore('users', () => {
     const users = ref<Array<User>>([])
@@ -54,7 +54,7 @@ export const useUserStore = defineStore('users', () => {
     async function removeRole(role: string) {
         error.value = null;
         try {
-            if(!currentUser.value) {
+            if (!currentUser.value) {
                 throw new Error("User is not logged in!");
             }
             const roleStore = useRoleStore();
@@ -69,7 +69,7 @@ export const useUserStore = defineStore('users', () => {
     async function addRole(role: string) {
         error.value = null;
         try {
-            if(!currentUser.value) {
+            if (!currentUser.value) {
                 throw new Error("User is not logged in!");
             }
             const roleStore = useRoleStore();
