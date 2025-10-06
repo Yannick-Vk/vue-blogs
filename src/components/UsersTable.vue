@@ -5,7 +5,7 @@ import {h, resolveComponent} from "vue";
 import type {User} from "@/stores/userStore.ts";
 import {useClipboard} from '@vueuse/core'
 import type {Row} from '@tanstack/vue-table'
-import { useRouter } from 'vue-router';
+import {useRouter} from 'vue-router';
 
 const props = defineProps({
   isLoading: Boolean,
@@ -19,11 +19,21 @@ const toast = useToast()
 const {copy} = useClipboard()
 const router = useRouter()
 
+const UAvatar = resolveComponent('UAvatar')
 const columns: TableColumn<User>[] = [
   {
     accessorKey: 'id',
     header: 'Id',
     cell: ({row}) => row.getValue('id')
+  },
+  {
+    accessorKey: "avatar",
+    header: "Avatar",
+    cell: ({row}) => {
+      return h(UAvatar, {
+        src: `https://i.pravatar.cc/64?u=${row.original.username}`,
+      });
+    }
   },
   {
     accessorKey: 'username',
@@ -94,6 +104,7 @@ function getRowItems(row: Row<User>) {
 </script>
 
 <template>
-  <UTable :loading="isLoading" sticky loading-color="primary" loading-animation="carousel" :data="data" :columns="columns"
+  <UTable :loading="isLoading" sticky loading-color="primary" loading-animation="carousel" :data="data"
+          :columns="columns"
           class="flex-1 max-h-[70vh]"/>
 </template>
