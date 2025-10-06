@@ -72,6 +72,19 @@ function getRowItems(row: Row<User>) {
       label: 'Actions'
     },
     {
+      label: 'Copy user Id',
+      icon: 'lucide:clipboard-copy',
+      onSelect() {
+        copy(row.original.id)
+
+        toast.add({
+          title: 'User ID copied to clipboard!',
+          color: 'success',
+          icon: 'i-lucide-circle-check'
+        })
+      },
+    },
+    {
       label: 'Remove user from role',
       color: 'error',
       icon: 'lucide:trash-2',
