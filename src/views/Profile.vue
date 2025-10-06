@@ -1,12 +1,11 @@
 ﻿<script setup lang="ts">
 import {useAuthStore} from "@/stores/auth.ts";
-import * as z from 'zod'
-import type {FormSubmitEvent} from '@nuxt/ui'
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, ref} from "vue";
 import {useProfileStore} from "@/stores/profileStore.ts";
 import {storeToRefs} from "pinia";
 import {useUserStore} from "@/stores/userStore.ts";
 import {isAxiosError} from "@/services/Api.ts";
+import ChangeEmailForm from "@/views/ChangeEmailForm.vue";
 
 const profileStore = useProfileStore();
 const userStore = useUserStore();
@@ -14,27 +13,15 @@ const {currentUser} = storeToRefs(userStore);
 
 const userId = ref<string | null>(null);
 
-const schema = z.object({
-  email: z.email('Email is required'),
-  password: z.string("Password is required").min(8, "Password requires at least 8 tokens"),
-})
-
-type Schema = z.output<typeof schema>
-
-const state = reactive<Partial<Schema>>({
-  email: undefined,
-  password: undefined,
-})
-
 const toast = useToast()
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
+async function changeEmail(email: string, password: string) {
   try {
-    await profileStore.changeEmail(event.data.email, event.data.password);
+    await profileStore.changeEmail(email, password);
     await userStore.fetchUser(userId.value!);
     toast.add({
       title: 'Successfully changed email',
-      description: `Email has been changed to ${event.data.email}`,
+      description: `Email has been changed to ${email}`,
       color: 'success'
     })
   } catch (e) {
@@ -47,7 +34,33 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     }
 
     toast.add({
-      title: `Failed to change email-address to ${event.data.email}`,
+      title: `Failed to change email-address to ${email}`,
+      description: errorMessage,
+      color: 'error'
+    })
+  }
+}
+
+async function changePassword(newPassword: string, password: string) {
+  try {
+    await profileStore.changePassword(newPassword, password);
+    await userStore.fetchUser(userId.value!);
+    toast.add({
+      title: 'Successfully changed password',
+      description: `Password has been changed.`,
+      color: 'success'
+    })
+  } catch (e) {
+    console.error(e)
+    let errorMessage = `Unexpected error occurred: ${e}`;
+    if (isAxiosError(e) && e.response?.data) {
+      errorMessage = e.response.data as string;
+    } else if (e instanceof Error) {
+      errorMessage = e.message;
+    }
+
+    toast.add({
+      title: `Failed to change password`,
       description: errorMessage,
       color: 'error'
     })
@@ -74,21 +87,7 @@ onMounted(async () => {
         }"
           size="3xl"
       />
-      <UCard variant="subtle" class="my-4">
-        <h3 class="text-lg mb-3 text-primary">Change email</h3>
-        <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-          <UFormField label="Email" name="email">
-            <UInput v-model="state.email" type="email" placeholder="Please enter new email ..." class="w-96"/>
-          </UFormField>
-
-          <PasswordField v-model="state.password" class="block w-96" />
-
-          <UButton type="submit">
-            Change email
-          </UButton>
-        </UForm>
-      </UCard>
-
+      <ChangeEmailForm @submit="changeEmail" />
 
     </div>
 
@@ -97,7 +96,3 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-
-<style scoped>
-
-</style>
