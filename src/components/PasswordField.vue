@@ -3,12 +3,16 @@ import {ref} from "vue";
 
 const show = ref(false)
 const password = defineModel<string>()
+interface Props {
+  placeholder?: string,
+}
+const props = defineProps<Props>()
 </script>
 
 <template>
   <UInput
       v-model="password"
-      placeholder="Password"
+      :placeholder="placeholder?? 'Password'"
       :type="show ? 'text' : 'password'"
       :ui="{ trailing: 'pe-1' }"
   >
