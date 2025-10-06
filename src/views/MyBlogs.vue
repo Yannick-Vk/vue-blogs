@@ -30,9 +30,9 @@ const filteredBlogs = computed(() => {
   <div v-else-if="blogs.length > 0">
     <UCard variant="subtle" class="mb-5 text-center">
       <h2 class="text-2xl text-primary">My blogs</h2>
-      <p>You've created {{blogs.length}} blogs!</p>
+      <p>You've created {{ blogs.length }} blogs!</p>
       <div class="mt-5 flex flex-row gap-5 justify-center">
-        <SearchBox v-model:searchTerm="searchTerm" />
+        <SearchBox v-model:searchTerm="searchTerm" title="Search blogs..."/>
       </div>
 
     </UCard>

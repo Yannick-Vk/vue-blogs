@@ -3,6 +3,7 @@ import {computed} from "vue";
 
 interface Props {
   searchTerm: string;
+  title?: string;
 }
 
 const props = defineProps<Props>();
@@ -21,7 +22,7 @@ function clearSearch() {
 <template>
   <UInput
       v-model="searchTermValue"
-      placeholder="Type something..."
+      :placeholder="title?? 'Type something...'"
       :ui="{ trailing: 'pe-1' }"
       size="xl"
       icon="lucide:search"
