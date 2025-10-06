@@ -64,6 +64,12 @@ export const useRoleStore = defineStore('role', () => {
         }
     }
 
+    async function createRole(roleName: string) {
+        const response = await api.post(`roles/`, {
+            roleName: roleName,
+        });
+    }
+
     return {
         roles, users,
         fetchAllRoles,
@@ -71,5 +77,6 @@ export const useRoleStore = defineStore('role', () => {
         removeRoleFromUser,
         addRoleToUser,
         getUsersWithRole,
+        createRole,
     }
 });

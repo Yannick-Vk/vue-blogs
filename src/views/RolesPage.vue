@@ -187,6 +187,26 @@ const filteredRoles = computed(() => {
   return roles.value.filter((role) => role.name.toLowerCase().includes(term));
 });
 
+const error = ref<string | null>(null);
+
+async function createRole(roleName: string) {
+  try {
+    error.value = null;
+
+    await roleStore.createRole(roleName);
+    await roleStore.fetchAllRoles();
+
+    toast.add({
+      title: `Successfully created ${roleName}`,
+      description: `Creation of Role ${roleName} was successful`,
+      color: 'success',
+      icon: "lucide:user-plus",
+    })
+  } catch (error) {
+    error.value = error;
+  }
+}
+
 const items = computed<BreadcrumbItem[]>(() => [
   {
     label: 'Home',
@@ -204,11 +224,12 @@ const items = computed<BreadcrumbItem[]>(() => [
   <UBreadcrumb :items="items" class="mb-5"/>
   <div v-if="roles.length > 0">
     <UCard variant="subtle" color="primary" class="my-3 flex flex-row gap-3 justify-center">
-      <p class="text-lg mb-3">Search roles: </p>
-      <SearchBox v-model:search-term="searchTerm" title="Search roles..."/>
+      <AddRoleForm @submit="createRole"/>
     </UCard>
     <UCard variant="subtle" color="primary" class="my-3 flex flex-row gap-3 justify-center">
-      <AddRoleForm />
+      <p class="text-lg mb-3">Search roles: </p>
+      <SearchBox v-model:search-term="searchTerm" title="Search roles..."/>
+
     </UCard>
     <div v-if="filteredRoles.length > 0">
       <UTable :columns="columns" :data="filteredRoles"/>
