@@ -59,7 +59,7 @@ export const useUserStore = defineStore('users', () => {
             }
             const roleStore = useRoleStore();
             await roleStore.removeRoleFromUser(currentUser.value.username, role);
-            roles.value = roleStore.roles;
+            await getRoles(currentUser.value.username);
         } catch (err) {
             console.error(err);
             error.value = "Failed to remove role";
@@ -72,7 +72,7 @@ export const useUserStore = defineStore('users', () => {
         }
         const roleStore = useRoleStore();
         await roleStore.addRoleToUser(currentUser.value.username, role);
-        roles.value = roleStore.roles;
+        await getRoles(currentUser.value.username);
     }
 
     return {users, error, currentUser, roles, fetchUsers, fetchUser, getRoles, removeRole, addRole};

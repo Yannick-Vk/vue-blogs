@@ -115,7 +115,6 @@ async function addRoles() {
     for (let role of selectedRoles.value) {
       await userStore.addRole(role);
     }
-    await userStore.getRoles(currentUser.value.username); // Fetch user roles again
     toast.add({
       title: `Successfully added role(s)`,
       description: `Successfully added ${selectedRoles.value.join(", ")} to ${currentUser.value?.username}`,
@@ -168,7 +167,7 @@ const items = computed<BreadcrumbItem[]>(() => [
       </div>
       <div>
         <UForm @submit="addRoles" class="mt-5">
-          <USelect v-model="selectedRoles" multiple :items="allRoles" class="w-48"/>
+          <USelectMenu v-model="selectedRoles" multiple :items="allRoles" class="w-48"/>
 
           <UButton type="submit" class="ml-5"> Add roles</UButton>
         </UForm>
