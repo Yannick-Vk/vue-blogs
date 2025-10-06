@@ -10,6 +10,7 @@ import type {Row} from "@tanstack/vue-table";
 import router from "@/router/routes.ts";
 import type {BreadcrumbItem} from "@nuxt/ui/components/Breadcrumb.vue";
 
+const toast = useToast();
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 
@@ -134,7 +135,7 @@ watch(roleName, async (newRoleName) => {
   if (newRoleName) {
     usersWithCurrentRole.value = await roleStore.getUsersWithRole(newRoleName) || [];
   }
-}, { immediate: true });
+}, {immediate: true});
 
 function _closeModal(): void {
   open.value = false;
@@ -146,20 +147,28 @@ async function _confirmModal(): void {
   await roleStore.fetchAllRoles();
   await userStore.fetchUsers();
   usersWithCurrentRole.value = await roleStore.getUsersWithRole(roleName.value) || [];
-  selectedUser.value = null; // Reset after an user has been added
+
+  toast.add({
+    title: `Added ${selectedUser.value.label} to the ${roleName.value}`,
+    description: `Successfully added user ${selectedUser.value.label} to the role ${roleName.value}`,
+    icon: "lucide:circle-check",
+    color: 'success'
+  })
+
+  selectedUser.value = null; // Reset after a user has been added
 }
 
 const userItems = computed(() => users.value
-  .filter((user: User) => !usersWithCurrentRole.value.some(u => u.id === user.id))
-  .map((user: User) => {
-  return {
-    label: user.username,
-    value: user.id,
-    avatar: {
-      src: `https://i.pravatar.cc/64?u=${user.username}`,
-    }
-  }
-}).sort((a, b) => a.label.localeCompare(b.label)));
+    .filter((user: User) => !usersWithCurrentRole.value.some(u => u.id === user.id))
+    .map((user: User) => {
+      return {
+        label: user.username,
+        value: user.id,
+        avatar: {
+          src: `https://i.pravatar.cc/64?u=${user.username}`,
+        }
+      }
+    }).sort((a, b) => a.label.localeCompare(b.label)));
 
 const selectedUser = ref(null)
 
