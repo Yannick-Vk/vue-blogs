@@ -115,6 +115,7 @@ async function addRoles() {
     for (let role of selectedRoles.value) {
       await userStore.addRole(role);
     }
+    selectedRoles.value = [];
     toast.add({
       title: `Successfully added role(s)`,
       description: `Successfully added ${selectedRoles.value.join(", ")} to ${currentUser.value?.username}`,
@@ -131,6 +132,11 @@ async function addRoles() {
     });
   }
 }
+
+const availableRoles = computed(() => {
+  const currentUserRoleNames = new Set(roles.value.map(role => role.name));
+  return allRoles.value.filter(roleName => !currentUserRoleNames.has(roleName));
+});
 
 const items = computed<BreadcrumbItem[]>(() => [
   {
@@ -167,7 +173,8 @@ const items = computed<BreadcrumbItem[]>(() => [
       </div>
       <div>
         <UForm @submit="addRoles" class="mt-5">
-          <USelectMenu v-model="selectedRoles" multiple :items="allRoles" class="w-48"/>
+          <USelectMenu v-model="selectedRoles" multiple :items="availableRoles"
+                       placeholder="Select one or more roles to add" class="w-60"/>
 
           <UButton type="submit" class="ml-5"> Add roles</UButton>
         </UForm>
