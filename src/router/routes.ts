@@ -95,7 +95,7 @@ router.beforeEach((to, from, next) => {
     }
 });
 
-async function isAdmin(to, from, next) {
+async function isAdmin(to: RouteLocationNormalized, from:  RouteLocationNormalized, next:  RouteLocationNormalized) {
     const authStore = useAuthStore();
 
     // Await the promise if it exists. It's created on login/app load.
