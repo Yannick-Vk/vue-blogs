@@ -81,9 +81,7 @@ onMounted(async () => {
             <UInput v-model="state.email" type="email" placeholder="Please enter new email ..." class="w-96"/>
           </UFormField>
 
-          <UFormField label="Password" name="password">
-            <UInput v-model="state.password" type="password" placeholder="Please enter password ..." class="w-96"/>
-          </UFormField>
+          <PasswordField v-model="state.password" class="block w-96" />
 
           <UButton type="submit">
             Change email
