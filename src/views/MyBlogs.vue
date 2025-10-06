@@ -3,6 +3,7 @@ import {useBlogStore} from "@/stores/blogStore.ts";
 import {storeToRefs} from "pinia";
 import {computed, onMounted, ref} from "vue";
 import BlogLoadingSkeleton from "@/components/BlogLoadingSkeleton.vue";
+import SearchBox from "@/components/SearchBox.vue";
 
 const blogStore = useBlogStore();
 const {blogs, loading} = storeToRefs(blogStore);
@@ -20,9 +21,6 @@ const filteredBlogs = computed(() => {
   return blogs.value.filter((blog) => blog.title.toLowerCase().includes(term));
 });
 
-function clearSearch() {
-    searchTerm.value = '';
-}
 </script>
 
 <template>
@@ -34,24 +32,7 @@ function clearSearch() {
       <h2 class="text-2xl text-primary">My blogs</h2>
       <p>You've created {{blogs.length}} blogs!</p>
       <div class="mt-5 flex flex-row gap-5 justify-center">
-        <UInput
-            v-model="searchTerm"
-            placeholder="Type something..."
-            :ui="{ trailing: 'pe-1' }"
-            size="xl"
-            icon="lucide:search"
-        >
-          <template v-if="searchTerm?.length" #trailing>
-            <UButton
-                color="neutral"
-                variant="link"
-                size="sm"
-                icon="lucide:circle-x"
-                aria-label="Clear input"
-                @click="clearSearch"
-            />
-          </template>
-        </UInput>
+        <SearchBox v-model:searchTerm="searchTerm" />
       </div>
 
     </UCard>
@@ -73,6 +54,3 @@ function clearSearch() {
     </UCard>
   </div>
 </template>
-
-<style scoped>
-</style>
