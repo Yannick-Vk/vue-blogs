@@ -10,8 +10,8 @@ const {user} = storeToRefs(useAuthStore());
 const userStore = useUserStore();
 const {users, error} = storeToRefs(userStore);
 
-onMounted(() => {
-  userStore.fetchUsers();
+onMounted(async () => {
+  await userStore.fetchUsers();
 });
 
 const items = computed<BreadcrumbItem[]>(() => [

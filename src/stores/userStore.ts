@@ -21,7 +21,7 @@ export const useUserStore = defineStore('users', () => {
         error.value = null;
         try {
             const response = await api.get<Array<User>>('users/', {withCredentials: true});
-            users.value = response.data;
+            users.value = response.data.sort((a, b) => a.username.localeCompare(b.username));
         } catch (err) {
             console.error(err);
             error.value = "The server seems to be down. Please try again later.";
