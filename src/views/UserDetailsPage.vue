@@ -36,7 +36,6 @@ onMounted(async () => {
   await userStore.getRoles(currentUser.value.username);
 });
 
-
 const columns: TableColumn<Role>[] = [
   {
     accessorKey: 'name',
@@ -161,9 +160,14 @@ const items = computed<BreadcrumbItem[]>(() => [
     <div v-if="currentUser">
       <div>
         <h1 class="text-2xl">User Details Page</h1>
-        <p>User ID: {{ userId }}</p>
-        <p>Username: {{ currentUser.username }}</p>
-        <p>Email: {{ currentUser.email }}</p>
+        <UCard variant="subtle" class="my-5">
+          <div class="flex flex-row gap-5 mb-5">
+            <UAvatar :src="`https://i.pravatar.cc/128?u=${currentUser.username}`" icon="lucide:user" size="3xl"/>
+            <p class="mt-3">{{ currentUser.username }}</p>
+          </div>
+          <p>User ID: {{ userId }}</p>
+          <p>Email: {{ currentUser.email }}</p>
+        </UCard>
       </div>
       <div v-if="roles.length > 0">
         <UTable :data="roles" :columns="columns" class="flex-1"/>
