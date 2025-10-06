@@ -116,14 +116,24 @@ function getRowItems(row: Row<Role>) {
     },
     {
       label: 'See users',
+      icon: 'lucide:users',
       async onSelect() {
         await router.push(`/roles/${row.original.name}`);
       }
     }, {
       label: 'Add user',
+      icon: 'lucide:user-plus',
       async onSelect() {
         open.value = true;
         roleName.value = row.original.name;
+      }
+    },
+    {
+      label: 'Remove Role',
+      color: 'error',
+      icon: 'lucide:trash-2',
+      async onSelect() {
+        console.log("Trying to delete role", row.original.name);
       }
     },
   ]

@@ -70,6 +70,12 @@ export const useRoleStore = defineStore('role', () => {
         });
     }
 
+    async function removeRole(roleName: string) {
+        const response = await api.delete(`roles/`, {
+            roleName: roleName,
+        });
+    }
+
     return {
         roles, users,
         fetchAllRoles,
