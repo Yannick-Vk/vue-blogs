@@ -41,6 +41,7 @@ export const useBlogStore = defineStore('blogs', () => {
     const currentBlog = ref<BlogWithContent | null>(null);
     const error = ref<string | null>(null);
     const loading = ref(false);
+    const bannerCache = ref(new Map<string, string | null>());
 
     async function getAllBlogs() {
         error.value = null;
@@ -164,13 +165,20 @@ export const useBlogStore = defineStore('blogs', () => {
     }
 
     async function getBanner(blogId: string) {
+        if (bannerCache.value.has(blogId)) {
+            return bannerCache.value.get(blogId)!;
+        }
+
         error.value = null;
         try {
             const response = await api.get(`blogs/${blogId}/banner`, {
                 responseType: 'blob'
             })
-            return URL.createObjectURL(response.data);
+            const bannerUrl = URL.createObjectURL(response.data);
+            bannerCache.value.set(blogId, bannerUrl);
+            return bannerUrl;
         } catch (err) {
+            bannerCache.value.set(blogId, null);
             //console.warn("no banner for blog", blogId);
             return null;
         }
