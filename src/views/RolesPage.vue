@@ -9,6 +9,7 @@ import type {Role} from "@/types/Role.ts";
 import type {Row} from "@tanstack/vue-table";
 import router from "@/router/routes.ts";
 import type {BreadcrumbItem} from "@nuxt/ui/components/Breadcrumb.vue";
+import AddRoleForm from "@/components/AddRoleForm.vue";
 
 const toast = useToast();
 const UButton = resolveComponent('UButton')
@@ -205,6 +206,9 @@ const items = computed<BreadcrumbItem[]>(() => [
     <UCard variant="subtle" color="primary" class="my-3 flex flex-row gap-3 justify-center">
       <p class="text-lg mb-3">Search roles: </p>
       <SearchBox v-model:search-term="searchTerm" title="Search roles..."/>
+    </UCard>
+    <UCard variant="subtle" color="primary" class="my-3 flex flex-row gap-3 justify-center">
+      <AddRoleForm />
     </UCard>
     <div v-if="filteredRoles.length > 0">
       <UTable :columns="columns" :data="filteredRoles"/>
