@@ -50,6 +50,10 @@ const items = computed<NavigationMenuItem[]>(() => [
     },
   ] : []),
 ])
+
+async function profile() {
+  await router.push("/profile");
+}
 </script>
 
 <template>
@@ -77,7 +81,7 @@ const items = computed<NavigationMenuItem[]>(() => [
         />
       </UTooltip>
 
-      <ProfileHeader v-if="authStore.isLoggedIn" @logout="logout" :user="user"/>
+      <ProfileHeader v-if="authStore.isLoggedIn" @logout="logout" @profile="profile" :user="user!"/>
       <UButton v-else-if="route.path === '/login'" to="/register" icon="lucide:log-in" class="w-24">Register</UButton>
       <UButton v-else to="/login" icon="lucide:log-in" class="w-24">Login</UButton>
 

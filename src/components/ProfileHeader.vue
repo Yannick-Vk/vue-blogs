@@ -1,12 +1,13 @@
 ﻿<script setup lang="ts">
 import type {DropdownMenuItem} from '@nuxt/ui'
 import type {User} from '../stores/auth.ts'
+import router from "@/router/routes.ts";
 
 interface Props {
   user: User;
 }
 
-const emit = defineEmits(['logout']);
+const emit = defineEmits(['logout', 'profile']);
 const props = defineProps<Props>();
 
 const items: DropdownMenuItem[][] = [
@@ -17,6 +18,15 @@ const items: DropdownMenuItem[][] = [
         src: `https://i.pravatar.cc/64?u=${props?.user.username}`
       },
       type: 'label'
+    }
+  ],
+  [
+    {
+      label: "Profile",
+      icon: 'lucide:user',
+      onSelect: async() => {
+        emit('profile')
+      },
     }
   ],
   [
