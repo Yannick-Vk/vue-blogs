@@ -1,7 +1,6 @@
 ﻿<script setup lang="ts">
 import type {DropdownMenuItem} from '@nuxt/ui'
 import type {User} from '../stores/auth.ts'
-import router from "@/router/routes.ts";
 
 interface Props {
   user: User;
