@@ -25,7 +25,7 @@ const props = defineProps<Props>();
     />
   </div>
   <UBlogPosts v-else-if="blogs && blogs.length > 0" class="mb-10">
-    <blog-list-item v-for="(blog, index) in blogs" :key="index" :blog="blog" />
+    <blog-list-item v-for="(blog) in blogs" :key="blog.id" :blog="blog" />
   </UBlogPosts>
   <div v-else>
     <BlogLoadingSkeleton/>
