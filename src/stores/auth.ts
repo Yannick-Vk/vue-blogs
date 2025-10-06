@@ -29,6 +29,22 @@ const authApiUrl = `${api_base_url}/auth`;
 
 export const useAuthStore = defineStore('auth', () => {
     const user = ref<User | null>(null)
+    const isAdmin = ref(false);
+
+    async function checkIsAdmin() {
+        if (!user.value) {
+            isAdmin.value = false;
+            return isAdmin.value;
+        }
+        try {
+            const response = await api.get('/roles/me/Admin');
+            isAdmin.value = response.data;
+        } catch (err) {
+            console.warn("Error checking admin status, setting to false");
+            isAdmin.value = false;
+        }
+        return isAdmin.value;
+    }
 
     // Load user from localStorage on store initialization
     const storedUser = localStorage.getItem('user');
@@ -36,6 +52,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     if (storedUser && expiration && new Date(expiration) > new Date()) {
         user.value = JSON.parse(storedUser);
+        const _ = checkIsAdmin()
     }
 
     // The user is authenticated if the user object is not null
@@ -51,6 +68,7 @@ export const useAuthStore = defineStore('auth', () => {
         user.value = new User(userData);
         localStorage.setItem('user', JSON.stringify(userData));
         localStorage.setItem('expiration', userData.expiry);
+        const _ = checkIsAdmin();
     }
 
     async function login(credentials: { username?: string, password?: string }) {
@@ -80,23 +98,15 @@ export const useAuthStore = defineStore('auth', () => {
             await axios.post(`${authApiUrl}/logout`);
         } finally {
             user.value = null
+            isAdmin.value = false;
             localStorage.removeItem('user');
             localStorage.removeItem('expiration');
         }
     }
 
     async function refresh(response: AxiosResponse) {
-        await handleLoginResponse(response);
+        handleLoginResponse(response);
     }
-
-    const isAdmin = computed(async () => {
-        try {
-            const response = await api.get('/roles/me/Admin')
-            return response.data;
-        } catch (err) {
-            return false;
-        }
-    });
 
     return {user, isLoggedIn, login, logout, register, fetchUser, refresh, isAdmin};
 })
