@@ -65,13 +65,13 @@ export const useRoleStore = defineStore('role', () => {
     }
 
     async function createRole(roleName: string) {
-        const response = await api.post(`roles/`, {
+        const _ = await api.post(`roles/`, {
             roleName: roleName,
         });
     }
 
     async function removeRole(roleName: string) {
-        const response = await api.delete(`roles/`, {
+        const _ = await api.delete(`roles/`, {
             data: {
                 roleName: roleName,
             }
