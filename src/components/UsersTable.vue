@@ -80,6 +80,7 @@ function getRowItems(row: Row<User>) {
     },
     {
       label: 'Copy user Id',
+      icon: 'lucide:clipboard-copy',
       onSelect() {
         copy(row.original.id)
 
@@ -88,16 +89,17 @@ function getRowItems(row: Row<User>) {
           color: 'success',
           icon: 'i-lucide-circle-check'
         })
-      }
+      },
     },
     {
       type: 'separator',
     },
     {
       label: 'View user details',
+      icon: "lucide:user-round-cog",
       async onSelect() {
         await router.push(`/users/${row.original.id}`)
-      }
+      },
     },
   ]
 }
