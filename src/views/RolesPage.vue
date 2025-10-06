@@ -202,7 +202,6 @@ const items = computed<BreadcrumbItem[]>(() => [
 <template>
   <UBreadcrumb :items="items" class="mb-5"/>
   <div v-if="roles.length > 0">
-
     <UCard variant="subtle" color="primary" class="my-3 flex flex-row gap-3 justify-center">
       <p class="text-lg mb-3">Search roles: </p>
       <SearchBox v-model:search-term="searchTerm" title="Search roles..."/>
