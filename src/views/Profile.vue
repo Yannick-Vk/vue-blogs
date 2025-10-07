@@ -15,7 +15,7 @@ const {currentUser} = storeToRefs(userStore);
 const userId = ref<string | null>(null);
 
 const toast = useToast()
-
+const changeEmailForm = ref<{reset: () => void} | null>(null)
 async function changeEmail(email: string, password: string) {
   try {
     await profileStore.changeEmail(email, password);
@@ -25,6 +25,8 @@ async function changeEmail(email: string, password: string) {
       description: `Email has been changed to ${email}`,
       color: 'success'
     })
+
+    changeEmailForm.value?.reset();
   } catch (e) {
     console.error(e)
     let errorMessage = `Unexpected error occurred: ${e}`;
@@ -89,7 +91,7 @@ onMounted(async () => {
           size="3xl"
       />
       <div class="flex flex-col lg:flex-row gap-5">
-        <ChangeEmailForm @submit="changeEmail" class="w-full"/>
+        <ChangeEmailForm ref="changeEmailForm" @submit="changeEmail" class="w-full"/>
         <ChangePasswordForm @submit="changePassword" class="w-full"/>
       </div>
 
