@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory} from 'vue-router'
+import {createRouter, createWebHistory, type NavigationGuardNext, type RouteLocationNormalized} from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
@@ -81,7 +81,7 @@ const router = createRouter({
     ],
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
     const authStore = useAuthStore(); // Get access to your auth store
     // Check if the route requires authentication
     if (to.meta.requiresAuth && !authStore.isLoggedIn) {
@@ -95,7 +95,7 @@ router.beforeEach((to, from, next) => {
     }
 });
 
-async function isAdmin(to: RouteLocationNormalized, from:  RouteLocationNormalized, next:  RouteLocationNormalized) {
+async function isAdmin(to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) {
     const authStore = useAuthStore();
 
     // Await the promise if it exists. It's created on login/app load.
