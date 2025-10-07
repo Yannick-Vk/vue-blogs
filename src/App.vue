@@ -6,7 +6,7 @@ import {useAuthStore} from '@/stores/auth';
 import type {ToasterProps} from "@nuxt/ui/components/Toaster.vue";
 
 const authStore = useAuthStore();
-const toaster: ToasterProps = {position: 'top-right', expand: false};
+const toaster: ToasterProps = {position: 'top-center', expand: false};
 
 onMounted(() => {
   authStore.fetchUser();
