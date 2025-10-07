@@ -88,7 +88,7 @@ onMounted(async () => {
         }"
           size="3xl"
       />
-      <div class="flex flex-row gap-5 justify-between">
+      <div class="flex flex-col lg:flex-row gap-5">
         <ChangeEmailForm @submit="changeEmail" class="w-full"/>
         <ChangePasswordForm @submit="changePassword" class="w-full"/>
       </div>
