@@ -19,14 +19,14 @@ const emit = defineEmits(['submit'])
 
 function onSubmit(event: FormSubmitEvent<Schema>) {
   emit('submit', event.data.email, event.data.password)
-
+  // Always reset the password
   state.password = undefined;
 }
-
+// Expose the reset function
 defineExpose({
   reset
 })
-
+// Reset the email when submit-result was a success
 function reset() {
   state.email = undefined
 }

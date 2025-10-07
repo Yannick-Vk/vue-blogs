@@ -19,6 +19,12 @@ const emit = defineEmits(['submit'])
 
 function onSubmit(event: FormSubmitEvent<Schema>) {
   emit('submit', event.data.newPassword, event.data.password)
+  reset();
+}
+
+function reset() {
+  state.password = undefined;
+  state.newPassword = undefined;
 }
 </script>
 
