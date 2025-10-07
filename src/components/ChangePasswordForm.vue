@@ -41,7 +41,7 @@ function reset() {
       </UFormField>
 
       <UButton type="submit">
-        Change email
+        Change password
       </UButton>
     </UForm>
   </UCard>

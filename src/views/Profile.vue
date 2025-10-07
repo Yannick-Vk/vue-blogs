@@ -47,7 +47,7 @@ async function changeEmail(email: string, password: string) {
 async function changePassword(newPassword: string, password: string) {
   try {
     await profileStore.changePassword(newPassword, password);
-    await userStore.fetchUser(userId.value!);
+    //await userStore.fetchUser(userId.value!);
     toast.add({
       title: 'Successfully changed password',
       description: `Password has been changed.`,

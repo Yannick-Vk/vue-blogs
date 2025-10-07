@@ -13,9 +13,13 @@ export const useProfileStore = defineStore('profile', () => {
         }
     }
 
-    async function changePassword(newEmail: string, password: string) {
+    async function changePassword(newPassword: string, password: string) {
         try {
             console.log("Trying to change password");
+            await api.put(`/me/change/password`, {
+                newPassword: newPassword,
+                password: password
+            })
         } catch (error) {
             throw error;
         }
