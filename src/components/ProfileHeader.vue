@@ -1,6 +1,8 @@
 ﻿<script setup lang="ts">
 import type {DropdownMenuItem} from '@nuxt/ui'
 import type {User} from '../stores/auth.ts'
+import {useProfileStore} from "@/stores/profileStore.ts";
+import {computed, onMounted, ref} from "vue";
 
 interface Props {
   user: User;
@@ -9,12 +11,21 @@ interface Props {
 const emit = defineEmits(['logout', 'profile']);
 const props = defineProps<Props>();
 
-const items: DropdownMenuItem[][] = [
+const profileStore = useProfileStore();
+const profilePictureUrl = ref<string | null>(null);
+
+onMounted(async () => {
+  if (props.user) {
+    profilePictureUrl.value = await profileStore.getProfilePicture(props.user.id);
+  }
+});
+
+const items = computed<DropdownMenuItem[][]>(() => [
   [
     {
       label: `${props?.user.username}`,
       avatar: {
-        src: `https://i.pravatar.cc/64?u=${props?.user.username}`
+        src: profilePictureUrl.value || `https://i.pravatar.cc/64?u=${props?.user.username}`
       },
       type: 'label'
     }
@@ -38,7 +49,7 @@ const items: DropdownMenuItem[][] = [
       }
     }
   ]
-]
+]);
 </script>
 
 <template>
