@@ -2,6 +2,7 @@
 import {h, ref, resolveComponent, useTemplateRef} from "vue";
 import type {FormSubmitEvent, TableColumn} from "@nuxt/ui";
 import type {User} from "@/stores/userStore.ts";
+import {Schema} from "node:inspector";
 
 const toast = useToast();
 
@@ -59,12 +60,12 @@ const columns: TableColumn<UserWithAuthor>[] = [
 const table = useTemplateRef('table')
 const rowSelection = ref<Record<string, boolean>>({})
 
-function onSelect(row: TableRow<UserWithAuthor>, e?: Event) {
+function onSelect(row: TableRow<UserWithAuthor>) {
   /* If you decide to also select the column you can do this  */
   row.toggleSelected(!row.getIsSelected())
 }
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
+async function onSubmit() {
   try {
     const selectedIds = Object.keys(rowSelection.value)
         .map(id => Number(id)); // Convert string keys to numbers

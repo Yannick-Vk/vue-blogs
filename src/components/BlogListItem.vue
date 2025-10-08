@@ -12,8 +12,7 @@ const blogStore = useBlogStore();
 const bannerImage = ref<string | null>(null);
 
 onMounted(async () => {
-  const banner = await blogStore.getBanner(props.blog.id);
-  bannerImage.value = banner;
+  bannerImage.value = await blogStore.getBanner(props.blog.id);
 })
 
 </script>
