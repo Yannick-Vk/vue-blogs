@@ -9,6 +9,7 @@ import {useRoleStore} from "@/stores/roleStore.ts";
 import type {BreadcrumbItem} from "@nuxt/ui/components/Breadcrumb.vue";
 import type {Role} from "@/types/Role.ts";
 import router from "@/router/routes.ts";
+import {useProfileStore} from "@/stores/profileStore.ts";
 
 const toast = useToast();
 
@@ -16,6 +17,7 @@ const route = useRoute();
 const userId = route.params.id as string;
 const userStore = useUserStore();
 const {currentUser, roles} = storeToRefs(userStore);
+const profileStore = useProfileStore();
 
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
@@ -23,6 +25,7 @@ const UDropdownMenu = resolveComponent('UDropdownMenu')
 const open = ref<boolean>(false);
 const roleToRemove = ref<Role | null>(null);
 const allRoles = ref<string[]>([]);
+const avatarSrc = ref('');
 
 onMounted(async () => {
   await userStore.fetchUser(userId);
@@ -30,6 +33,10 @@ onMounted(async () => {
     console.warn("No user found.");
     return;
   }
+
+  const fetchedAvatar = await profileStore.getProfilePicture(currentUser.value.id);
+  avatarSrc.value = fetchedAvatar || `https://i.pravatar.cc/128?u=${currentUser.value.username}`;
+
   const roleStore = useRoleStore();
   await roleStore.fetchAllRoles();
   allRoles.value = roleStore.roles.map((role: Role) => role.name);
@@ -173,7 +180,7 @@ const items = computed<BreadcrumbItem[]>(() => [
         <h1 class="text-2xl">User Details Page</h1>
         <UCard variant="subtle" class="my-5">
           <div class="flex flex-row gap-5 mb-5">
-            <UAvatar :src="`https://i.pravatar.cc/128?u=${currentUser.username}`" icon="lucide:user" size="3xl"/>
+            <UAvatar :src="avatarSrc" icon="lucide:user" size="3xl"/>
             <p class="mt-3">{{ currentUser.username }}</p>
           </div>
           <p>User ID: {{ userId }}</p>
