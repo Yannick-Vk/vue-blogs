@@ -75,5 +75,10 @@ export const useUserStore = defineStore('users', () => {
         await getRoles(currentUser.value.username);
     }
 
-    return {users, error, currentUser, roles, fetchUsers, fetchUser, getRoles, removeRole, addRole};
+    async function getUser() {
+        const response = await api.get("/users/me");
+        currentUser.value = response.data;
+    }
+
+    return {users, error, currentUser, roles, fetchUsers, fetchUser, getRoles, removeRole, addRole, getUser};
 });

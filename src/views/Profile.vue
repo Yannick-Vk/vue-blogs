@@ -13,10 +13,9 @@ const profileStore = useProfileStore();
 const userStore = useUserStore();
 const {currentUser} = storeToRefs(userStore);
 
-const userId = ref<string | null>(null);
-
 const toast = useToast()
-const changeEmailForm = ref<{reset: () => void} | null>(null)
+const changeEmailForm = ref<{ reset: () => void } | null>(null)
+
 async function changeEmail(email: string, password: string) {
   try {
     await profileStore.changeEmail(email, password);
@@ -71,7 +70,8 @@ async function changePassword(newPassword: string, password: string) {
   }
 }
 
-const changeProfilePictureForm = ref<{reset: () => void} | null>(null)
+const changeProfilePictureForm = ref<{ reset: () => void } | null>(null)
+
 async function changeProfilePicture(image: File) {
   try {
     await profileStore.changeProfilePicture(image);
@@ -103,11 +103,15 @@ async function changeProfilePicture(image: File) {
 
 }
 
+const avatar = ref<string>(`https://i.pravatar.cc/64?u=${currentUser.username}`);
+
 onMounted(async () => {
-  const authStore = useAuthStore();
-  const user = authStore.user;
-  await userStore.fetchUser(user!.id);
-  userId.value = user!.id;
+  await userStore.getUser();
+  console.dir(currentUser.value);
+  try {
+    avatar.value = await profileStore.getProfilePicture();
+  } catch (e) {
+  }
 })
 </script>
 
@@ -119,7 +123,8 @@ onMounted(async () => {
           :name="currentUser.username"
           :description="currentUser.email"
           :avatar="{
-          src: `https://i.pravatar.cc/64?u=${currentUser.username}`,
+          src: avatar,
+          alt: currentUser.username,
         }"
           size="3xl"
       />

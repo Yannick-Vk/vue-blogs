@@ -40,7 +40,11 @@ export const useProfileStore = defineStore('profile', () => {
 
     async function getProfilePicture() {
         try {
-
+            const response = await api.get(`/me/profile-picture`, {
+                responseType: 'blob'
+            })
+            const imageUrl = URL.createObjectURL(response.data);
+            return imageUrl;
         } catch (error) {
             throw error;
         }
