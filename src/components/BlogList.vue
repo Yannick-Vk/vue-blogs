@@ -11,14 +11,14 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-  <div v-if="error" class="mx-auto max-w-2xl">
+  <div v-if="error" class="mx-auto">
     <UAlert
         :title="error"
         :ui="{
         title: 'text-2xl font-bold',
         icon: 'size-8'
       }"
-        class="my-4"
+        class="my-4 text-center"
         color="error"
         icon="lucide:server-off"
         variant="outline"

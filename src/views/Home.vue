@@ -27,7 +27,7 @@ const filteredBlogs = computed(() => {
   <UCard class="my-3 flex flex-row gap-3 justify-center" color="primary" variant="subtle">
     <SearchBox v-model:search-term="searchTerm" class="w-96" title="Search blogs..."/>
   </UCard>
-  <div v-if="filteredBlogs.length > 0">
+  <div v-if="blogs.length === 0 || filteredBlogs.length > 0">
     <blog-list :blogs="filteredBlogs" :error="error"/>
   </div>
   <div v-else>
