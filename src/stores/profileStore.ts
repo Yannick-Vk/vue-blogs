@@ -15,7 +15,6 @@ export const useProfileStore = defineStore('profile', () => {
 
     async function changePassword(newPassword: string, password: string) {
         try {
-            console.log("Trying to change password");
             await api.put(`/me/change/password`, {
                 newPassword: newPassword,
                 password: password
@@ -25,9 +24,11 @@ export const useProfileStore = defineStore('profile', () => {
         }
     }
 
-    async function changeProfilePicture() {
+    async function changeProfilePicture(image: File) {
         try {
-
+            const formData = new FormData();
+            formData.append('image', image);
+            await api.put(`/me/change/profile-picture`,formData)
         } catch (error) {
             throw error;
         }
@@ -35,7 +36,7 @@ export const useProfileStore = defineStore('profile', () => {
 
     async function getProfilePicture() {
         try {
-            
+
         } catch (error) {
             throw error;
         }

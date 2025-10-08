@@ -72,8 +72,30 @@ async function changePassword(newPassword: string, password: string) {
 }
 
 async function changeProfilePicture(image: File) {
-  console.log("ChangeProfilePicture");
-  console.dir(image);
+  try {
+    await profileStore.changeProfilePicture(image);
+
+    toast.add({
+      title: 'Successfully changed profile image',
+      description: `Profile picture has been updated.`,
+      color: 'success'
+    })
+  } catch (e) {
+    console.error(e)
+    let errorMessage = `Unexpected error occurred: ${e}`;
+    if (isAxiosError(e) && e.response?.data) {
+      errorMessage = e.response.data as string;
+    } else if (e instanceof Error) {
+      errorMessage = e.message;
+    }
+
+    toast.add({
+      title: `Failed to change profile picture`,
+      description: errorMessage,
+      color: 'error'
+    })
+  }
+
 }
 
 onMounted(async () => {
