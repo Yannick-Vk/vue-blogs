@@ -10,6 +10,7 @@ import type {Row} from "@tanstack/vue-table";
 import router from "@/router/routes.ts";
 import type {BreadcrumbItem} from "@nuxt/ui/components/Breadcrumb.vue";
 import AddRoleForm from "@/components/AddRoleForm.vue";
+import {useProfileStore} from "@/stores/profileStore.ts";
 
 const toast = useToast();
 const UButton = resolveComponent('UButton')
@@ -17,14 +18,28 @@ const UDropdownMenu = resolveComponent('UDropdownMenu')
 
 const roleStore = useRoleStore();
 const userStore = useUserStore();
+const profileStore = useProfileStore();
 const {roles} = storeToRefs(roleStore);
 const {users} = storeToRefs(userStore);
 
 const roleName = ref<string>("");
+const usersWithAvatars = ref<any[]>([]);
 
 onMounted(async () => {
   await roleStore.fetchAllRoles();
   await userStore.fetchUsers();
+
+  usersWithAvatars.value = await Promise.all(
+      users.value.map(async (user) => {
+        const avatarSrc = await profileStore.getProfilePicture(user.id);
+        return {
+          ...user,
+          avatar: {
+            src: avatarSrc || `https://i.pravatar.cc/64?u=${user.username}`
+          }
+        };
+      })
+  );
 })
 
 /**
@@ -182,15 +197,13 @@ async function _confirmDeleteUserModal(): void {
   await roleStore.fetchAllRoles();
 }
 
-const userItems = computed(() => users.value
-    .filter((user: User) => !usersWithCurrentRole.value.some(u => u.id === user.id))
-    .map((user: User) => {
+const userItems = computed(() => usersWithAvatars.value
+    .filter((user) => !usersWithCurrentRole.value.some(u => u.id === user.id))
+    .map((user) => {
       return {
         label: user.username,
         value: user.id,
-        avatar: {
-          src: `https://i.pravatar.cc/64?u=${user.username}`,
-        }
+        avatar: user.avatar
       }
     }).sort((a, b) => a.label.localeCompare(b.label)));
 
