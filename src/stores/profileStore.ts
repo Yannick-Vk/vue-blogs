@@ -1,5 +1,5 @@
 ﻿import {defineStore, storeToRefs} from "pinia";
-import {api} from "@/services/Api.ts";
+import {api, isAxiosError} from "@/services/Api.ts";
 import {useUserStore} from "@/stores/userStore.ts";
 
 export const useProfileStore = defineStore('profile', () => {
@@ -39,16 +39,21 @@ export const useProfileStore = defineStore('profile', () => {
         }
     }
 
-    async function getProfilePicture() {
+    async function getProfilePicture(userId: string): Promise<string | null> {
         try {
-            const response = await api.get(`/me/profile-picture`, {
-                responseType: 'blob'
-            })
+            const response = await api.get(`/users/${userId}/profile-picture`, {
+                responseType: 'blob',
+                validateStatus: (status) => status < 500,
+            });
+
+            if (response.status === 404 || response.data.size === 0) {
+                return null;
+            }
+
             return URL.createObjectURL(response.data);
         } catch (error) {
-            const userStore = useUserStore();
-            const {currentUser} = storeToRefs(userStore);
-            return `https://i.pravatar.cc/64?u=${currentUser.value.username}`;
+            console.error(`Failed to get profile picture for user ${userId}`, error);
+            return null;
         }
     }
 
