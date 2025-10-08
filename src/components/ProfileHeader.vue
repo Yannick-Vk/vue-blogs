@@ -14,9 +14,21 @@ const props = defineProps<Props>();
 const profileStore = useProfileStore();
 const profilePictureUrl = ref<string | null>(null);
 
-onMounted(async () => {
+async function fetchAvatar() {
   if (props.user) {
     profilePictureUrl.value = await profileStore.getProfilePicture(props.user.id);
+  }
+}
+
+onMounted(async () => {
+  await fetchAvatar();
+});
+
+profileStore.$onAction(({name, after}) => {
+  if (name === 'changeProfilePicture') {
+    after(async () => {
+      await fetchAvatar();
+    });
   }
 });
 
