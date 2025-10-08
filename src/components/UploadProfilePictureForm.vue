@@ -21,6 +21,13 @@ const emit = defineEmits(['submit'])
 function onSubmit(event: FormSubmitEvent<Schema>) {
   emit('submit', event.data.image)
 }
+
+defineExpose({
+  reset
+})
+function reset() {
+  state.image = undefined;
+}
 </script>
 
 <template>

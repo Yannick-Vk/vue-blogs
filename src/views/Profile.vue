@@ -71,6 +71,7 @@ async function changePassword(newPassword: string, password: string) {
   }
 }
 
+const changeProfilePictureForm = ref<{reset: () => void} | null>(null)
 async function changeProfilePicture(image: File) {
   try {
     await profileStore.changeProfilePicture(image);
@@ -80,6 +81,8 @@ async function changeProfilePicture(image: File) {
       description: `Profile picture has been updated.`,
       color: 'success'
     })
+
+    changeProfilePictureForm.value?.reset();
   } catch (e) {
     console.error(e)
     let errorMessage = `Unexpected error occurred: ${e}`;
@@ -121,7 +124,7 @@ onMounted(async () => {
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5">
         <ChangeEmailForm ref="changeEmailForm" @submit="changeEmail"/>
         <ChangePasswordForm @submit="changePassword"/>
-        <UploadProfilePictureForm @submit="changeProfilePicture"/>
+        <UploadProfilePictureForm ref="changeProfilePictureForm" @submit="changeProfilePicture"/>
       </div>
 
     </div>
