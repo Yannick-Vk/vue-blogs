@@ -89,12 +89,15 @@ export const useBlogStore = defineStore('blogs', () => {
             const blogData = response.data;
             currentBlog.value = {
                 ...blogData,
-                authors: blogData.authors.map(author => ({
-                    id: author.id,
-                    name: author.username,
-                    avatar: {
-                        src: `https://i.pravatar.cc/32?u=${author.username}`
-                    }
+                authors: await Promise.all(blogData.authors.map(async (author) => {
+                    const profilePic = await profileStore.getProfilePicture(author.id)
+                    return {
+                        id: author.id,
+                        name: author.username,
+                        avatar: {
+                            src: profilePic || `https://i.pravatar.cc/32?u=${author.username}`
+                        }
+                    };
                 }))
             };
         } catch (err) {
