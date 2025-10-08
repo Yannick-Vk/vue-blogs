@@ -57,5 +57,23 @@ export const useProfileStore = defineStore('profile', () => {
         }
     }
 
-    return {changeEmail, changePassword, changeProfilePicture, getProfilePicture};
+    async function getMyProfilePicture(): Promise<string | null> {
+        try {
+            const response = await api.get(`/me/profile-picture`, {
+                responseType: 'blob',
+                validateStatus: (status) => status < 500,
+            });
+
+            if (response.status === 404 || response.data.size === 0) {
+                return null;
+            }
+
+            return URL.createObjectURL(response.data);
+        } catch (error) {
+            console.error(`Failed to get profile picture for logged in user`, error);
+            return null;
+        }
+    }
+
+    return {changeEmail, changePassword, changeProfilePicture, getProfilePicture, getMyProfilePicture};
 })

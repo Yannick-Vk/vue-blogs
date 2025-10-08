@@ -106,7 +106,8 @@ const avatar = ref<string | null>(null);
 
 onMounted(async () => {
   await userStore.getUser();
-  avatar.value = await profileStore.getProfilePicture();
+  const image: string | null = await profileStore.getMyProfilePicture();
+  avatar.value = image? image : `https://i.pravatar.cc/32?u=${author.username}`;
 })
 </script>
 
