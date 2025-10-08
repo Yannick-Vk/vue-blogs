@@ -1,5 +1,6 @@
-﻿import {defineStore} from "pinia";
+﻿import {defineStore, storeToRefs} from "pinia";
 import {api} from "@/services/Api.ts";
+import {useUserStore} from "@/stores/userStore.ts";
 
 export const useProfileStore = defineStore('profile', () => {
     async function changeEmail(newEmail: string, password: string) {
@@ -45,7 +46,9 @@ export const useProfileStore = defineStore('profile', () => {
             })
             return URL.createObjectURL(response.data);
         } catch (error) {
-            return null;
+            const userStore = useUserStore();
+            const {currentUser} = storeToRefs(userStore);
+            return `https://i.pravatar.cc/64?u=${currentUser.value.username}`;
         }
     }
 
