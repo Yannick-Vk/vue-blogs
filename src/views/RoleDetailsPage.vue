@@ -6,29 +6,40 @@ import {useRoleStore} from "@/stores/roleStore.ts";
 import type {TableColumn} from "@nuxt/ui";
 import type {Row} from "@tanstack/vue-table";
 import type {User} from "@/stores/userStore.ts";
+import {useProfileStore} from "@/stores/profileStore.ts";
 
 const toast = useToast();
 const route = useRoute();
 const roleName = route.params.id as string;
 const roleStore = useRoleStore();
-const users = ref<User[]>([]);
+const profileStore = useProfileStore();
+const users = ref<any[]>([]);
 const userToRemove = ref<User | null>(null);
 
 onMounted(async () => {
   const userList: User[] = await roleStore.getUsersWithRole(roleName);
-  users.value = userList.sort((a, b) => a.username.localeCompare(b.username));
+  const usersWithAvatars = await Promise.all(
+      userList.map(async (user) => {
+        const avatarSrc = await profileStore.getProfilePicture(user.id);
+        return {
+          ...user,
+          avatarSrc: avatarSrc || `https://i.pravatar.cc/64?u=${user.username}`
+        };
+      })
+  );
+  users.value = usersWithAvatars.sort((a, b) => a.username.localeCompare(b.username));
 })
 
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 const UAvatar = resolveComponent('UAvatar')
-const columns: TableColumn<User>[] = [
+const columns: TableColumn<any>[] = [
   {
     accessorKey: "avatar",
     header: "Avatar",
     cell: ({row}) => {
       return h(UAvatar, {
-        src: `https://i.pravatar.cc/64?u=${row.original.username}`,
+        src: row.original.avatarSrc,
       });
     }
   },
@@ -65,7 +76,7 @@ const columns: TableColumn<User>[] = [
   },
 ]
 
-function getRowItems(row: Row<User>) {
+function getRowItems(row: Row<any>) {
   return [
     {
       type: 'label',
@@ -109,7 +120,17 @@ async function confirmDelete(): void {
   }
 
   await roleStore.removeRoleFromUser(userToRemove.value.username, roleName);
-  users.value = await roleStore.getUsersWithRole(roleName);
+  const userList: User[] = await roleStore.getUsersWithRole(roleName);
+  const usersWithAvatars = await Promise.all(
+      userList.map(async (user) => {
+        const avatarSrc = await profileStore.getProfilePicture(user.id);
+        return {
+          ...user,
+          avatarSrc: avatarSrc || `https://i.pravatar.cc/64?u=${user.username}`
+        };
+      })
+  );
+  users.value = usersWithAvatars.sort((a, b) => a.username.localeCompare(b.username));
   toast.add({
     title: `Removed user ${userToRemove.value.username}`,
     description: `Successfully removed ${userToRemove.value.username} from role ${roleName}`,
@@ -126,7 +147,7 @@ const filteredUsers = computed(() => {
   if (term.length < 1) {
     return users.value;
   }
-  return users.value.filter((user: User) => user.username.toLowerCase().includes(term));
+  return users.value.filter((user) => user.username.toLowerCase().includes(term));
 });
 
 const items = computed<BreadcrumbItem[]>(() => [
