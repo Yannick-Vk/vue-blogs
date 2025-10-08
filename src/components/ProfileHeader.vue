@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+﻿<script lang="ts" setup>
 import type {DropdownMenuItem} from '@nuxt/ui'
 import type {User} from '../stores/auth.ts'
 import {useProfileStore} from "@/stores/profileStore.ts";
@@ -46,7 +46,7 @@ const items = computed<DropdownMenuItem[][]>(() => [
     {
       label: "Profile",
       icon: 'lucide:user',
-      onSelect: async() => {
+      onSelect: async () => {
         emit('profile')
       },
     }
@@ -65,12 +65,12 @@ const items = computed<DropdownMenuItem[][]>(() => [
 </script>
 
 <template>
-  <UDropdownMenu arrow :items="items" :content="{
+  <UDropdownMenu :content="{
       align: 'end',
       side: 'bottom',
       sideOffset: 8
-    }" :ui="{ content: 'w-48' }">
-    <UButton :label="props?.user.username" color="neutral" variant="outline" icon="lucide:user" size="lg"/>
+    }" :items="items" :ui="{ content: 'w-48' }" arrow>
+    <UButton :label="props?.user.username" color="neutral" icon="lucide:user" size="lg" variant="outline"/>
   </UDropdownMenu>
 </template>
 

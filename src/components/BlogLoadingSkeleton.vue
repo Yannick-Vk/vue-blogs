@@ -1,10 +1,10 @@
-﻿<script setup lang="ts">
+﻿<script lang="ts" setup>
 
 </script>
 
 <template>
   <div class="flex justify-center py-4">
-    <UIcon name="lucide:loader-circle" class="size-8 animate-spin"></UIcon>
+    <UIcon class="size-8 animate-spin" name="lucide:loader-circle"></UIcon>
   </div>
   <div v-for="i in 3" :key="i" class="my-3 flex gap-4 items-center">
     <USkeleton class="h-32 w-48"/>

@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+﻿<script lang="ts" setup>
 import {computed, onMounted, ref} from "vue";
 import {useAuthStore} from "@/stores/auth.ts";
 import {storeToRefs} from "pinia";
@@ -55,11 +55,11 @@ const items = computed<BreadcrumbItem[]>(() => [
 <template>
   <UBreadcrumb :items="items" class="mb-5"/>
   <h1 class="text-3xl color-primary-700 my-5">Users</h1>
-  <UCard variant="subtle" color="primary" class="my-3 flex flex-row gap-3 justify-center">
-    <SearchBox v-model:search-term="searchTerm" title="Search roles..." class="w-96"/>
+  <UCard class="my-3 flex flex-row gap-3 justify-center" color="primary" variant="subtle">
+    <SearchBox v-model:search-term="searchTerm" class="w-96" title="Search roles..."/>
   </UCard>
   <div v-if="filteredUsers.length > 0">
-    <UsersTable :is-loading="false" :data="filteredUsers"/>
+    <UsersTable :data="filteredUsers" :is-loading="false"/>
   </div>
   <div v-else>
     <UCard variant="subtle">

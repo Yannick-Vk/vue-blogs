@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+﻿<script lang="ts" setup>
 import * as z from 'zod'
 import type {FormSubmitEvent} from '@nuxt/ui'
 import {useAuthStore} from '@/stores/auth';
@@ -36,13 +36,13 @@ const providers = [{
   label: 'Google',
   icon: 'logos:google-icon',
   onClick: () => {
-    toast.add({ title: 'Google', icon: "logos:google-icon", description: 'Login with Google' })
+    toast.add({title: 'Google', icon: "logos:google-icon", description: 'Login with Google'})
   }
 }, {
   label: 'GitHub',
   icon: 'lucide:github',
   onClick: () => {
-    toast.add({ title: 'GitHub', icon:"lucide:github", description: 'Login with GitHub' })
+    toast.add({title: 'GitHub', icon: "lucide:github", description: 'Login with GitHub'})
   }
 }]
 
@@ -82,21 +82,23 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   <div class="flex flex-col items-center justify-center gap-4 p-4">
     <UPageCard class="w-full max-w-md">
       <UAuthForm
-          :schema="schema"
           :fields="fields"
           :providers="providers"
-          title="Welcome back!"
+          :schema="schema"
           icon="i-lucide-lock"
+          title="Welcome back!"
           @submit="onSubmit"
       >
         <template #description>
-          Don't have an account? <ULink to="register" class="text-primary font-medium">Register</ULink>.
+          Don't have an account?
+          <ULink class="text-primary font-medium" to="register">Register</ULink>
+          .
         </template>
         <template #password-hint>
-          <ULink to="#" class="text-primary font-medium" tabindex="-1">Forgot password?</ULink>
+          <ULink class="text-primary font-medium" tabindex="-1" to="#">Forgot password?</ULink>
         </template>
         <template #validation>
-          <UAlert v-if="errorBox" color="error" icon="i-lucide-info" :title="errorBox" />
+          <UAlert v-if="errorBox" :title="errorBox" color="error" icon="i-lucide-info"/>
         </template>
       </UAuthForm>
     </UPageCard>

@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+﻿<script lang="ts" setup>
 import * as z from 'zod'
 import type {FormSubmitEvent} from '@nuxt/ui'
 import {ref} from "vue";
@@ -108,20 +108,20 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   <div class="flex flex-col items-center justify-center gap-4 p-4">
     <UPageCard class="w-full max-w-md">
       <UAuthForm
-          :schema="schema"
           :fields="fields"
           :providers="providers"
-          title="Welcome!"
+          :schema="schema"
           icon="i-lucide-lock"
+          title="Welcome!"
           @submit="onSubmit"
       >
         <template #description>
           Already have an account?
-          <ULink to="login" class="text-primary font-medium">Login</ULink>
+          <ULink class="text-primary font-medium" to="login">Login</ULink>
           .
         </template>
         <template #validation>
-          <UAlert v-if="errorBox" color="error" icon="i-lucide-info" :title="errorBox"/>
+          <UAlert v-if="errorBox" :title="errorBox" color="error" icon="i-lucide-info"/>
         </template>
       </UAuthForm>
     </UPageCard>

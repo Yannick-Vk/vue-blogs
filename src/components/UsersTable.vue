@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+﻿<script lang="ts" setup>
 
 import type {TableColumn} from "@nuxt/ui";
 import {h, resolveComponent} from "vue";
@@ -113,7 +113,7 @@ function getRowItems(row: Row<User>) {
 </script>
 
 <template>
-  <UTable :loading="isLoading" sticky loading-color="primary" loading-animation="carousel" :data="data"
-          :columns="columns"
-          class="flex-1 max-h-[70vh]"/>
+  <UTable :columns="columns" :data="data" :loading="isLoading" class="flex-1 max-h-[70vh]" loading-animation="carousel"
+          loading-color="primary"
+          sticky/>
 </template>

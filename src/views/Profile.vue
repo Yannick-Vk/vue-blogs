@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+﻿<script lang="ts" setup>
 import {onMounted, ref} from "vue";
 import {useProfileStore} from "@/stores/profileStore.ts";
 import {storeToRefs} from "pinia";
@@ -124,12 +124,12 @@ onMounted(async () => {
     <h2 class="text-2xl font-bold mb-4">Profile</h2>
     <div v-if="currentUser">
       <UUser
-          :name="currentUser.username"
-          :description="currentUser.email"
           :avatar="{
           src: avatar,
           alt: currentUser.username,
         }"
+          :description="currentUser.email"
+          :name="currentUser.username"
           size="3xl"
       />
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5">

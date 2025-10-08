@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+﻿<script lang="ts" setup>
 import {useRoute} from 'vue-router';
 import {useUserStore} from "@/stores/userStore.ts";
 import {storeToRefs} from "pinia";
@@ -178,7 +178,7 @@ const items = computed<BreadcrumbItem[]>(() => [
     <div v-if="currentUser">
       <div>
         <h1 class="text-2xl">User Details Page</h1>
-        <UCard variant="subtle" class="my-5">
+        <UCard class="my-5" variant="subtle">
           <div class="flex flex-row gap-5 mb-5">
             <UAvatar :src="avatarSrc" icon="lucide:user" size="3xl"/>
             <p class="mt-3">{{ currentUser.username }}</p>
@@ -188,24 +188,24 @@ const items = computed<BreadcrumbItem[]>(() => [
         </UCard>
       </div>
       <div v-if="roles.length > 0">
-        <UTable :data="roles" :columns="columns" class="flex-1"/>
+        <UTable :columns="columns" :data="roles" class="flex-1"/>
       </div>
       <div v-else>
-        <UAlert title="User doesn't have any roles" color="primary" variant="subtle" class="my-5"/>
+        <UAlert class="my-5" color="primary" title="User doesn't have any roles" variant="subtle"/>
       </div>
       <div>
-        <UForm @submit="addRoles" class="mt-5">
-          <USelectMenu v-model="selectedRoles" multiple :items="availableRoles"
-                       placeholder="Select one or more roles to add" class="w-60"/>
+        <UForm class="mt-5" @submit="addRoles">
+          <USelectMenu v-model="selectedRoles" :items="availableRoles" class="w-60"
+                       multiple placeholder="Select one or more roles to add"/>
 
-          <UButton type="submit" class="ml-5"> Add roles</UButton>
+          <UButton class="ml-5" type="submit"> Add roles</UButton>
         </UForm>
       </div>
 
       <UModal
+          v-model:open="open"
           :title="`Removing role '${roleToRemove?.name}' from ${currentUser.username}`"
           description="Are you sure you want to remove this role?"
-          v-model:open="open"
       >
         <template #body>
           <div class="flex items-center justify-start gap-3">

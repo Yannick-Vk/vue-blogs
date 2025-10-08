@@ -6,7 +6,7 @@ import {createPinia} from 'pinia'
 import App from './App.vue'
 import router from './router/routes.ts'
 import ui from "@nuxt/ui/vue-plugin";
-import { VueShowdownPlugin } from 'vue-showdown';
+import {VueShowdownPlugin} from 'vue-showdown';
 
 const app = createApp(App)
 

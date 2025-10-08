@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+﻿<script lang="ts" setup>
 import {h, ref, resolveComponent, useTemplateRef} from "vue";
 import type {FormSubmitEvent, TableColumn} from "@nuxt/ui";
 import type {User} from "@/stores/userStore.ts";
@@ -81,8 +81,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
 <template>
   <UForm class="space-y-4" @submit="onSubmit">
-    <UTable ref="table" v-model:row-selection="rowSelection" :data="props.users" :columns="columns" @select="onSelect"
-            class="flex-1"/>
+    <UTable ref="table" v-model:row-selection="rowSelection" :columns="columns" :data="props.users" class="flex-1"
+            @select="onSelect"/>
 
     <div class="px-4 py-3.5 border-t border-accented text-sm text-muted">
       {{ table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0 }} of

@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+﻿<script lang="ts" setup>
 import type {NavigationMenuItem} from '@nuxt/ui'
 import {computed, toRef} from "vue";
 import {useRoute, useRouter} from "vue-router";
@@ -60,7 +60,7 @@ async function profile() {
   <UHeader toggle-side="left">
     <template #title>
       <div class="flex flex-row gap-3">
-        <UIcon name="lucide:home" class="text-primary-700 dark:text-primary-200 size-7"/>
+        <UIcon class="text-primary-700 dark:text-primary-200 size-7" name="lucide:home"/>
         <p class="text-primary-700 dark:text-primary-200">Vue Blogger</p>
       </div>
     </template>
@@ -70,25 +70,25 @@ async function profile() {
     <template #right>
       <UColorModeButton/>
 
-      <UTooltip text="Open on GitHub" :kbds="['meta', 'G']">
+      <UTooltip :kbds="['meta', 'G']" text="Open on GitHub">
         <UButton
-            color="neutral"
-            variant="ghost"
-            to="https://github.com/Yannick-Vk/vue-blogs"
-            target="_blank"
-            icon="lucide:github"
             aria-label="GitHub"
+            color="neutral"
+            icon="lucide:github"
+            target="_blank"
+            to="https://github.com/Yannick-Vk/vue-blogs"
+            variant="ghost"
         />
       </UTooltip>
 
-      <ProfileHeader v-if="authStore.isLoggedIn" @logout="logout" @profile="profile" :user="user!"/>
-      <UButton v-else-if="route.path === '/login'" to="/register" icon="lucide:log-in" class="w-24">Register</UButton>
-      <UButton v-else to="/login" icon="lucide:log-in" class="w-24">Login</UButton>
+      <ProfileHeader v-if="authStore.isLoggedIn" :user="user!" @logout="logout" @profile="profile"/>
+      <UButton v-else-if="route.path === '/login'" class="w-24" icon="lucide:log-in" to="/register">Register</UButton>
+      <UButton v-else class="w-24" icon="lucide:log-in" to="/login">Login</UButton>
 
     </template>
 
     <template #body>
-      <UNavigationMenu :items="items" orientation="vertical" class="-mx-2.5"/>
+      <UNavigationMenu :items="items" class="-mx-2.5" orientation="vertical"/>
     </template>
   </UHeader>
 </template>

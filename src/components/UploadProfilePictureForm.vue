@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+﻿<script lang="ts" setup>
 import * as z from 'zod'
 import {reactive} from "vue";
 import type {FormSubmitEvent} from "@nuxt/ui";
@@ -25,6 +25,7 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
 defineExpose({
   reset
 })
+
 function reset() {
   state.image = undefined;
 }
@@ -34,7 +35,8 @@ function reset() {
   <UCard variant="subtle">
     <h3 class="text-lg mb-3 text-primary">Change profile picture</h3>
     <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-      <UFileUpload v-model="state.image" label="click or drop your profile picture here" accept="image/*" class="min-h-48"/>
+      <UFileUpload v-model="state.image" accept="image/*" class="min-h-48"
+                   label="click or drop your profile picture here"/>
 
       <UButton type="submit">
         Change profile picture

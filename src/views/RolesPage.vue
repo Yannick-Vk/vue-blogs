@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+﻿<script lang="ts" setup>
 import {computed, defineComponent, h, onMounted, ref, resolveComponent, watch} from "vue";
 import {useRoleStore} from '../stores/roleStore.ts'
 import type {User} from "@/stores/userStore.ts";
@@ -259,20 +259,20 @@ const items = computed<BreadcrumbItem[]>(() => [
 <template>
   <UBreadcrumb :items="items" class="mb-5"/>
   <div v-if="roles.length > 0">
-    <UCard variant="subtle" color="primary" class="my-3 flex flex-row gap-3 justify-center">
+    <UCard class="my-3 flex flex-row gap-3 justify-center" color="primary" variant="subtle">
       <AddRoleForm @submit="createRole"/>
     </UCard>
-    <UCard variant="subtle" color="primary" class="my-3 flex flex-row gap-3 justify-center">
-      <SearchBox v-model:search-term="searchTerm" title="Search roles..." class="w-96"/>
+    <UCard class="my-3 flex flex-row gap-3 justify-center" color="primary" variant="subtle">
+      <SearchBox v-model:search-term="searchTerm" class="w-96" title="Search roles..."/>
 
     </UCard>
     <div v-if="filteredRoles.length > 0">
       <UTable :columns="columns" :data="filteredRoles"/>
 
       <UModal
-          title="Adding user"
-          :description="`Select a user to add to ${roleName?? ``}`"
           v-model:open="openAddUserModal"
+          :description="`Select a user to add to ${roleName?? ``}`"
+          title="Adding user"
       >
         <template #body>
           <USelectMenu v-model="selectedUser" :avatar="selectedUserObject?.avatar" :items="userItems" class="w-full"
@@ -286,9 +286,9 @@ const items = computed<BreadcrumbItem[]>(() => [
         </template>
       </UModal>
       <UModal
-          :title="`Removing role ${roleName?? ''}`"
-          :description="`Are you sure you want to remove role '${roleName?? ''}'`"
           v-model:open="openDeleteUserModal"
+          :description="`Are you sure you want to remove role '${roleName?? ''}'`"
+          :title="`Removing role ${roleName?? ''}`"
       >
         <template #footer>
           <div class="flex items-center justify-start gap-3">
@@ -306,7 +306,7 @@ const items = computed<BreadcrumbItem[]>(() => [
     </div>
   </div>
   <div v-else>
-    <UAlert title="No roles have been loaded" variant="subtle" color="error" class="my-5"/>
+    <UAlert class="my-5" color="error" title="No roles have been loaded" variant="subtle"/>
   </div>
 </template>
 

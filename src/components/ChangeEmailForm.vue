@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+﻿<script lang="ts" setup>
 import * as z from 'zod'
 import {reactive} from "vue";
 import type {FormSubmitEvent} from "@nuxt/ui";
@@ -22,10 +22,12 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
   // Always reset the password
   state.password = undefined;
 }
+
 // Expose the reset function
 defineExpose({
   reset
 })
+
 // Reset the email when submit-result was a success
 function reset() {
   state.email = undefined
@@ -37,7 +39,7 @@ function reset() {
     <h3 class="text-lg mb-3 text-primary">Change email</h3>
     <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
       <UFormField label="Email" name="email">
-        <UInput v-model="state.email" type="email" placeholder="Please enter new email ..." class="w-full"/>
+        <UInput v-model="state.email" class="w-full" placeholder="Please enter new email ..." type="email"/>
       </UFormField>
 
       <UFormField label="Password" name="password">

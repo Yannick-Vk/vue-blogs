@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {useBlogStore} from "@/stores/blogStore.ts";
 import {storeToRefs} from "pinia";
 import {computed, onMounted, ref} from "vue";
@@ -28,7 +28,7 @@ const filteredBlogs = computed(() => {
     <BlogLoadingSkeleton/>
   </div>
   <div v-else-if="blogs.length > 0">
-    <UCard variant="subtle" class="mb-5 text-center">
+    <UCard class="mb-5 text-center" variant="subtle">
       <h2 class="text-2xl text-primary">My blogs</h2>
       <p>You've created {{ blogs.length }} blogs!</p>
       <div class="mt-5 flex flex-row gap-5 justify-center">
@@ -50,7 +50,7 @@ const filteredBlogs = computed(() => {
     <UCard variant="subtle">
       <h2 class="text-2xl text-primary mb-5">You have no blogs yet.</h2>
       <p>Click the button below to create your first blog post!</p>
-      <UButton color="primary" variant="outline" icon="lucide:edit" to="/blog/new" class="mt-5">Create blog</UButton>
+      <UButton class="mt-5" color="primary" icon="lucide:edit" to="/blog/new" variant="outline">Create blog</UButton>
     </UCard>
   </div>
 </template>

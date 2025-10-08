@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {type Blog, useBlogStore} from "@/stores/blogStore.ts";
 import {onMounted, ref} from "vue";
 
@@ -20,13 +20,13 @@ onMounted(async () => {
 
 <template>
   <UBlogPost
-      :title="blog.title"
+      :authors="blog.authors"
+      :date="blog.createdAt"
       :description="blog.description"
       :image="bannerImage?? 'https://nuxt.com/assets/blog/nuxt-icon/cover.png'"
-      :date="blog.createdAt"
+      :title="blog.title"
       :to="'/blog/' + blog.id"
       orientation="vertical"
       variant="soft"
-      :authors="blog.authors"
   />
 </template>

@@ -1,5 +1,5 @@
-﻿<script setup lang="ts">
-import {reactive, ref} from "vue";
+﻿<script lang="ts" setup>
+import {reactive} from "vue";
 import * as z from 'zod'
 import type {FormSubmitEvent} from '@nuxt/ui'
 

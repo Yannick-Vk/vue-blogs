@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+﻿<script lang="ts" setup>
 import {useRoute} from "vue-router";
 import {computed, h, onMounted, ref, resolveComponent} from "vue";
 import type {BreadcrumbItem} from "@nuxt/ui/components/Breadcrumb.vue";
@@ -173,15 +173,15 @@ const items = computed<BreadcrumbItem[]>(() => [
   <h2 class="text-2xl text-primary">{{ roleName }}</h2>
   <div v-if="users.length > 0">
     <p>This role has {{ users.length }} Users.</p>
-    <UCard variant="subtle" color="primary" class="my-3 flex flex-row gap-3 justify-center">
-      <SearchBox v-model:search-term="searchTerm" title="Search users..." class="w-96"/>
+    <UCard class="my-3 flex flex-row gap-3 justify-center" color="primary" variant="subtle">
+      <SearchBox v-model:search-term="searchTerm" class="w-96" title="Search users..."/>
     </UCard>
     <div v-if="filteredUsers.length > 0">
-      <UTable :data="filteredUsers" :columns="columns" class="flex-1"/>
+      <UTable :columns="columns" :data="filteredUsers" class="flex-1"/>
       <UModal
+          v-model:open="open"
           :title="`Removing user '${userToRemove?.username}' from ${roleName}`"
           description="Are you sure you want to remove this user?"
-          v-model:open="open"
       >
         <template #body>
           <div class="flex items-center justify-start gap-3">
@@ -199,7 +199,7 @@ const items = computed<BreadcrumbItem[]>(() => [
     </div>
   </div>
   <div v-else>
-    <UAlert title="Role doesn't have any users" color="primary" variant="subtle" class="my-5"/>
+    <UAlert class="my-5" color="primary" title="Role doesn't have any users" variant="subtle"/>
   </div>
 </template>
 

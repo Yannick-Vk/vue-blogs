@@ -1,5 +1,5 @@
-﻿<script setup lang="ts">
-import {computed, onMounted, reactive, ref, watch} from "vue";
+﻿<script lang="ts" setup>
+import {computed, onMounted, reactive, watch} from "vue";
 import type {BreadcrumbItem} from "@nuxt/ui/components/Breadcrumb.vue";
 import {useRoute} from "vue-router";
 import {useBlogStore} from "@/stores/blogStore.ts";
@@ -145,7 +145,7 @@ async function updateAuthors(userIds: string[]) {
   <div v-if="currentBlog" class="p-4">
     <UBreadcrumb :items="items"/>
     <div class="flex flex-col items-center justify-center gap-4 p-4">
-      <Authors :users="usersWithAuthorStatus" @submit-complete="updateAuthors" />
+      <Authors :users="usersWithAuthorStatus" @submit-complete="updateAuthors"/>
       <UPageCard class="w-full max-w-md">
         <template #header>
           <h2 class="text-2xl">Update blog</h2>
@@ -158,21 +158,21 @@ async function updateAuthors(userIds: string[]) {
             </UFormField>
 
             <UFormField label="Description" name="description">
-              <UTextarea v-model="state.description" placeholder="Enter description ..." class="w-full"/>
+              <UTextarea v-model="state.description" class="w-full" placeholder="Enter description ..."/>
             </UFormField>
 
             <UFormField label="Blog file" name="blogContent">
-              <UFileUpload v-model="state.blogContent" accept=".md" label="Click or Drop your blog file here"
+              <UFileUpload v-model="state.blogContent" accept=".md" class="min-h-48 w-96"
                            color="neutral"
                            highlight
-                           class="min-h-48 w-96"/>
+                           label="Click or Drop your blog file here"/>
             </UFormField>
 
             <UFormField label="Banner Image" name="bannerImage">
-              <UFileUpload v-model="state.bannerImage" accept="image/*" label="Click or Drop your banner image here"
+              <UFileUpload v-model="state.bannerImage" accept="image/*" class="min-h-48 w-96"
                            color="neutral"
                            highlight
-                           class="min-h-48 w-96"/>
+                           label="Click or Drop your banner image here"/>
             </UFormField>
 
             <UButton type="submit">

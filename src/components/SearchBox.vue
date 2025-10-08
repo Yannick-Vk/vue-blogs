@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {computed} from "vue";
 
 interface Props {
@@ -24,16 +24,16 @@ function clearSearch() {
       v-model="searchTermValue"
       :placeholder="title?? 'Type something...'"
       :ui="{ trailing: 'pe-1' }"
-      size="xl"
       icon="lucide:search"
+      size="xl"
   >
     <template v-if="searchTermValue?.length" #trailing>
       <UButton
-          color="neutral"
-          variant="link"
-          size="sm"
-          icon="lucide:circle-x"
           aria-label="Clear input"
+          color="neutral"
+          icon="lucide:circle-x"
+          size="sm"
+          variant="link"
           @click="clearSearch"
       />
     </template>

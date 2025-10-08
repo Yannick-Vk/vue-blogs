@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {computed, onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
 import {useBlogStore} from "@/stores/blogStore";
@@ -88,10 +88,10 @@ function formatDate(date: string) {
 
 <template>
   <div v-if="currentBlog" class="p-4">
-    <UBreadcrumb separator-icon="lucide:chevron-right" :items="items"/>
+    <UBreadcrumb :items="items" separator-icon="lucide:chevron-right"/>
     <UPageHero
-        :title="currentBlog.title"
         :description="currentBlog.description"
+        :title="currentBlog.title"
         orientation="horizontal"
     >
       <img
@@ -108,7 +108,7 @@ function formatDate(date: string) {
 
         <div v-for="(author, key) in currentBlog.authors" :key="key" class="flex items-center gap-2 mb-2">
           <UTooltip :text="author.name">
-            <UAvatar :src="author.avatar?.src" :alt="author.description" class="mr-2"/>
+            <UAvatar :alt="author.description" :src="author.avatar?.src" class="mr-2"/>
           </UTooltip>
           <span>{{ author.name }}</span>
         </div>
@@ -116,7 +116,7 @@ function formatDate(date: string) {
       <template #links>
         <div v-if="loggedInUserIsAuthor" class="mt-5 flex flex-row gap-5">
 
-          <UButton @click="editBlog" color="primary" icon="lucide:clipboard-pen">Edit blog</UButton>
+          <UButton color="primary" icon="lucide:clipboard-pen" @click="editBlog">Edit blog</UButton>
 
           <UModal
               title="Confirm deletion"
@@ -128,8 +128,8 @@ function formatDate(date: string) {
             </template>
 
             <template #footer="{ close }">
-              <UButton label="Cancel" color="neutral" variant="outline" @click="close"/>
-              <UButton label="Delete" color="error" @click="deleteBlog"/>
+              <UButton color="neutral" label="Cancel" variant="outline" @click="close"/>
+              <UButton color="error" label="Delete" @click="deleteBlog"/>
             </template>
           </UModal>
         </div>
@@ -138,23 +138,23 @@ function formatDate(date: string) {
 
     <div v-if="currentBlog.content" class="prose max-w-none">
       <VueShowdown
-          :markdown="currentBlog.content"
-          flavor="github"
-          :options="{ emoji: true }"
           :extensions="[showdownHighlight({pre: true})]"
+          :markdown="currentBlog.content"
+          :options="{ emoji: true }"
+          flavor="github"
       />
     </div>
     <div v-else>
       <UAlert
-          title="No blog content found"
-          color="error"
-          variant="outline"
-          icon="lucide:server-off"
-          class="my-4"
           :ui="{
         title: 'text-2xl font-bold',
         icon: 'size-8'
       }"
+          class="my-4"
+          color="error"
+          icon="lucide:server-off"
+          title="No blog content found"
+          variant="outline"
       />
     </div>
 

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import * as z from 'zod'
 import type {FormErrorEvent, FormSubmitEvent} from '@nuxt/ui'
 import {reactive} from "vue";
@@ -27,38 +27,38 @@ const toast = useToast();
 const blogStore = useBlogStore();
 
 const fileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-            if (typeof reader.result === 'string') {
-                const base64String = reader.result.split(',')[1];
-                if (base64String) {
-                    resolve(base64String);
-                } else {
-                    reject(new Error('Failed to extract base64 content from file'));
-                }
-            } else {
-                reject(new Error('Failed to read file as base64'));
-            }
-        };
-        reader.onerror = error => reject(error);
-    });
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        const base64String = reader.result.split(',')[1];
+        if (base64String) {
+          resolve(base64String);
+        } else {
+          reject(new Error('Failed to extract base64 content from file'));
+        }
+      } else {
+        reject(new Error('Failed to read file as base64'));
+      }
+    };
+    reader.onerror = error => reject(error);
+  });
 }
 
 const readTextFile = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsText(file, 'UTF-8');
-        reader.onload = () => {
-            if (typeof reader.result === 'string') {
-                resolve(reader.result);
-            } else {
-                reject(new Error('Failed to read file as text'));
-            }
-        };
-        reader.onerror = error => reject(error);
-    });
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsText(file, 'UTF-8');
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        resolve(reader.result);
+      } else {
+        reject(new Error('Failed to read file as text'));
+      }
+    };
+    reader.onerror = error => reject(error);
+  });
 }
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
@@ -124,27 +124,27 @@ function onError(event: FormErrorEvent) {
       </template>
 
       <template #body>
-        <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit" @error="onError">
+        <UForm :schema="schema" :state="state" class="space-y-4" @error="onError" @submit="onSubmit">
           <UFormField label="Title" name="title">
             <UInput v-model="state.title" class="w-full" placeholder="Blog title"/>
           </UFormField>
 
           <UFormField label="Description" name="description">
-            <UTextarea v-model="state.description" placeholder="Enter description ..." class="w-full"/>
+            <UTextarea v-model="state.description" class="w-full" placeholder="Enter description ..."/>
           </UFormField>
 
           <UFormField label="Blog file" name="blogContent">
-            <UFileUpload v-model="state.blogContent" accept=".md" label="Click or Drop your blog file here"
+            <UFileUpload v-model="state.blogContent" accept=".md" class="min-h-48 w-96"
                          color="neutral"
                          highlight
-                         class="min-h-48 w-96"/>
+                         label="Click or Drop your blog file here"/>
           </UFormField>
 
           <UFormField label="Banner Image" name="bannerImage">
-            <UFileUpload v-model="state.bannerImage" accept="image/*" label="Click or Drop your banner image here"
+            <UFileUpload v-model="state.bannerImage" accept="image/*" class="min-h-48 w-96"
                          color="neutral"
                          highlight
-                         class="min-h-48 w-96"/>
+                         label="Click or Drop your banner image here"/>
           </UFormField>
 
           <UButton type="submit">

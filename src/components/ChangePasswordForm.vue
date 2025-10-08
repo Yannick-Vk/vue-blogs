@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+﻿<script lang="ts" setup>
 import * as z from 'zod'
 import {reactive} from "vue";
 import type {FormSubmitEvent} from "@nuxt/ui";
@@ -34,10 +34,10 @@ function reset() {
     <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
 
       <UFormField label="New Password" name="newPassword">
-        <PasswordField v-model="state.newPassword" placeholder="New password..." class="block w-full"/>
+        <PasswordField v-model="state.newPassword" class="block w-full" placeholder="New password..."/>
       </UFormField>
       <UFormField label="Old Password" name="password">
-        <PasswordField v-model="state.password" placeholder="Old Password..." class="block w-full"/>
+        <PasswordField v-model="state.password" class="block w-full" placeholder="Old Password..."/>
       </UFormField>
 
       <UButton type="submit">
