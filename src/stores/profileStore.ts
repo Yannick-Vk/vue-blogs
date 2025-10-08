@@ -43,10 +43,9 @@ export const useProfileStore = defineStore('profile', () => {
             const response = await api.get(`/me/profile-picture`, {
                 responseType: 'blob'
             })
-            const imageUrl = URL.createObjectURL(response.data);
-            return imageUrl;
+            return URL.createObjectURL(response.data);
         } catch (error) {
-            throw error;
+            return null;
         }
     }
 

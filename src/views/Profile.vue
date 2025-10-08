@@ -1,5 +1,4 @@
 ﻿<script setup lang="ts">
-import {useAuthStore} from "@/stores/auth.ts";
 import {onMounted, ref} from "vue";
 import {useProfileStore} from "@/stores/profileStore.ts";
 import {storeToRefs} from "pinia";
@@ -103,15 +102,12 @@ async function changeProfilePicture(image: File) {
 
 }
 
-const avatar = ref<string>(`https://i.pravatar.cc/64?u=${currentUser.username}`);
+const avatar = ref<string | null>(null);
 
 onMounted(async () => {
   await userStore.getUser();
-  console.dir(currentUser.value);
-  try {
-    avatar.value = await profileStore.getProfilePicture();
-  } catch (e) {
-  }
+  const response: string | null = await profileStore.getProfilePicture();
+  avatar.value = response ? response : `https://i.pravatar.cc/64?u=${currentUser.value.username}`;
 })
 </script>
 
