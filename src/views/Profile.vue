@@ -18,7 +18,9 @@ const changeEmailForm = ref<{ reset: () => void } | null>(null)
 async function changeEmail(email: string, password: string) {
   try {
     await profileStore.changeEmail(email, password);
-    await userStore.fetchUser(userId.value!);
+    if (currentUser.value) {
+      await userStore.fetchUser(currentUser.value.id);
+    }
     toast.add({
       title: 'Successfully changed email',
       description: `Email has been changed to ${email}`,
@@ -70,10 +72,19 @@ async function changePassword(newPassword: string, password: string) {
 }
 
 const changeProfilePictureForm = ref<{ reset: () => void } | null>(null)
+const avatar = ref<string>('');
+
+async function fetchAvatar() {
+  if (currentUser.value) {
+    const image = await profileStore.getProfilePicture(currentUser.value.id);
+    avatar.value = image || `https://i.pravatar.cc/64?u=${currentUser.value.username}`;
+  }
+}
 
 async function changeProfilePicture(image: File) {
   try {
     await profileStore.changeProfilePicture(image);
+    await fetchAvatar();
 
     toast.add({
       title: 'Successfully changed profile image',
@@ -102,12 +113,9 @@ async function changeProfilePicture(image: File) {
 
 }
 
-const avatar = ref<string | null>(null);
-
 onMounted(async () => {
   await userStore.getUser();
-  const image: string | null = await profileStore.getMyProfilePicture();
-  avatar.value = image? image : `https://i.pravatar.cc/32?u=${author.username}`;
+  await fetchAvatar();
 })
 </script>
 
