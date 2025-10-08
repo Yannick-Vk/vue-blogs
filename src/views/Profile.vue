@@ -7,6 +7,7 @@ import {useUserStore} from "@/stores/userStore.ts";
 import {isAxiosError} from "@/services/Api.ts";
 import ChangeEmailForm from "@/components/ChangeEmailForm.vue";
 import ChangePasswordForm from "@/components/ChangePasswordForm.vue";
+import UploadProfilePictureForm from "@/components/UploadProfilePictureForm.vue";
 
 const profileStore = useProfileStore();
 const userStore = useUserStore();
@@ -70,6 +71,11 @@ async function changePassword(newPassword: string, password: string) {
   }
 }
 
+async function changeProfilePicture(image: File) {
+  console.log("ChangeProfilePicture");
+  console.dir(image);
+}
+
 onMounted(async () => {
   const authStore = useAuthStore();
   const user = authStore.user;
@@ -90,9 +96,10 @@ onMounted(async () => {
         }"
           size="3xl"
       />
-      <div class="flex flex-col lg:flex-row gap-5">
-        <ChangeEmailForm ref="changeEmailForm" @submit="changeEmail" class="w-full"/>
-        <ChangePasswordForm @submit="changePassword" class="w-full"/>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5">
+        <ChangeEmailForm ref="changeEmailForm" @submit="changeEmail"/>
+        <ChangePasswordForm @submit="changePassword"/>
+        <UploadProfilePictureForm @submit="changeProfilePicture"/>
       </div>
 
     </div>

@@ -33,7 +33,7 @@ function reset() {
 </script>
 
 <template>
-  <UCard variant="subtle" class="my-4">
+  <UCard variant="subtle">
     <h3 class="text-lg mb-3 text-primary">Change email</h3>
     <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
       <UFormField label="Email" name="email">
