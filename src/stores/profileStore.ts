@@ -1,8 +1,11 @@
-﻿import {defineStore, storeToRefs} from "pinia";
+import {defineStore, storeToRefs} from "pinia";
 import {api, isAxiosError} from "@/services/Api.ts";
 import {useUserStore} from "@/stores/userStore.ts";
+import {ref} from "vue";
 
 export const useProfileStore = defineStore('profile', () => {
+    const avatarCache = ref(new Map<string, string | null>());
+
     async function changeEmail(newEmail: string, password: string) {
         try {
             await api.put(`/me/change/email`, {
@@ -33,13 +36,22 @@ export const useProfileStore = defineStore('profile', () => {
         try {
             const formData = new FormData();
             formData.append('image', image);
-            await api.put(`/me/change/profile-picture`,formData)
+            await api.put(`/me/change/profile-picture`, formData)
+
+            const {useAuthStore} = await import("@/stores/auth.ts");
+            const authStore = useAuthStore();
+            if (authStore.user) {
+                avatarCache.value.delete(authStore.user.id);
+            }
         } catch (error) {
             throw error;
         }
     }
 
     async function getProfilePicture(userId: string): Promise<string | null> {
+        if (avatarCache.value.has(userId)) {
+            return avatarCache.value.get(userId)!;
+        }
         try {
             const response = await api.get(`/users/${userId}/profile-picture`, {
                 responseType: 'blob',
@@ -47,10 +59,13 @@ export const useProfileStore = defineStore('profile', () => {
             });
 
             if (response.status === 404 || response.data.size === 0) {
+                avatarCache.value.set(userId, null);
                 return null;
             }
 
-            return URL.createObjectURL(response.data);
+            const imageUrl = URL.createObjectURL(response.data);
+            avatarCache.value.set(userId, imageUrl);
+            return imageUrl;
         } catch (error) {
             console.error(`Failed to get profile picture for user ${userId}`, error);
             return null;
@@ -58,6 +73,19 @@ export const useProfileStore = defineStore('profile', () => {
     }
 
     async function getMyProfilePicture(): Promise<string | null> {
+        const {useAuthStore} = await import("@/stores/auth.ts");
+        const authStore = useAuthStore();
+        const userId = authStore.user?.id;
+
+        if (!userId) {
+            console.error("User not logged in, cannot fetch profile picture.");
+            return null;
+        }
+
+        if (avatarCache.value.has(userId)) {
+            return avatarCache.value.get(userId)!;
+        }
+
         try {
             const response = await api.get(`/me/profile-picture`, {
                 responseType: 'blob',
@@ -65,10 +93,13 @@ export const useProfileStore = defineStore('profile', () => {
             });
 
             if (response.status === 404 || response.data.size === 0) {
+                avatarCache.value.set(userId, null);
                 return null;
             }
 
-            return URL.createObjectURL(response.data);
+            const imageUrl = URL.createObjectURL(response.data);
+            avatarCache.value.set(userId, imageUrl);
+            return imageUrl;
         } catch (error) {
             console.error(`Failed to get profile picture for logged in user`, error);
             return null;
