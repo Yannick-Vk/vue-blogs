@@ -1,6 +1,6 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import {type Blog, useBlogStore} from "@/stores/blogStore.ts";
-import {ref, onMounted} from "vue";
+import {onMounted, ref} from "vue";
 
 interface Props {
   blog: Blog

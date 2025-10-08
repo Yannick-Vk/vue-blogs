@@ -1,6 +1,5 @@
-import {defineStore, storeToRefs} from "pinia";
-import {api, isAxiosError} from "@/services/Api.ts";
-import {useUserStore} from "@/stores/userStore.ts";
+import {defineStore} from "pinia";
+import {api} from "@/services/Api.ts";
 import {ref} from "vue";
 
 export const useProfileStore = defineStore('profile', () => {
