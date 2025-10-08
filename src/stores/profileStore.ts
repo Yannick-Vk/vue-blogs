@@ -25,6 +25,10 @@ export const useProfileStore = defineStore('profile', () => {
     }
 
     async function changeProfilePicture(image: File) {
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (!allowedTypes.includes(image.type)) {
+            throw new Error('Invalid image format. Please upload a JPG, PNG, GIF, or WEBP file.');
+        }
         try {
             const formData = new FormData();
             formData.append('image', image);

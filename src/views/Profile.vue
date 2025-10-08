@@ -97,6 +97,8 @@ async function changeProfilePicture(image: File) {
       description: errorMessage,
       color: 'error'
     })
+    // Reset if the file was a wrong format
+    changeProfilePictureForm.value?.reset();
   }
 
 }
