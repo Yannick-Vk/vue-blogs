@@ -26,9 +26,8 @@ export interface LoginResponse {
     expiry: string;
 }
 
-const authApiUrl = `${api_base_url}/auth`;
-
 export const useAuthStore = defineStore('auth', () => {
+    const authApiUrl = `${api_base_url}/auth`;
     const user = ref<User | null>(null)
     const isAdmin = ref(false);
     let adminCheckPromise: Promise<boolean> | null = null;

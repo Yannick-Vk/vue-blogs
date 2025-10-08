@@ -20,7 +20,14 @@ const {copy} = useClipboard()
 const router = useRouter()
 
 const UAvatar = resolveComponent('UAvatar')
-const columns: TableColumn<User>[] = [
+
+export interface UserWithAvatar extends User {
+  avatar: {
+    src: string;
+  }
+}
+
+const columns: TableColumn<UserWithAvatar>[] = [
   {
     accessorKey: 'id',
     header: 'Id',
@@ -31,7 +38,7 @@ const columns: TableColumn<User>[] = [
     header: "Avatar",
     cell: ({row}) => {
       return h(UAvatar, {
-        src: `https://i.pravatar.cc/64?u=${row.original.username}`,
+        src: row.original.avatar.src,
       });
     }
   },

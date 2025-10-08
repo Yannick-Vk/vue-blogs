@@ -4,14 +4,29 @@ import {useAuthStore} from "@/stores/auth.ts";
 import {storeToRefs} from "pinia";
 import {useUserStore} from "@/stores/userStore.ts";
 import type {BreadcrumbItem} from "@nuxt/ui/components/Breadcrumb.vue";
-
+import {useProfileStore} from "@/stores/profileStore.ts";
+import {UserWithAvatar} from "../components/UsersTable.vue"
 
 const {user} = storeToRefs(useAuthStore());
 const userStore = useUserStore();
 const {users, error} = storeToRefs(userStore);
+const profileStore = useProfileStore();
+
+const usersWithAvatars = ref<UserWithAvatar[]>([]);
 
 onMounted(async () => {
   await userStore.fetchUsers();
+  usersWithAvatars.value = await Promise.all(
+      users.value.map(async (user) => {
+        const avatarSrc = await profileStore.getProfilePicture(user.id);
+        return {
+          ...user,
+          avatar: {
+            src: avatarSrc || `https://i.pravatar.cc/64?u=${user.username}`
+          }
+        };
+      })
+  );
 });
 
 const searchTerm = ref<string>("");
@@ -19,9 +34,9 @@ const searchTerm = ref<string>("");
 const filteredUsers = computed(() => {
   const term = searchTerm.value.trim().toLowerCase();
   if (term.length < 1) {
-    return users.value;
+    return usersWithAvatars.value;
   }
-  return users.value.filter((user) => user.username.toLowerCase().includes(term));
+  return usersWithAvatars.value.filter((user) => user.username.toLowerCase().includes(term));
 });
 
 const items = computed<BreadcrumbItem[]>(() => [
