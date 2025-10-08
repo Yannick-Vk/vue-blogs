@@ -25,5 +25,21 @@ export const useProfileStore = defineStore('profile', () => {
         }
     }
 
-    return {changeEmail, changePassword};
+    async function changeProfilePicture() {
+        try {
+
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async function getProfilePicture() {
+        try {
+            
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    return {changeEmail, changePassword, changeProfilePicture, getProfilePicture};
 })
