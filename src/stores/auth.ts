@@ -2,6 +2,7 @@ import {computed, ref} from 'vue'
 import {defineStore} from 'pinia'
 import axios, {type AxiosResponse} from 'axios'
 import {api, api_base_url} from "@/services/Api.ts";
+import {useUserStore} from "@/stores/userStore.ts";
 
 axios.defaults.withCredentials = true;
 
@@ -97,6 +98,8 @@ export const useAuthStore = defineStore('auth', () => {
     async function logout() {
         try {
             await axios.post(`${authApiUrl}/logout`);
+            const userStore = useUserStore();
+            userStore.currentUser = undefined;
         } finally {
             user.value = null
             isAdmin.value = false;
