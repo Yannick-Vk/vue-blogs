@@ -36,13 +36,14 @@ const providers = [{
   label: 'Google',
   icon: 'logos:google-icon',
   onClick: async () => {
-    window.location.href = 'https://localhost:7134/api/v1/oauth/google';
+    window.location.href = 'https://localhost:7134/api/v1/auth/external-login?provider=Google';
     toast.add({title: 'Google', icon: "logos:google-icon", description: 'Login with Google'})
   }
 }, {
   label: 'GitHub',
   icon: 'lucide:github',
   onClick: () => {
+    window.location.href = 'https://localhost:7134/api/v1/auth/external-login?provider=GitHub';
     toast.add({title: 'GitHub', icon: "lucide:github", description: 'Login with GitHub'})
   }
 }]
