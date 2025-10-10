@@ -61,6 +61,13 @@ export const useAuthStore = defineStore('auth', () => {
 
     // Fetches the user's profile from a protected endpoint to check for an active session
     async function fetchUser() {
+        try {
+            const response = await api.get<LoginResponse>(`${authApiUrl}/me`);
+            handleLoginResponse(response);
+        } catch (error) {
+            console.error("Failed to fetch user session:", error);
+            await logout(); // Log out if session is invalid
+        }
     }
 
     // Helper function to centralize login/registration logic

@@ -40,7 +40,7 @@ onMounted(async () => {
 });
 const bannerImage = ref<string | null>(null);
 const authStore = useAuthStore();
-const {user} = storeToRefs(authStore);
+const user = computed(() => authStore.user);
 
 const loggedInUserIsAuthor = computed(() => {
   if (!user.value || !currentBlog.value?.authors) {
