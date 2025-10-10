@@ -3,7 +3,7 @@ import * as z from 'zod'
 import type {FormSubmitEvent} from '@nuxt/ui'
 import {useAuthStore} from '@/stores/auth';
 import {useRouter} from 'vue-router';
-import {isAxiosError} from '@/services/Api.ts'
+import {api, isAxiosError} from '@/services/Api.ts'
 import {ref} from "vue";
 
 const toast = useToast()
@@ -35,7 +35,8 @@ const fields = [{
 const providers = [{
   label: 'Google',
   icon: 'logos:google-icon',
-  onClick: () => {
+  onClick: async () => {
+    window.location.href = 'https://localhost:7134/api/v1/oauth/google';
     toast.add({title: 'Google', icon: "logos:google-icon", description: 'Login with Google'})
   }
 }, {
