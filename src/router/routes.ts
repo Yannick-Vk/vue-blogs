@@ -12,6 +12,7 @@ import EditBlog from "@/views/EditBlog.vue";
 import MyBlogs from "@/views/MyBlogs.vue";
 import RoleDetailsPage from "@/views/RoleDetailsPage.vue";
 import Profile from "@/views/Profile.vue";
+import VerifyEmail from "@/views/VerifyEmail.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -77,6 +78,10 @@ const router = createRouter({
             name: 'profile',
             component: Profile,
             meta: {requiresAuth: true}
+        }, {
+            path: '/verify-email',
+            name: 'verify-email',
+            component: VerifyEmail,
         },
     ],
 })
