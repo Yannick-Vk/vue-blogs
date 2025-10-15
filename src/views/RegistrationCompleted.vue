@@ -3,7 +3,8 @@
 </script>
 
 <template>
-  <h1>Verifying your email</h1>
+  <h1>Registration completed!</h1>
+  <p>Please verify your email to continue</p>
 </template>
 
 <style scoped>
