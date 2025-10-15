@@ -82,7 +82,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       description: `Welcome ${authStore.user?.username}`,
       color: 'success'
     })
-    await router.push({name: 'home'})
+    await router.push({name: 'registration-complete'})
   } catch (error) {
     let errorMessage = `Unexpected error occurred: ${error}`;
     if (isAxiosError(error) && error.response?.data) {
