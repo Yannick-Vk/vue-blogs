@@ -14,6 +14,7 @@ import RoleDetailsPage from "@/views/RoleDetailsPage.vue";
 import Profile from "@/views/Profile.vue";
 import VerifyEmail from "@/views/VerifyEmail.vue";
 import RegistrationCompleted from "@/views/RegistrationCompleted.vue";
+import VerificationFailed from "@/views/VerificationFailed.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -87,6 +88,11 @@ const router = createRouter({
             path: '/registration/complete',
             name: 'registration-complete',
             component: RegistrationCompleted,
+        }, {
+            path: '/verification-failed',
+            name: 'verification-failed',
+            alias: '/verify-email-failed',
+            component: VerificationFailed,
         }
     ],
 })

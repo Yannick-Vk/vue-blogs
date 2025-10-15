@@ -1,8 +1,9 @@
 ﻿<script setup lang="ts">
+
 </script>
 
 <template>
-  <EmailVerifyComponent :confirmed="true" />
+  <EmailVerifyComponent :confirmed="false" />
 </template>
 
 <style scoped>
