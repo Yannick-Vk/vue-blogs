@@ -99,6 +99,13 @@ function getRowItems(row: Row<any>) {
       },
     },
     {
+      label: 'See user details',
+      icon: 'lucide:user-cog',
+      async onSelect() {
+        await router.push({ name: 'users', params: {id: row.original.id} });
+      },
+    },
+    {
       label: 'Remove user from role',
       color: 'error',
       icon: 'lucide:trash-2',
