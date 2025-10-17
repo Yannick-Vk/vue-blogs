@@ -7,6 +7,8 @@ import type {TableColumn} from "@nuxt/ui";
 import type {Row} from "@tanstack/vue-table";
 import type {User} from "@/stores/userStore.ts";
 import {useProfileStore} from "@/stores/profileStore.ts";
+import router from "@/router/routes.ts";
+import {useClipboard} from "@vueuse/core";
 
 const toast = useToast();
 const route = useRoute();
@@ -15,6 +17,7 @@ const roleStore = useRoleStore();
 const profileStore = useProfileStore();
 const users = ref<any[]>([]);
 const userToRemove = ref<User | null>(null);
+const {copy} = useClipboard();
 
 onMounted(async () => {
   const userList: User[] = await roleStore.getUsersWithRole(roleName);
