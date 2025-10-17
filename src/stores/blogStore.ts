@@ -276,16 +276,22 @@ export const useBlogStore = defineStore('blogs', () => {
         error.value = null;
         try {
             const response = await api.get<Array<ApiBlog>>(`/blogs/author/me`);
-            blogs.value = response.data.map(blog => ({
-                ...blog,
-                authors: blog.authors.map(author => ({
-                    id: author.id,
-                    name: author.username,
-                    avatar: {
-                        src: `https://i.pravatar.cc/32?u=${author.username}`,
-                    }
-                }))
-            }))
+            blogs.value = await Promise.all(response.data.map(async (blog) => {
+                const authors = await Promise.all(blog.authors.map(async (author) => {
+                    const profilePic = await profileStore.getProfilePicture(author.id);
+                    return {
+                        id: author.id,
+                        name: author.username,
+                        avatar: {
+                            src: profilePic || `https://i.pravatar.cc/32?u=${author.username}`,
+                        }
+                    };
+                }));
+                return {
+                    ...blog,
+                    authors,
+                };
+            }));
         } catch (err) {
             console.error(err);
             if (isAxiosError(err)) {
