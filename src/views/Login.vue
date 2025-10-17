@@ -3,7 +3,7 @@ import * as z from 'zod'
 import type {FormSubmitEvent} from '@nuxt/ui'
 import {useAuthStore} from '@/stores/auth';
 import {useRouter} from 'vue-router';
-import {api, isAxiosError} from '@/services/Api.ts'
+import {api, api_base_url, isAxiosError} from '@/services/Api.ts'
 import {ref} from "vue";
 
 const toast = useToast()
@@ -31,19 +31,19 @@ const fields = [{
   placeholder: 'Enter your password',
   required: true,
 }]
-
+const providerUrl = `${api_base_url}/auth/external-login?provider=`;
 const providers = [{
   label: 'Google',
   icon: 'logos:google-icon',
   onClick: async () => {
-    window.location.href = 'https://localhost:7134/api/v1/auth/external-login?provider=Google';
+    window.location.href = `${providerUrl}Google`;
     toast.add({title: 'Google', icon: "logos:google-icon", description: 'Login with Google'})
   }
 }, {
   label: 'GitHub',
   icon: 'lucide:github',
   onClick: () => {
-    window.location.href = 'https://localhost:7134/api/v1/auth/external-login?provider=GitHub';
+    window.location.href = `${providerUrl}GitHub`;
     toast.add({title: 'GitHub', icon: "lucide:github", description: 'Login with GitHub'})
   }
 }]
