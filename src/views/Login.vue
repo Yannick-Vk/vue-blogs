@@ -31,7 +31,7 @@ const fields = [{
   placeholder: 'Enter your password',
   required: true,
 }]
-const providerUrl = `${api_base_url}/auth/external-login?provider=`;
+const providerUrl = `${api_base_url}/auth/challenge?provider=`;
 const providers = [{
   label: 'Google',
   icon: 'logos:google-icon',
