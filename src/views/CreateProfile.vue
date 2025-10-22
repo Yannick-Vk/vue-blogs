@@ -2,6 +2,11 @@
 import * as z from 'zod'
 import {reactive} from "vue";
 import type {FormSubmitEvent} from "@nuxt/ui";
+import {useProfileStore} from "@/stores/profileStore.ts";
+import {useRouter} from "vue-router";
+
+const toast = useToast();
+const router = useRouter();
 
 const schema = z.object({
   username: z.string('Username is required'),
@@ -13,20 +18,19 @@ const state = reactive<Partial<Schema>>({
   username: undefined,
 })
 
-const emit = defineEmits(['submit'])
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+  const profileStore = useProfileStore();
+  const username = event.data.username;
+  await profileStore.changeUsername(username);
 
-function onSubmit(event: FormSubmitEvent<Schema>) {
-  emit('submit', event.data.username)
-}
+  toast.add({
+    title: `Changed username to ${username}`,
+    description: `Created profile with username ${username}`,
+    color: "success",
+    icon: "lucide:check",
+  })
 
-// Expose the reset function
-defineExpose({
-  reset
-})
-
-// Reset the email when submit-result was a success
-function reset() {
-  state.username = undefined
+  await router.push("home");
 }
 </script>
 
