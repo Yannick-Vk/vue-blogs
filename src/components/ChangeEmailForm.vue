@@ -5,22 +5,18 @@ import type {FormSubmitEvent} from "@nuxt/ui";
 
 const schema = z.object({
   email: z.email('Email is required'),
-  password: z.string("Password is required").min(8, "Password requires at least 8 tokens"),
 })
 
 type Schema = z.output<typeof schema>
 
 const state = reactive<Partial<Schema>>({
   email: undefined,
-  password: undefined,
 })
 
 const emit = defineEmits(['submit'])
 
 function onSubmit(event: FormSubmitEvent<Schema>) {
-  emit('submit', event.data.email, event.data.password)
-  // Always reset the password
-  state.password = undefined;
+  emit('submit', event.data.email,)
 }
 
 // Expose the reset function
@@ -40,10 +36,6 @@ function reset() {
     <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
       <UFormField label="Email" name="email">
         <UInput v-model="state.email" class="w-full" placeholder="Please enter new email ..." type="email"/>
-      </UFormField>
-
-      <UFormField label="Password" name="password">
-        <PasswordField v-model="state.password" class="block w-full"/>
       </UFormField>
 
       <UButton type="submit">

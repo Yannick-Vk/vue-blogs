@@ -5,33 +5,31 @@ import {ref} from "vue";
 export const useProfileStore = defineStore('profile', () => {
     const avatarCache = ref(new Map<string, string | null>());
 
-    async function changeEmail(newEmail: string, password: string) {
+    async function changeEmail(newEmail: string,) {
         try {
             await api.put(`/me/change/email`, {
                 email: newEmail,
-                password: password
             })
         } catch (error) {
             throw error;
         }
     }
 
-    async function changeUsername(newUsername: string, password: string) {
+    async function changeUsername(newUsername: string,) {
         try {
             await api.put(`/me/change/username`, {
                 username: newUsername,
-                password: password
             })
         } catch (error) {
             throw error;
         }
     }
 
-    async function changePassword(newPassword: string, password: string) {
+    async function changePassword(password: string, newPassword: string,) {
         try {
             await api.put(`/me/change/password`, {
                 newPassword: newPassword,
-                password: password
+                password: password,
             })
         } catch (error) {
             throw error;

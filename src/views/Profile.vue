@@ -15,9 +15,9 @@ const {currentUser} = storeToRefs(userStore);
 const toast = useToast()
 const changeEmailForm = ref<{ reset: () => void } | null>(null)
 
-async function changeEmail(email: string, password: string) {
+async function changeEmail(email: string) {
   try {
-    await profileStore.changeEmail(email, password);
+    await profileStore.changeEmail(email);
     if (currentUser.value) {
       await userStore.fetchUser(currentUser.value.id);
     }
@@ -32,7 +32,7 @@ async function changeEmail(email: string, password: string) {
     console.error(e)
     let errorMessage = `Unexpected error occurred: ${e}`;
     if (isAxiosError(e) && e.response?.data) {
-      errorMessage = e.response.data as string;
+      errorMessage = e.response.data.detail;
     } else if (e instanceof Error) {
       errorMessage = e.message;
     }
@@ -45,9 +45,9 @@ async function changeEmail(email: string, password: string) {
   }
 }
 
-async function changeUsername(username: string, password: string) {
+async function changeUsername(username: string) {
   try {
-    await profileStore.changeUsername(username, password);
+    await profileStore.changeUsername(username);
     if (currentUser.value) {
       await userStore.fetchUser(currentUser.value.id);
     }
@@ -62,7 +62,7 @@ async function changeUsername(username: string, password: string) {
     console.error(e)
     let errorMessage = `Unexpected error occurred: ${e}`;
     if (isAxiosError(e) && e.response?.data) {
-      errorMessage = e.response.data as string;
+      errorMessage = e.response.data.detail;
     } else if (e instanceof Error) {
       errorMessage = e.message;
     }
@@ -88,7 +88,7 @@ async function changePassword(newPassword: string, password: string) {
     console.error(e)
     let errorMessage = `Unexpected error occurred: ${e}`;
     if (isAxiosError(e) && e.response?.data) {
-      errorMessage = e.response.data as string;
+      errorMessage = e.response.data.detail;
     } else if (e instanceof Error) {
       errorMessage = e.message;
     }
@@ -164,8 +164,8 @@ onMounted(async () => {
       />
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5">
         <ChangeEmailForm ref="changeEmailForm" @submit="changeEmail"/>
-        <ChangePasswordForm @submit="changePassword"/>
         <ChangeUsernameForm @submit="changeUsername"/>
+        <ChangePasswordForm @submit="changePassword"/>
         <UploadProfilePictureForm ref="changeProfilePictureForm" @submit="changeProfilePicture"/>
       </div>
 
