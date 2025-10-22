@@ -16,6 +16,7 @@ import VerifyEmail from "@/views/VerifyEmail.vue";
 import RegistrationCompleted from "@/views/RegistrationCompleted.vue";
 import VerificationFailed from "@/views/VerificationFailed.vue";
 import LoginSuccess from "@/views/LoginSuccess.vue";
+import CreateProfile from "@/views/CreateProfile.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -99,6 +100,10 @@ const router = createRouter({
             name: 'login-success',
             alias: '/login-succes/:provider',
             component: LoginSuccess,
+        }, {
+            path: '/create-profile',
+            name: 'create-profile',
+            component: CreateProfile,
         },
     ],
 })
