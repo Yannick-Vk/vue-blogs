@@ -17,13 +17,13 @@ type Schema = z.output<typeof schema>
 
 const providers = [{
   label: 'Google',
-  icon: 'logos:google-icon',
+  icon: 'cib:google',
   onClick: () => {
     toast.add({title: 'Google', icon: "logos:google-icon", description: 'Login with Google'})
   }
 }, {
   label: 'GitHub',
-  icon: 'lucide:github',
+  icon: 'cib:github',
   onClick: () => {
     toast.add({title: 'GitHub', icon: "lucide:github", description: 'Login with GitHub'})
   }

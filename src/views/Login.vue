@@ -34,17 +34,15 @@ const fields = [{
 const providerUrl = `${api_base_url}/auth/challenge?provider=`;
 const providers = [{
   label: 'Google',
-  icon: 'logos:google-icon',
+  icon: 'cib:google',
   onClick: async () => {
     window.location.href = `${providerUrl}Google`;
-    toast.add({title: 'Google', icon: "logos:google-icon", description: 'Login with Google'})
   }
 }, {
   label: 'GitHub',
-  icon: 'lucide:github',
+  icon: 'cib:github',
   onClick: () => {
     window.location.href = `${providerUrl}GitHub`;
-    toast.add({title: 'GitHub', icon: "lucide:github", description: 'Login with GitHub'})
   }
 }]
 
