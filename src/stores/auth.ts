@@ -118,7 +118,21 @@ export const useAuthStore = defineStore('auth', () => {
         handleLoginResponse(response);
     }
 
-    return {user, isLoggedIn, login, logout, register, fetchUser, refresh, isAdmin, adminCheckPromise, checkIsAdmin};
+    async function whoAmI() {
+        try {
+            const login = await axios.get<LoginResponse>(`${authApiUrl}/whoAmI`);
+            console.dir(login);
+            handleLoginResponse(login);
+        } catch (e) {
+            console.error("WhoAmI failed:" + e);
+        }
+    }
+
+    function getAdminCheckPromise() {
+        return adminCheckPromise;
+    }
+
+    return {user, isLoggedIn, login, logout, register, fetchUser, refresh, whoAmI, isAdmin, getAdminCheckPromise, checkIsAdmin};
 })
 
 

@@ -15,6 +15,7 @@ import Profile from "@/views/Profile.vue";
 import VerifyEmail from "@/views/VerifyEmail.vue";
 import RegistrationCompleted from "@/views/RegistrationCompleted.vue";
 import VerificationFailed from "@/views/VerificationFailed.vue";
+import LoginSuccess from "@/views/LoginSuccess.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -93,7 +94,12 @@ const router = createRouter({
             name: 'verification-failed',
             alias: '/verify-email-failed',
             component: VerificationFailed,
-        }
+        }, {
+            path: '/login/success/:provider',
+            name: 'login-success',
+            alias: '/login-succes/:provider',
+            component: LoginSuccess,
+        },
     ],
 })
 
@@ -115,8 +121,9 @@ async function isAdmin(to: RouteLocationNormalized, from: RouteLocationNormalize
     const authStore = useAuthStore();
 
     // Await the promise if it exists. It's created on login/app load.
-    if (authStore.adminCheckPromise) {
-        await authStore.adminCheckPromise;
+    const promise = authStore.getAdminCheckPromise();
+    if (promise) {
+        await promise;
     } else if (authStore.isLoggedIn) {
         // If logged in but promise is missing (e.g. HMR), run check.
         await authStore.checkIsAdmin();
