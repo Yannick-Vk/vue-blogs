@@ -16,6 +16,17 @@ export const useProfileStore = defineStore('profile', () => {
         }
     }
 
+    async function changeUsername(newUsername: string, password: string) {
+        try {
+            await api.put(`/me/change/username`, {
+                username: newUsername,
+                password: password
+            })
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async function changePassword(newPassword: string, password: string) {
         try {
             await api.put(`/me/change/password`, {
@@ -105,5 +116,5 @@ export const useProfileStore = defineStore('profile', () => {
         }
     }
 
-    return {changeEmail, changePassword, changeProfilePicture, getProfilePicture, getMyProfilePicture};
+    return {changeEmail, changePassword, changeProfilePicture, getProfilePicture, getMyProfilePicture, changeUsername};
 })

@@ -45,6 +45,36 @@ async function changeEmail(email: string, password: string) {
   }
 }
 
+async function changeUsername(username: string, password: string) {
+  try {
+    await profileStore.changeUsername(username, password);
+    if (currentUser.value) {
+      await userStore.fetchUser(currentUser.value.id);
+    }
+    toast.add({
+      title: 'Successfully changed username',
+      description: `Username has been changed to ${username}`,
+      color: 'success'
+    })
+
+    changeEmailForm.value?.reset();
+  } catch (e) {
+    console.error(e)
+    let errorMessage = `Unexpected error occurred: ${e}`;
+    if (isAxiosError(e) && e.response?.data) {
+      errorMessage = e.response.data as string;
+    } else if (e instanceof Error) {
+      errorMessage = e.message;
+    }
+
+    toast.add({
+      title: `Failed to change username to ${username}`,
+      description: errorMessage,
+      color: 'error'
+    })
+  }
+}
+
 async function changePassword(newPassword: string, password: string) {
   try {
     await profileStore.changePassword(newPassword, password);
@@ -135,6 +165,7 @@ onMounted(async () => {
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5">
         <ChangeEmailForm ref="changeEmailForm" @submit="changeEmail"/>
         <ChangePasswordForm @submit="changePassword"/>
+        <ChangeUsernameForm @submit="changeUsername"/>
         <UploadProfilePictureForm ref="changeProfilePictureForm" @submit="changeProfilePicture"/>
       </div>
 
