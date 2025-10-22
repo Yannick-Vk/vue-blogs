@@ -18,9 +18,8 @@ const changeEmailForm = ref<{ reset: () => void } | null>(null)
 async function changeEmail(email: string) {
   try {
     await profileStore.changeEmail(email);
-    if (currentUser.value) {
-      await userStore.fetchUser(currentUser.value.id);
-    }
+    await userStore.getUser();
+
     toast.add({
       title: 'Successfully changed email',
       description: `Email has been changed to ${email}`,
@@ -48,9 +47,8 @@ async function changeEmail(email: string) {
 async function changeUsername(username: string) {
   try {
     await profileStore.changeUsername(username);
-    if (currentUser.value) {
-      await userStore.fetchUser(currentUser.value.id);
-    }
+    await userStore.getUser();
+
     toast.add({
       title: 'Successfully changed username',
       description: `Username has been changed to ${username}`,
@@ -78,7 +76,8 @@ async function changeUsername(username: string) {
 async function changePassword(newPassword: string, password: string) {
   try {
     await profileStore.changePassword(newPassword, password);
-    //await userStore.fetchUser(userId.value!);
+    await userStore.getUser();
+
     toast.add({
       title: 'Successfully changed password',
       description: `Password has been changed.`,
