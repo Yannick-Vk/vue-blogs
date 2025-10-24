@@ -104,6 +104,7 @@ const router = createRouter({
             path: '/create-profile',
             name: 'create-profile',
             component: CreateProfile,
+            meta: {requiresAuth: true},
         },
     ],
 })
