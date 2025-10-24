@@ -4,7 +4,7 @@ import {useRoleStore} from '../stores/roleStore.ts'
 import type {User} from "@/stores/userStore.ts";
 import {useUserStore} from "@/stores/userStore.ts";
 import {storeToRefs} from "pinia";
-import type {SelectMenuItem, TableColumn} from "@nuxt/ui";
+import type {TableColumn} from "@nuxt/ui";
 import type {Role} from "@/types/Role.ts";
 import type {Row} from "@tanstack/vue-table";
 import router from "@/router/routes.ts";
@@ -170,12 +170,10 @@ function _closeAddUserModal(): void {
 }
 
 async function _confirmAddUserModal() {
-  console.dir(selectedUser.value);
   if (!selectedUser.value) return;
 
   openAddUserModal.value = false;
   // Add role to user by ID
-  console.dir(selectedUser.value);
   await roleStore.addRoleToUser(selectedUser.value.value, roleName.value);
   await roleStore.fetchAllRoles();
   await userStore.fetchUsers();

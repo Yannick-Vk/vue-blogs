@@ -129,7 +129,7 @@ async function confirmDelete() {
     return;
   }
 
-  await roleStore.removeRoleFromUser(userToRemove.value.username, roleName);
+  await roleStore.removeRoleFromUser(userToRemove.value.id, roleName);
   const userList: User[] = await roleStore.getUsersWithRole(roleName);
   const usersWithAvatars = await Promise.all(
       userList.map(async (user) => {
