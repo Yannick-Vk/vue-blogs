@@ -3,6 +3,12 @@ import * as z from 'zod'
 import {reactive} from "vue";
 import type {FormSubmitEvent} from "@nuxt/ui";
 
+interface Props {
+  button?: boolean,
+}
+
+const props = defineProps<Props>();
+
 const schema = z.object({
   image: z
       .instanceof(File, {
@@ -35,8 +41,11 @@ function reset() {
   <UCard variant="subtle">
     <h3 class="text-lg mb-3 text-primary">Change profile picture</h3>
     <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-      <UFileUpload v-model="state.image" accept="image/*" class="min-h-48"
-                   label="click or drop your profile picture here"/>
+      <p v-if="props.button">Choose a file to upload</p>
+      <UFileUpload v-model="state.image" accept="image/*" :class="props.button? '' : 'min-h-48'"
+                   :label="props.button? '' : 'click or drop your profile picture here'"
+                   :variant="props.button? 'button' : 'area'"
+      />
 
       <UButton type="submit">
         Change profile picture
