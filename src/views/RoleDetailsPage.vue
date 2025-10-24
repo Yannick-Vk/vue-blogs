@@ -102,7 +102,7 @@ function getRowItems(row: Row<any>) {
       label: 'See user details',
       icon: 'lucide:user-cog',
       async onSelect() {
-        await router.push({ name: 'users', params: {id: row.original.id} });
+        await router.push({ name: 'user-detail', params: {id: row.original.id} });
       },
     },
     {
