@@ -29,22 +29,22 @@ export const useRoleStore = defineStore('role', () => {
         }
     }
 
-    async function removeRoleFromUser(username: string, roleName: string) {
+    async function removeRoleFromUser(userId: string, roleName: string) {
         try {
             await api.post(`roles/remove-from-user`, {
-                username: username,
+                userId: userId,
                 roleName: roleName,
             });
-            await getUserRoles(username);
+            await getUserRoles(userId);
         } catch (err) {
             console.error(err);
         }
     }
 
-    async function addRoleToUser(username: string, roleName: string) {
+    async function addRoleToUser(userId: string, roleName: string) {
         try {
             const json = {
-                username: username,
+                userId: userId,
                 roleName: roleName,
             };
             await api.post(`roles/add-to-user`, json);

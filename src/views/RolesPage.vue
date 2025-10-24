@@ -149,14 +149,14 @@ function getRowItems(row: Row<Role>) {
       icon: 'lucide:trash-2',
       async onSelect() {
         roleName.value = row.original.name;
-        openDeleteUserModal.value = true;
+        openDeleteRoleModal.value = true;
       },
     },
   ]
 }
 
 const openAddUserModal = ref<boolean>(false);
-const openDeleteUserModal = ref<boolean>(false);
+const openDeleteRoleModal = ref<boolean>(false);
 const usersWithCurrentRole = ref<User[]>([]);
 
 watch(roleName, async (newRoleName) => {
@@ -170,17 +170,20 @@ function _closeAddUserModal(): void {
 }
 
 async function _confirmAddUserModal() {
-  if (!selectedUserObject.value) return;
+  console.dir(selectedUser.value);
+  if (!selectedUser.value) return;
 
   openAddUserModal.value = false;
-  await roleStore.addRoleToUser(selectedUserObject.value.label, roleName.value);
+  // Add role to user by ID
+  console.dir(selectedUser.value);
+  await roleStore.addRoleToUser(selectedUser.value.value, roleName.value);
   await roleStore.fetchAllRoles();
   await userStore.fetchUsers();
   usersWithCurrentRole.value = await roleStore.getUsersWithRole(roleName.value) || [];
 
   toast.add({
-    title: `Added ${selectedUserObject.value.label} to the ${roleName.value}`,
-    description: `Successfully added user ${selectedUserObject.value.label} to the role ${roleName.value}`,
+    title: `Added ${selectedUser.value.label} to the ${roleName.value}`,
+    description: `Successfully added user ${selectedUser.value.label} to the role ${roleName.value}`,
     icon: "lucide:circle-check",
     color: 'success'
   })
@@ -188,13 +191,12 @@ async function _confirmAddUserModal() {
   selectedUser.value = undefined; // Reset after a user has been added
 }
 
-function _closeDeleteUserModal(): void {
-  openDeleteUserModal.value = false;
+function _closeDeleteRoleModal(): void {
+  openDeleteRoleModal.value = false;
 }
 
-async function _confirmDeleteUserModal() {
-  openDeleteUserModal.value = false;
-  console.log("removing role", roleName.value);
+async function _confirmDeleteRole() {
+  openDeleteRoleModal.value = false;
   await roleStore.removeRole(roleName.value);
   await roleStore.fetchAllRoles();
 }
@@ -209,11 +211,7 @@ const userItems = computed(() => usersWithAvatars.value
       }
     }).sort((a, b) => a.label.localeCompare(b.label)));
 
-const selectedUser = ref<string | number | undefined>(undefined)
-
-const selectedUserObject = computed(() => {
-  return userItems.value.find(item => item.value === selectedUser.value);
-});
+const selectedUser = ref<any>(undefined)
 
 const searchTerm = ref<string>("");
 
@@ -274,10 +272,10 @@ const items = computed<BreadcrumbItem[]>(() => [
       <UModal
           v-model:open="openAddUserModal"
           :description="`Select a user to add to ${roleName?? ``}`"
-          title="Adding user"
+          :title="`Adding user to ${roleName?? ``}`"
       >
         <template #body>
-          <USelectMenu v-model="selectedUser" :avatar="selectedUserObject?.avatar" :items="userItems" class="w-full"
+          <USelectMenu v-model="selectedUser" :avatar="selectedUser?.avatar" :items="userItems" class="w-full"
                        placeholder="Select a user"/>
         </template>
         <template #footer>
@@ -288,14 +286,14 @@ const items = computed<BreadcrumbItem[]>(() => [
         </template>
       </UModal>
       <UModal
-          v-model:open="openDeleteUserModal"
+          v-model:open="openDeleteRoleModal"
           :description="`Are you sure you want to remove role '${roleName?? ''}'`"
           :title="`Removing role ${roleName?? ''}`"
       >
         <template #footer>
           <div class="flex items-center justify-start gap-3">
-            <UButton color="neutral" @click="_closeDeleteUserModal">Cancel</UButton>
-            <UButton color="error" @click="_confirmDeleteUserModal">Confirm deletion</UButton>
+            <UButton color="neutral" @click="_closeDeleteRoleModal">Cancel</UButton>
+            <UButton color="error" @click="_confirmDeleteRole">Confirm deletion</UButton>
           </div>
         </template>
       </UModal>
