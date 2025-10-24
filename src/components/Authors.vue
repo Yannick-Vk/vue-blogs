@@ -1,10 +1,7 @@
 ﻿<script lang="ts" setup>
 import {h, ref, resolveComponent, useTemplateRef} from "vue";
-import type {FormSubmitEvent, TableColumn} from "@nuxt/ui";
+import type {TableColumn, TableRow} from "@nuxt/ui";
 import type {User} from "@/stores/userStore.ts";
-import {Schema} from "node:inspector";
-
-const toast = useToast();
 
 interface UserWithAuthor extends User {
   isAuthor: boolean;
@@ -12,7 +9,7 @@ interface UserWithAuthor extends User {
 }
 
 const props = defineProps<{
-  users?: UserWithAuthor[]
+  users: UserWithAuthor[]
 }>()
 
 const emit = defineEmits<{
@@ -60,7 +57,7 @@ const columns: TableColumn<UserWithAuthor>[] = [
 const table = useTemplateRef('table')
 const rowSelection = ref<Record<string, boolean>>({})
 
-function onSelect(row: TableRow<UserWithAuthor>) {
+function onSelect(e: Event, row: TableRow<UserWithAuthor>) {
   /* If you decide to also select the column you can do this  */
   row.toggleSelected(!row.getIsSelected())
 }

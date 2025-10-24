@@ -25,27 +25,6 @@ const state = reactive<Partial<Schema>>({
 
 const toast = useToast();
 const blogStore = useBlogStore();
-
-const fileToBase64 = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      if (typeof reader.result === 'string') {
-        const base64String = reader.result.split(',')[1];
-        if (base64String) {
-          resolve(base64String);
-        } else {
-          reject(new Error('Failed to extract base64 content from file'));
-        }
-      } else {
-        reject(new Error('Failed to read file as base64'));
-      }
-    };
-    reader.onerror = error => reject(error);
-  });
-}
-
 const readTextFile = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -107,10 +86,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 }
 
 function onError(event: FormErrorEvent) {
-  if (event.errors.some(value => value.path.includes("blogContent"))) {
+  if (event.errors.some(value => value.message.includes("blogContent"))) {
     state.blogContent = undefined;
   }
-  if (event.errors.some(value => value.path.includes("bannerImage"))) {
+  if (event.errors.some(value => value.message.includes("bannerImage"))) {
     state.bannerImage = undefined;
   }
 }

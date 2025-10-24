@@ -136,10 +136,10 @@ function formatDate(date: string) {
       </template>
     </UPageHero>
 
-    <div v-if="currentBlog.content" class="prose max-w-none">
+    <div v-if="currentBlog.blogContent" class="prose max-w-none">
       <VueShowdown
           :extensions="[showdownHighlight({pre: true})]"
-          :markdown="currentBlog.content"
+          :markdown="currentBlog.blogContent"
           :options="{ emoji: true }"
           flavor="github"
       />

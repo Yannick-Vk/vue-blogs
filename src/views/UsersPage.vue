@@ -5,7 +5,7 @@ import {storeToRefs} from "pinia";
 import {useUserStore} from "@/stores/userStore.ts";
 import type {BreadcrumbItem} from "@nuxt/ui/components/Breadcrumb.vue";
 import {useProfileStore} from "@/stores/profileStore.ts";
-import {UserWithAvatar} from "../components/UsersTable.vue"
+import {type UserWithAvatar} from "../components/UsersTable.vue"
 
 const {user} = storeToRefs(useAuthStore());
 const userStore = useUserStore();

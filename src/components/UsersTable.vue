@@ -79,7 +79,7 @@ const columns: TableColumn<UserWithAvatar>[] = [
   }
 ]
 
-function getRowItems(row: Row<User>) {
+function getRowItems(row: Row<UserWithAvatar>) {
   return [
     {
       type: 'label',

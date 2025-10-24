@@ -3,6 +3,7 @@ import {onMounted, ref} from "vue";
 import {useProfileStore} from "@/stores/profileStore.ts";
 import {storeToRefs} from "pinia";
 import {useUserStore} from "@/stores/userStore.ts";
+import {useAuthStore} from "@/stores/auth.ts";
 import {isAxiosError} from "@/services/Api.ts";
 import ChangeEmailForm from "@/components/ChangeEmailForm.vue";
 import ChangePasswordForm from "@/components/ChangePasswordForm.vue";
@@ -10,6 +11,7 @@ import UploadProfilePictureForm from "@/components/UploadProfilePictureForm.vue"
 
 const profileStore = useProfileStore();
 const userStore = useUserStore();
+const authStore = useAuthStore();
 const {currentUser} = storeToRefs(userStore);
 
 const toast = useToast()
@@ -31,7 +33,7 @@ async function changeEmail(email: string) {
     console.error(e)
     let errorMessage = `Unexpected error occurred: ${e}`;
     if (isAxiosError(e) && e.response?.data) {
-      errorMessage = e.response.data.detail;
+      errorMessage = (e.response.data as any).detail;
     } else if (e instanceof Error) {
       errorMessage = e.message;
     }
@@ -47,6 +49,8 @@ async function changeEmail(email: string) {
 async function changeUsername(username: string) {
   try {
     await profileStore.changeUsername(username);
+    await authStore.whoAmI();
+    await fetchAvatar();
     await userStore.getUser();
 
     toast.add({
@@ -60,7 +64,7 @@ async function changeUsername(username: string) {
     console.error(e)
     let errorMessage = `Unexpected error occurred: ${e}`;
     if (isAxiosError(e) && e.response?.data) {
-      errorMessage = e.response.data.detail;
+      errorMessage = (e.response.data as any).detail;
     } else if (e instanceof Error) {
       errorMessage = e.message;
     }
@@ -87,7 +91,7 @@ async function changePassword(newPassword: string, password: string) {
     console.error(e)
     let errorMessage = `Unexpected error occurred: ${e}`;
     if (isAxiosError(e) && e.response?.data) {
-      errorMessage = e.response.data.detail;
+      errorMessage = (e.response.data as any).detail;
     } else if (e instanceof Error) {
       errorMessage = e.message;
     }
@@ -105,6 +109,7 @@ const avatar = ref<string>('');
 
 async function fetchAvatar() {
   if (currentUser.value) {
+    console.info("Updating pfp")
     const image = await profileStore.getProfilePicture(currentUser.value.id);
     avatar.value = image || `https://i.pravatar.cc/64?u=${currentUser.value.username}`;
   }

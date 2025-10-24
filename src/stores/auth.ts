@@ -105,7 +105,7 @@ export const useAuthStore = defineStore('auth', () => {
         try {
             await axios.post(`${authApiUrl}/logout`);
             const userStore = useUserStore();
-            userStore.currentUser = undefined;
+            userStore.currentUser = null;
         } finally {
             user.value = null
             isAdmin.value = false;
@@ -121,7 +121,6 @@ export const useAuthStore = defineStore('auth', () => {
     async function whoAmI() {
         try {
             const login = await axios.get<LoginResponse>(`${authApiUrl}/whoAmI`);
-            console.dir(login);
             handleLoginResponse(login);
         } catch (e) {
             console.error("WhoAmI failed:" + e);

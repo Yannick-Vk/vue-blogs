@@ -4,7 +4,7 @@ import {useRoleStore} from '../stores/roleStore.ts'
 import type {User} from "@/stores/userStore.ts";
 import {useUserStore} from "@/stores/userStore.ts";
 import {storeToRefs} from "pinia";
-import type {TableColumn} from "@nuxt/ui";
+import type {SelectMenuItem, TableColumn} from "@nuxt/ui";
 import type {Role} from "@/types/Role.ts";
 import type {Row} from "@tanstack/vue-table";
 import router from "@/router/routes.ts";
@@ -169,28 +169,30 @@ function _closeAddUserModal(): void {
   openAddUserModal.value = false;
 }
 
-async function _confirmAddUserModal(): void {
+async function _confirmAddUserModal() {
+  if (!selectedUserObject.value) return;
+
   openAddUserModal.value = false;
-  await roleStore.addRoleToUser(selectedUser.value.label, roleName.value);
+  await roleStore.addRoleToUser(selectedUserObject.value.label, roleName.value);
   await roleStore.fetchAllRoles();
   await userStore.fetchUsers();
   usersWithCurrentRole.value = await roleStore.getUsersWithRole(roleName.value) || [];
 
   toast.add({
-    title: `Added ${selectedUser.value.label} to the ${roleName.value}`,
-    description: `Successfully added user ${selectedUser.value.label} to the role ${roleName.value}`,
+    title: `Added ${selectedUserObject.value.label} to the ${roleName.value}`,
+    description: `Successfully added user ${selectedUserObject.value.label} to the role ${roleName.value}`,
     icon: "lucide:circle-check",
     color: 'success'
   })
 
-  selectedUser.value = null; // Reset after a user has been added
+  selectedUser.value = undefined; // Reset after a user has been added
 }
 
 function _closeDeleteUserModal(): void {
   openDeleteUserModal.value = false;
 }
 
-async function _confirmDeleteUserModal(): void {
+async function _confirmDeleteUserModal() {
   openDeleteUserModal.value = false;
   console.log("removing role", roleName.value);
   await roleStore.removeRole(roleName.value);
@@ -207,7 +209,7 @@ const userItems = computed(() => usersWithAvatars.value
       }
     }).sort((a, b) => a.label.localeCompare(b.label)));
 
-const selectedUser = ref(null)
+const selectedUser = ref<string | number | undefined>(undefined)
 
 const selectedUserObject = computed(() => {
   return userItems.value.find(item => item.value === selectedUser.value);
@@ -238,8 +240,8 @@ async function createRole(roleName: string) {
       color: 'success',
       icon: "lucide:user-plus",
     })
-  } catch (error) {
-    error.value = error;
+  } catch (er) {
+    error.value = "Failed to create role";
   }
 }
 

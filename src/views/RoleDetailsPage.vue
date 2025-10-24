@@ -123,7 +123,7 @@ function _closeModal(): void {
   open.value = false;
 }
 
-async function confirmDelete(): void {
+async function confirmDelete() {
   open.value = false;
   if (!userToRemove.value) {
     return;

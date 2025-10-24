@@ -2,7 +2,7 @@
 import type {DropdownMenuItem} from '@nuxt/ui'
 import type {User} from '../stores/auth.ts'
 import {useProfileStore} from "@/stores/profileStore.ts";
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 
 interface Props {
   user: User;
@@ -29,6 +29,12 @@ profileStore.$onAction(({name, after}) => {
     after(async () => {
       await fetchAvatar();
     });
+  }
+});
+
+watch(() => props.user.username, async (newUsername, oldUsername) => {
+  if (newUsername !== oldUsername) {
+    await fetchAvatar();
   }
 });
 
