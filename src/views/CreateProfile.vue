@@ -9,12 +9,12 @@ import {useAuthStore} from "@/stores/auth.ts";
 const toast = useToast();
 const router = useRouter();
 const userStore = useUserStore();
+const profileStore = useProfileStore();
 const authStore = useAuthStore();
 const {currentUser} = storeToRefs(userStore);
 
 async function onChangeUsername(username: string) {
   try {
-    const profileStore = useProfileStore();
     await profileStore.changeUsername(username);
     await authStore.whoAmI();
     //await fetchAvatar();
@@ -27,7 +27,25 @@ async function onChangeUsername(username: string) {
       icon: "lucide:check",
     })
   } catch (e) {
-    console.log(e)
+    console.error(e)
+
+  }
+}
+
+async function UploadImage(image: File) {
+  try {
+    await profileStore.changeProfilePicture(image);
+    //await fetchAvatar();
+
+    toast.add({
+      title: 'Successfully changed profile image',
+      description: `Profile picture has been updated.`,
+      color: 'success'
+    })
+
+    changeProfilePictureForm.value?.reset();
+  } catch (e) {
+    console.error(e)
   }
 }
 
@@ -46,10 +64,10 @@ onMounted(async () => {
     </h3>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 my-5">
       <ChangeUsernameForm @submit="onChangeUsername"></ChangeUsernameForm>
-      <UploadProfilePictureForm button></UploadProfilePictureForm>
+      <UploadProfilePictureForm @submit="UploadImage" button></UploadProfilePictureForm>
     </div>
     <p>You can always change this later, want to finish the profile creation?</p>
-    <UButton class="mt-5">Go to home page</UButton>
+    <UButton @click="async () => await router.push('home')" class="mt-5">Go to home page</UButton>
   </div>
   <div v-else>Loading user data...</div>
 </template>
