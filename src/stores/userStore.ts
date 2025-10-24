@@ -39,11 +39,11 @@ export const useUserStore = defineStore('users', () => {
         }
     }
 
-    async function getRoles(username: string) {
+    async function getRoles(userId: string) {
         error.value = null;
         try {
             const roleStore = useRoleStore();
-            await roleStore.getUserRoles(username);
+            await roleStore.getUserRoles(userId);
             roles.value = roleStore.roles;
         } catch (err) {
             console.error(err);
@@ -58,7 +58,7 @@ export const useUserStore = defineStore('users', () => {
                 throw new Error("User is not logged in!");
             }
             const roleStore = useRoleStore();
-            await roleStore.removeRoleFromUser(currentUser.value.username, role);
+            await roleStore.removeRoleFromUser(currentUser.value.id, role);
             await getRoles(currentUser.value.username);
         } catch (err) {
             console.error(err);
@@ -71,8 +71,8 @@ export const useUserStore = defineStore('users', () => {
             throw new Error("User is not logged in!");
         }
         const roleStore = useRoleStore();
-        await roleStore.addRoleToUser(currentUser.value.username, role);
-        await getRoles(currentUser.value.username);
+        await roleStore.addRoleToUser(currentUser.value.id, role);
+        await getRoles(currentUser.value.id);
     }
 
     async function getUser() {

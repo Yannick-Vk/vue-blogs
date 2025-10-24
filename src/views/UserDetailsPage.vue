@@ -114,7 +114,7 @@ async function confirmDelete() {
     return;
   }
 
-  await userStore.removeRole(roleToRemove.value.name);
+  await userStore.removeRole(roleToRemove.value.id);
   if (!userStore.error) {
     toast.add({
       title: `Removed role ${roleToRemove.value.name}`,
