@@ -41,7 +41,7 @@ onMounted(async () => {
   await roleStore.fetchAllRoles();
   allRoles.value = roleStore.roles.map((role: Role) => role.name);
 
-  await userStore.getRoles(currentUser.value.username);
+  await userStore.getRoles(currentUser.value.id);
 });
 
 const columns: TableColumn<Role>[] = [

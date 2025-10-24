@@ -17,9 +17,9 @@ export const useRoleStore = defineStore('role', () => {
         }
     }
 
-    async function getUserRoles(username: string) {
+    async function getUserRoles(userId: string) {
         try {
-            const response = await api.get<string[]>(`users/${username}/roles`);
+            const response = await api.get<string[]>(`users/${userId}/roles`);
             roles.value = response.data.map(roleName => ({
                 id: roleName,
                 name: roleName
