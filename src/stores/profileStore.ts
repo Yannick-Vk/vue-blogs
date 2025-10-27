@@ -114,8 +114,16 @@ export const useProfileStore = defineStore('profile', () => {
     }
 
 
-    async function resetPassword(email: string) {
+    async function sendResetPasswordMail(email: string) {
         await api.post(`/me/password/reset/${email}`, {});
+    }
+
+    async function confirmResetPassword(userId: string, token: string, newPassword: string) {
+        await api.post(`/me/password/confirm`, {
+            userId: userId,
+            token: token,
+            newPassword: newPassword,
+        });
     }
 
     return {
@@ -123,7 +131,8 @@ export const useProfileStore = defineStore('profile', () => {
         changePassword,
         changeProfilePicture,
         getProfilePicture,
-        resetPassword,
+        sendResetPasswordMail,
+        confirmResetPassword,
         getMyProfilePicture,
         changeUsername
     };
