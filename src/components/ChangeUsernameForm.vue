@@ -13,6 +13,7 @@ const state = reactive<Partial<Schema>>({
   username: undefined,
 })
 
+const form = reactive({});
 const emit = defineEmits(['submit'])
 
 function onSubmit(event: FormSubmitEvent<Schema>) {
@@ -21,19 +22,23 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
 
 // Expose the reset function
 defineExpose({
-  reset
+  reset, setError
 })
 
 // Reset the email when submit-result was a success
 function reset() {
   state.username = undefined
 }
+
+function setError(message: string) {
+
+}
 </script>
 
 <template>
   <UCard variant="subtle">
     <h3 class="text-lg mb-3 text-primary">Change Username</h3>
-    <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+    <UForm ref="form" :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
       <UFormField label="Username" name="username">
         <UInput v-model="state.username" class="w-full" placeholder="Please enter new username ..."/>
       </UFormField>

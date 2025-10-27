@@ -47,7 +47,7 @@ async function changeEmail(email: string) {
   }
 }
 
-const changeUsernameForm = ref<{ reset: () => void } | null>(null)
+const changeUsernameForm = ref<{ reset: () => void, setError: (msg: string) => void} | null>(null)
 
 async function changeUsername(username: string) {
   try {
@@ -70,6 +70,8 @@ async function changeUsername(username: string) {
     } else if (e instanceof Error) {
       errorMessage = e.message;
     }
+
+    changeUsernameForm.value?.setError(errorMessage);
 
     toast.add({
       title: `Failed to change username to ${username}`,
