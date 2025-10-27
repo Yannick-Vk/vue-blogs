@@ -1,6 +1,6 @@
 ﻿<script setup lang="ts">
 import * as z from 'zod'
-import {reactive} from 'vue'
+import {reactive, ref} from 'vue'
 import type {FormSubmitEvent} from "@nuxt/ui";
 import {useProfileStore} from "@/stores/profileStore.ts";
 import {useRouter} from "vue-router";
@@ -16,12 +16,29 @@ const state = reactive<Partial<Schema>>({
   password: undefined,
 })
 
+const fields = [{
+  name: 'password',
+  label: 'Password',
+  type: 'password' as const,
+  placeholder: 'Enter your password',
+  required: true,
+}, {
+  name: 'password_confirmation',
+  label: 'Password confirmation',
+  type: 'password' as const,
+  placeholder: 'Enter your password again',
+  required: true,
+}]
+
+const errorBox = ref<string | null>(null);
+
 const toast = useToast()
 const profileStore = useProfileStore();
 const router = useRouter();
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
+    errorBox.value = null;
     await profileStore.confirmResetPassword("", "", event.data.password);
     toast.add({
       title: 'Password has been reset',
@@ -32,6 +49,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     await router.push('/login');
   } catch (e) {
     console.error(e);
+    errorBox.value = e;
     toast.add({title: "Failed to reset password", description: `Failed to reset password, ${e}`, color: "error"})
   }
 }
@@ -44,21 +62,16 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         <h2 class="text-2xl text-primary">Reset password</h2>
       </template>
       <template #body>
-        <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-          <UFormField label="Password" name="password">
-            <UInput v-model="state.password" type="password" placeholder="Please enter your new password ..."
-                    class="w-96"/>
-          </UFormField>
+        <UAuthForm :fields="fields" :schema="schema" class="space-y-4" @submit="onSubmit">
 
-          <UFormField label="Confirm Password" name="confirmPassword">
-            <UInput v-model="state.confirmPassword" type="password" placeholder="Please enter your new password ..."
-                    class="w-96"/>
-          </UFormField>
+          <template #validation>
+            <UAlert v-if="errorBox" :title="errorBox" color="error" icon="i-lucide-info"/>
+          </template>
 
           <UButton type="submit">
             Reset password
           </UButton>
-        </UForm>
+        </UAuthForm>
       </template>
     </UPageCard>
   </div>
