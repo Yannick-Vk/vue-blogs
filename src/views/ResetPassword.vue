@@ -17,7 +17,9 @@ const state = reactive<Partial<Schema>>({
   confirmPassword: undefined,
 })
 
-const errorBox = ref<Array<string>>([]);
+const errorBox = ref<Array<{
+  description: string
+}>>([]);
 
 const toast = useToast()
 const profileStore = useProfileStore();
@@ -37,9 +39,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       icon: 'lucide:check-circle',
     })
     await router.push('/login');
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
-    errorBox.value = e.response.data;
+    errorBox.value = e.response.data as {description: string}[];
     toast.add({title: "Failed to reset password", description: `Failed to reset password, ${e}`, color: "error"})
   }
 }

@@ -3,7 +3,7 @@ import * as z from 'zod'
 import type {FormSubmitEvent} from '@nuxt/ui'
 import {useAuthStore} from '@/stores/auth';
 import {useRouter} from 'vue-router';
-import {api, api_base_url, isAxiosError} from '@/services/Api.ts'
+import {api_base_url, isAxiosError} from '@/services/Api.ts'
 import {ref} from "vue";
 
 const toast = useToast()

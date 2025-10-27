@@ -43,7 +43,7 @@ async function UploadImage(image: File) {
       color: 'success'
     })
 
-    changeProfilePictureForm.value?.reset();
+    //changeProfilePictureForm.value?.reset();
   } catch (e) {
     console.error(e)
   }

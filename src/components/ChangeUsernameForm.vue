@@ -2,7 +2,7 @@
 import * as z from 'zod'
 import {reactive, ref} from "vue";
 import type {FormSubmitEvent} from "@nuxt/ui";
-import type {Form} from "#ui/types";
+import type {Form} from "@nuxt/ui";
 
 const schema = z.object({
   username: z.string('Username is required'),
@@ -33,7 +33,7 @@ function reset() {
 
 function setError(message: string) {
   console.error("set error!", message)
-  form.value.setErrors([{message: message, name: 'username'}])
+  form.value?.setErrors([{message: message, name: 'username'}])
 }
 </script>
 
