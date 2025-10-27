@@ -8,6 +8,7 @@ import {isAxiosError} from "@/services/Api.ts";
 import ChangeEmailForm from "@/components/ChangeEmailForm.vue";
 import ChangePasswordForm from "@/components/ChangePasswordForm.vue";
 import UploadProfilePictureForm from "@/components/UploadProfilePictureForm.vue";
+import ChangeUsernameForm from "@/components/ChangeUsernameForm.vue";
 
 const profileStore = useProfileStore();
 const userStore = useUserStore();
@@ -46,6 +47,8 @@ async function changeEmail(email: string) {
   }
 }
 
+const changeUsernameForm = ref<{ reset: () => void } | null>(null)
+
 async function changeUsername(username: string) {
   try {
     await profileStore.changeUsername(username);
@@ -58,11 +61,10 @@ async function changeUsername(username: string) {
       description: `Username has been changed to ${username}`,
       color: 'success'
     })
-
-    changeEmailForm.value?.reset();
+    changeUsernameForm.value?.reset();
   } catch (e) {
     let errorMessage = `Unexpected error occurred: ${e}`;
-  console.error(errorMessage)
+    console.error(errorMessage)
     if (isAxiosError(e) && e.response?.data) {
       errorMessage = (e.response.data as any).detail;
     } else if (e instanceof Error) {
@@ -87,6 +89,8 @@ async function changePassword(newPassword: string, password: string) {
       description: `Password has been changed.`,
       color: 'success'
     })
+
+
   } catch (e) {
     console.error(e)
     let errorMessage = `Unexpected error occurred: ${e}`;
@@ -167,7 +171,7 @@ onMounted(async () => {
       />
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5">
         <ChangeEmailForm ref="changeEmailForm" @submit="changeEmail"/>
-        <ChangeUsernameForm @submit="changeUsername"/>
+        <ChangeUsernameForm ref="changeUsernameForm" @submit="changeUsername"/>
         <ChangePasswordForm @submit="changePassword"/>
         <UploadProfilePictureForm ref="changeProfilePictureForm" @submit="changeProfilePicture"/>
       </div>
