@@ -14,6 +14,7 @@ type Schema = z.output<typeof schema>
 
 const state = reactive<Partial<Schema>>({
   password: undefined,
+  confirmPassword: undefined,
 })
 
 const errorBox = ref<string | null>(null);
@@ -22,15 +23,14 @@ const toast = useToast()
 const profileStore = useProfileStore();
 const router = useRouter();
 const route = useRoute();
-const userId = route.path.id as string;
-const token = route.query.token as string;
+const userId = route.params.id as string;
+const token = route.params.token as string;
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
     errorBox.value = null;
-    //await profileStore.confirmResetPassword(userId, token, event.data.password);
-    console.log("userId", userId)
-    console.log("token", token)
+    console.log(userId, token, "*".repeat(event.data.password.length));
+    await profileStore.confirmResetPassword(userId, token, event.data.password);
     toast.add({
       title: 'Password has been reset',
       description: 'Your password have been reset, please login to continue.',
@@ -48,9 +48,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
 <template>
   <div class="flex flex-col items-center justify-center gap-4 p-4">
-    <div>
-      {{ token }} , {{ userId }}
-    </div>
     <UPageCard class="w-full max-w-md">
       <template #header>
         <h2 class="text-2xl text-primary">Reset password</h2>
@@ -58,7 +55,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       <template #body>
         <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
 
-          <UFormField label="Password" name="newPassword">
+          <UFormField label="Password" name="password">
             <PasswordField v-model="state.password" class="block w-full" placeholder="Password..."/>
           </UFormField>
           <UFormField label="Confirm Password" name="confirmPassword">
