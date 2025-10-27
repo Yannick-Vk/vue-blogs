@@ -17,7 +17,7 @@ const state = reactive<Partial<Schema>>({
   confirmPassword: undefined,
 })
 
-const errorBox = ref<string | null>(null);
+const errorBox = ref<Array<string>>([]);
 
 const toast = useToast()
 const profileStore = useProfileStore();
@@ -28,8 +28,7 @@ const token = route.params.token as string;
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
-    errorBox.value = null;
-    console.log(userId, token, "*".repeat(event.data.password.length));
+    errorBox.value = [];
     await profileStore.confirmResetPassword(userId, token, event.data.password);
     toast.add({
       title: 'Password has been reset',
@@ -37,10 +36,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       color: 'success',
       icon: 'lucide:check-circle',
     })
-    //await router.push('/login');
+    await router.push('/login');
   } catch (e) {
     console.error(e);
-    errorBox.value = e;
+    errorBox.value = e.response.data;
     toast.add({title: "Failed to reset password", description: `Failed to reset password, ${e}`, color: "error"})
   }
 }
@@ -61,6 +60,19 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           <UFormField label="Confirm Password" name="confirmPassword">
             <PasswordField v-model="state.confirmPassword" class="block w-full" placeholder="Confirm password..."/>
           </UFormField>
+
+          <div v-if="errorBox.length > 0">
+            <UAlert color="error" variant="subtle" class="my-5">
+              <template #title>
+                <h3 class="text-2xl">Failed to change password</h3>
+              </template>
+              <template #description>
+                <ul v-for="error in errorBox">
+                  <li class="list-disc ml-5">{{ error.description }}</li>
+                </ul>
+              </template>
+            </UAlert>
+          </div>
 
           <UButton type="submit">
             Reset password

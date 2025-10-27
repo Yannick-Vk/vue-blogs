@@ -120,9 +120,9 @@ export const useProfileStore = defineStore('profile', () => {
 
     async function confirmResetPassword(userId: string, token: string, newPassword: string) {
         await api.post(`/me/password/confirm`, {
-            userId: userId,
-            token: token,
-            newPassword: newPassword,
+            UserId: userId,
+            Token: token,
+            NewPassword: newPassword,
         });
     }
 
