@@ -5,7 +5,7 @@ import {useProfileStore} from "@/stores/profileStore.ts";
 import {computed, onMounted, ref, watch} from "vue";
 
 interface Props {
-  user: User | null;
+  user: User;
 }
 
 const emit = defineEmits(['logout', 'profile']);
@@ -71,12 +71,12 @@ const items = computed<DropdownMenuItem[][]>(() => [
 </script>
 
 <template>
-  <UDropdownMenu :content="{
+  <UDropdownMenu v-if="props.user" :content="{
       align: 'end',
       side: 'bottom',
       sideOffset: 8
     }" :items="items" :ui="{ content: 'w-48' }" arrow>
-    <UButton :label="props?.user?.username" color="neutral" icon="lucide:user" size="lg" variant="outline"/>
+    <UButton :label="props.user.username" color="neutral" icon="lucide:user" size="lg" variant="outline"/>
   </UDropdownMenu>
 </template>
 

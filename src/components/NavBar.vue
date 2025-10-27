@@ -1,6 +1,6 @@
 ﻿<script lang="ts" setup>
 import type {NavigationMenuItem} from '@nuxt/ui'
-import {computed, onMounted, toRef} from "vue";
+import {computed, onMounted} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {useAuthStore} from "@/stores/auth.ts";
 import {storeToRefs} from "pinia";
@@ -88,7 +88,7 @@ onMounted(async () => {
         />
       </UTooltip>
 
-      <ProfileHeader v-if="authStore.isLoggedIn" :user="currentUser!" @logout="logout" @profile="profile"/>
+      <ProfileHeader v-if="currentUser" :user="currentUser!" @logout="logout" @profile="profile"/>
       <UButton v-else-if="route.path === '/login'" class="w-24" icon="lucide:log-in" to="/register">Register</UButton>
       <UButton v-else class="w-24" icon="lucide:log-in" to="/login">Login</UButton>
 
