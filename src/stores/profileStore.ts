@@ -3,7 +3,6 @@ import {api} from "@/services/Api.ts";
 import {ref} from "vue";
 import {useAuthStore} from "@/stores/auth.ts"
 
-
 export const useProfileStore = defineStore('profile', () => {
     const avatarCache = ref(new Map<string, string | null>());
 
@@ -114,5 +113,18 @@ export const useProfileStore = defineStore('profile', () => {
         }
     }
 
-    return {changeEmail, changePassword, changeProfilePicture, getProfilePicture, getMyProfilePicture, changeUsername};
+
+    async function resetPassword(email: string) {
+        await api.post(`/me/password/reset/${email}`, {});
+    }
+
+    return {
+        changeEmail,
+        changePassword,
+        changeProfilePicture,
+        getProfilePicture,
+        resetPassword,
+        getMyProfilePicture,
+        changeUsername
+    };
 })

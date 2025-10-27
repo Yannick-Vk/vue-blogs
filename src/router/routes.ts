@@ -17,6 +17,7 @@ import RegistrationCompleted from "@/views/RegistrationCompleted.vue";
 import VerificationFailed from "@/views/VerificationFailed.vue";
 import LoginSuccess from "@/views/LoginSuccess.vue";
 import CreateProfile from "@/views/CreateProfile.vue";
+import ForgotPassword from "@/views/ForgotPassword.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -105,7 +106,11 @@ const router = createRouter({
             name: 'create-profile',
             component: CreateProfile,
             meta: {requiresAuth: true},
-        },
+        }, {
+            path: '/forgot-password',
+            name: 'forgot-password',
+            component: ForgotPassword,
+        }
     ],
 })
 

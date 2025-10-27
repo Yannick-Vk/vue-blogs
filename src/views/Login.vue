@@ -95,7 +95,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           .
         </template>
         <template #password-hint>
-          <ULink class="text-primary font-medium" tabindex="-1" to="#">Forgot password?</ULink>
+          <ULink class="text-primary font-medium" tabindex="-1" to="forgot-password">Forgot password?</ULink>
         </template>
         <template #validation>
           <UAlert v-if="errorBox" :title="errorBox" color="error" icon="i-lucide-info"/>
