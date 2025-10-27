@@ -1,6 +1,6 @@
 ﻿<script lang="ts" setup>
 import * as z from 'zod'
-import {reactive} from "vue";
+import {reactive, useTemplateRef} from "vue";
 import type {FormSubmitEvent} from "@nuxt/ui";
 
 const schema = z.object({
@@ -26,12 +26,25 @@ function reset() {
   state.password = undefined;
   state.newPassword = undefined;
 }
+
+
+// Expose the setError function
+defineExpose({
+  setError
+})
+
+const form = useTemplateRef('form');
+
+function setError(message: string) {
+  console.error("set error!", message)
+  form.value?.setErrors([{message: message, name: 'newPassword'}])
+}
 </script>
 
 <template>
   <UCard variant="subtle">
     <h3 class="text-lg mb-3 text-primary">Change Password</h3>
-    <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+    <UForm ref="form" :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
 
       <UFormField label="New Password" name="newPassword">
         <PasswordField v-model="state.newPassword" class="block w-full" placeholder="New password..."/>

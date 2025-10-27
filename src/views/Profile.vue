@@ -81,6 +81,7 @@ async function changeUsername(username: string) {
   }
 }
 
+const changePasswordFrom = ref<{ setError: (message: string) => void } | null>(null)
 async function changePassword(newPassword: string, password: string) {
   try {
     await profileStore.changePassword(newPassword, password);
@@ -91,16 +92,16 @@ async function changePassword(newPassword: string, password: string) {
       description: `Password has been changed.`,
       color: 'success'
     })
-
-
   } catch (e) {
     console.error(e)
     let errorMessage = `Unexpected error occurred: ${e}`;
     if (isAxiosError(e) && e.response?.data) {
-      errorMessage = (e.response.data as any).detail;
+      errorMessage =  e.response.data as string;
     } else if (e instanceof Error) {
       errorMessage = e.message;
     }
+
+    changePasswordFrom.value?.setError(errorMessage);
 
     toast.add({
       title: `Failed to change password`,
@@ -174,7 +175,7 @@ onMounted(async () => {
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5">
         <ChangeEmailForm ref="changeEmailForm" @submit="changeEmail"/>
         <ChangeUsernameForm ref="changeUsernameForm" @submit="changeUsername"/>
-        <ChangePasswordForm @submit="changePassword"/>
+        <ChangePasswordForm ref="changePasswordFrom" @submit="changePassword"/>
         <UploadProfilePictureForm ref="changeProfilePictureForm" @submit="changeProfilePicture"/>
       </div>
 

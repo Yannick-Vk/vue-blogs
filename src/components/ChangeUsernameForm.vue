@@ -1,7 +1,8 @@
 ﻿<script lang="ts" setup>
 import * as z from 'zod'
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 import type {FormSubmitEvent} from "@nuxt/ui";
+import type {Form} from "#ui/types";
 
 const schema = z.object({
   username: z.string('Username is required'),
@@ -13,7 +14,7 @@ const state = reactive<Partial<Schema>>({
   username: undefined,
 })
 
-const form = reactive({});
+const form = ref<Form<Schema>>()
 const emit = defineEmits(['submit'])
 
 function onSubmit(event: FormSubmitEvent<Schema>) {
@@ -31,7 +32,8 @@ function reset() {
 }
 
 function setError(message: string) {
-
+  console.error("set error!", message)
+  form.value.setErrors([{message: message, name: 'username'}])
 }
 </script>
 
