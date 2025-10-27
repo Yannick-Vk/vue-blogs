@@ -77,6 +77,8 @@ export const useAuthStore = defineStore('auth', () => {
         localStorage.setItem('user', JSON.stringify(userData));
         localStorage.setItem('expiration', userData.expiry);
         adminCheckPromise = checkIsAdmin();
+        const userStore = useUserStore();
+        userStore.getUser();
     }
 
     async function login(credentials: { username?: string, password?: string }) {
