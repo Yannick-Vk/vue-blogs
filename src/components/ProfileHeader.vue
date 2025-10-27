@@ -1,11 +1,11 @@
 ﻿<script lang="ts" setup>
 import type {DropdownMenuItem} from '@nuxt/ui'
-import type {User} from '../stores/auth.ts'
+import type {User} from '../stores/userStore.ts'
 import {useProfileStore} from "@/stores/profileStore.ts";
 import {computed, onMounted, ref, watch} from "vue";
 
 interface Props {
-  user: User;
+  user: User | null;
 }
 
 const emit = defineEmits(['logout', 'profile']);
@@ -76,7 +76,7 @@ const items = computed<DropdownMenuItem[][]>(() => [
       side: 'bottom',
       sideOffset: 8
     }" :items="items" :ui="{ content: 'w-48' }" arrow>
-    <UButton :label="props?.user.username" color="neutral" icon="lucide:user" size="lg" variant="outline"/>
+    <UButton :label="props?.user?.username" color="neutral" icon="lucide:user" size="lg" variant="outline"/>
   </UDropdownMenu>
 </template>
 

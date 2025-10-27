@@ -1,15 +1,18 @@
 ﻿<script lang="ts" setup>
 import type {NavigationMenuItem} from '@nuxt/ui'
-import {computed, toRef} from "vue";
+import {computed, onMounted, toRef} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {useAuthStore} from "@/stores/auth.ts";
+import {storeToRefs} from "pinia";
+import {useUserStore} from "@/stores/userStore.ts";
 
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
-const user = toRef(authStore, 'user')
+const userStore = useUserStore();
+const {currentUser} = storeToRefs(userStore);
 
-const toast = useToast()
+const toast = useToast();
 
 async function logout() {
   await authStore.logout()
@@ -54,6 +57,10 @@ const items = computed<NavigationMenuItem[]>(() => [
 async function profile() {
   await router.push("/profile");
 }
+
+onMounted(async () => {
+  await userStore.getUser();
+})
 </script>
 
 <template>
@@ -81,7 +88,7 @@ async function profile() {
         />
       </UTooltip>
 
-      <ProfileHeader v-if="authStore.isLoggedIn" :user="user!" @logout="logout" @profile="profile"/>
+      <ProfileHeader v-if="authStore.isLoggedIn" :user="currentUser!" @logout="logout" @profile="profile"/>
       <UButton v-else-if="route.path === '/login'" class="w-24" icon="lucide:log-in" to="/register">Register</UButton>
       <UButton v-else class="w-24" icon="lucide:log-in" to="/login">Login</UButton>
 

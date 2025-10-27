@@ -1,6 +1,8 @@
 import {defineStore} from "pinia";
 import {api} from "@/services/Api.ts";
 import {ref} from "vue";
+import {useAuthStore} from "@/stores/auth.ts"
+
 
 export const useProfileStore = defineStore('profile', () => {
     const avatarCache = ref(new Map<string, string | null>());
@@ -46,7 +48,6 @@ export const useProfileStore = defineStore('profile', () => {
             formData.append('image', image);
             await api.put(`/me/change/profile-picture`, formData)
 
-            const {useAuthStore} = await import("@/stores/auth.ts");
             const authStore = useAuthStore();
             if (authStore.user) {
                 avatarCache.value.delete(authStore.user.id);
@@ -81,7 +82,6 @@ export const useProfileStore = defineStore('profile', () => {
     }
 
     async function getMyProfilePicture(): Promise<string | null> {
-        const {useAuthStore} = await import("@/stores/auth.ts");
         const authStore = useAuthStore();
         const userId = authStore.user?.id;
 

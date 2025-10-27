@@ -61,8 +61,8 @@ async function changeUsername(username: string) {
 
     changeEmailForm.value?.reset();
   } catch (e) {
-    console.error(e)
     let errorMessage = `Unexpected error occurred: ${e}`;
+  console.error(errorMessage)
     if (isAxiosError(e) && e.response?.data) {
       errorMessage = (e.response.data as any).detail;
     } else if (e instanceof Error) {
@@ -109,7 +109,6 @@ const avatar = ref<string>('');
 
 async function fetchAvatar() {
   if (currentUser.value) {
-    console.info("Updating pfp")
     const image = await profileStore.getProfilePicture(currentUser.value.id);
     avatar.value = image || `https://i.pravatar.cc/64?u=${currentUser.value.username}`;
   }
