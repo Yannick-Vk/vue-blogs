@@ -79,3 +79,21 @@ or with npm
 ```sh
 npm run build
 ```
+
+## Running with Docker
+
+This project is also configured to run in a Docker container.
+
+### Prerequisites
+
+* [Docker](https://www.docker.com/get-started)
+
+### Building and running the application
+
+To build and run the application with Docker Compose, run the following command:
+
+```sh
+docker compose up --build
+```
+
+The application will be available at [http://localhost:8080](http://localhost:8080).
