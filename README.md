@@ -82,7 +82,7 @@ npm run build
 
 ## Running with Docker
 
-This project is also configured to run in a Docker container.
+This project is also configured to run in a Docker container with NGINX.
 
 ### Prerequisites
 
