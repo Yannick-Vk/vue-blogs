@@ -8,7 +8,7 @@ import router from "@/router/routes.ts";
 const schema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().min(1, 'Description is required'),
-  blogContent: z.instanceof(File, {message: 'A blog file is required'})
+  content: z.instanceof(File, {message: 'A blog file is required'})
       .refine((file) => file.name.endsWith('.md'), "Only .md files are allowed"),
   bannerImage: z.instanceof(File, {message: 'A banner image is required'})
       .refine((file) => file.type.startsWith('image/'), "Only image files are allowed"),
@@ -19,7 +19,7 @@ type Schema = z.output<typeof schema>
 const state = reactive<Partial<Schema>>({
   title: undefined,
   description: undefined,
-  blogContent: undefined,
+  content: undefined,
   bannerImage: undefined,
 })
 
@@ -42,12 +42,12 @@ const readTextFile = (file: File): Promise<string> => {
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
-    const content = await readTextFile(event.data.blogContent)
+    const content = await readTextFile(event.data.content)
 
     const blogData = {
       title: event.data.title,
       description: event.data.description,
-      blogContent: content,
+      content: content,
       bannerImage: event.data.bannerImage,
     }
 
@@ -86,8 +86,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 }
 
 function onError(event: FormErrorEvent) {
-  if (event.errors.some(value => value.message.includes("blogContent"))) {
-    state.blogContent = undefined;
+  if (event.errors.some(value => value.message.includes("content"))) {
+    state.content = undefined;
   }
   if (event.errors.some(value => value.message.includes("bannerImage"))) {
     state.bannerImage = undefined;
@@ -112,8 +112,8 @@ function onError(event: FormErrorEvent) {
             <UTextarea v-model="state.description" class="w-full" placeholder="Enter description ..."/>
           </UFormField>
 
-          <UFormField label="Blog file" name="blogContent">
-            <UFileUpload v-model="state.blogContent" accept=".md" class="min-h-48 w-96"
+          <UFormField label="Blog file" name="content">
+            <UFileUpload v-model="state.content" accept=".md" class="min-h-48 w-96"
                          color="neutral"
                          highlight
                          label="Click or Drop your blog file here"/>

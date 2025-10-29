@@ -59,7 +59,7 @@ onMounted(async () => {
 const schema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
-  blogContent: z.instanceof(File)
+  content: z.instanceof(File)
       .refine((file) => file.name.endsWith('.md'), "Only .md files are allowed").optional(),
   bannerImage: z.instanceof(File)
       .refine((file) => file.type.startsWith('image/'), "Only image files are allowed").optional(),
@@ -70,7 +70,7 @@ type Schema = z.output<typeof schema>
 const state = reactive<Partial<Schema>>({
   title: undefined,
   description: undefined,
-  blogContent: undefined,
+  content: undefined,
   bannerImage: undefined,
 })
 
@@ -92,7 +92,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   const changedData: {
     title?: string;
     description?: string;
-    blogContent?: string;
+    content?: string;
     bannerImage?: File;
   } = {};
 
@@ -106,10 +106,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     changedData.bannerImage = event.data.bannerImage;
   }
 
-  if (event.data.blogContent) {
-    const content = await event.data.blogContent.text();
-    if (content !== currentBlog.value.blogContent) {
-      changedData.blogContent = content;
+  if (event.data.content) {
+    const content = await event.data.content.text();
+    if (content !== currentBlog.value.content) {
+      changedData.content = content;
     }
   }
 
@@ -161,8 +161,8 @@ async function updateAuthors(userIds: string[]) {
               <UTextarea v-model="state.description" class="w-full" placeholder="Enter description ..."/>
             </UFormField>
 
-            <UFormField label="Blog file" name="blogContent">
-              <UFileUpload v-model="state.blogContent" accept=".md" class="min-h-48 w-96"
+            <UFormField label="Blog file" name="content">
+              <UFileUpload v-model="state.content" accept=".md" class="min-h-48 w-96"
                            color="neutral"
                            highlight
                            label="Click or Drop your blog file here"/>

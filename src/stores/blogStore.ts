@@ -30,11 +30,11 @@ interface ApiBlog {
 }
 
 export interface BlogWithContent extends Blog {
-    blogContent: string;
+    content: string;
 }
 
 interface ApiBlogWithContent extends ApiBlog {
-    blogContent: string;
+    content: string;
 }
 
 export const useBlogStore = defineStore('blogs', () => {
@@ -119,7 +119,7 @@ export const useBlogStore = defineStore('blogs', () => {
     async function uploadBlog(blogData: {
         title: string;
         description: string;
-        blogContent: string;
+        content: string;
         bannerImage: File;
     }) {
         error.value = null;
@@ -128,7 +128,7 @@ export const useBlogStore = defineStore('blogs', () => {
             const formData = new FormData();
             formData.append('Title', blogData.title);
             formData.append('Description', blogData.description);
-            formData.append('File', blogData.blogContent);
+            formData.append('File', blogData.content);
             formData.append('BannerImage', blogData.bannerImage);
 
             console.dir(formData);
@@ -198,7 +198,7 @@ export const useBlogStore = defineStore('blogs', () => {
     async function updateBlog(blogId: string, blogData: {
         title?: string;
         description?: string;
-        blogContent?: string;
+        content?: string;
         bannerImage?: File;
     }) {
         error.value = null;
@@ -208,7 +208,7 @@ export const useBlogStore = defineStore('blogs', () => {
 
             if (blogData.title !== undefined) formData.append('Title', blogData.title);
             if (blogData.description !== undefined) formData.append('Description', blogData.description);
-            if (blogData.blogContent !== undefined) formData.append('BlogContent', blogData.blogContent);
+            if (blogData.content !== undefined) formData.append('Content', blogData.content);
             if (blogData.bannerImage) formData.append('BannerImage', blogData.bannerImage);
 
             await api.patch(`/blogs`, formData);
