@@ -1,36 +1,81 @@
-# vue-blogs
+# Vue Blogs
 
-This template should help get you started developing with Vue 3 in Vite.
+A simple and modern blogging platform built with Vue.js.
 
-## Recommended IDE Setup
+## Description
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and
-disable Vetur).
+This project is a feature-rich blogging application that allows users to create, edit, and view blog posts. It includes
+user authentication, profile management, and role-based access control. The frontend is built as a Single Page
+Application (SPA) using Vue.js.
 
-## Type Support for `.vue` Imports in TS
+The backend is a web api build with C# / .NET and can be found
+here: [link to backend](https://github.com/Yannick-Vk/Angular-Admin-Web-Api)
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for
-type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the
-TypeScript language service aware of `.vue` types.
+## Tech Stack
 
-## Customize configuration
+This project utilizes a modern frontend stack:
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+* **Vue.js:** A progressive JavaScript framework for building user interfaces.
+* **Vue Router:** The official router for Vue.js.
+* **Pinia:** The official state management library for Vue.js.
+* **TypeScript:** A typed superset of JavaScript that compiles to plain JavaScript.
+* **@nuxt/ui:** A UI library for building beautiful and responsive user interfaces.
+* **Axios:** A promise-based HTTP client for the browser and Node.js.
+* **Highlight.js:** A syntax highlighter for the web.
+* **Luxon:** A powerful, modern, and friendly library for parsing, validating, manipulating, and formatting dates and
+  times.
+* **Showdown:** A JavaScript Markdown to HTML converter.
 
-## Project Setup
+## Getting Started
 
-```sh
-bun install
-```
+### Prerequisites
 
-### Compile and Hot-Reload for Development
+* [Node.js](https://nodejs.org/) (v20.19.0 or higher)
+* [Bun (optional)](https://bun.sh/)
+
+### Installation
+
+1. Clone the repository:
+   ```sh
+   git clone <repository-url>
+   ```
+2. Navigate to the project directory:
+   ```sh
+   cd vue-blogs/vue-blogs
+   ```
+3. Install the dependencies:
+   ```sh
+   bun install
+   ```
+   or with npm
+   ```sh
+   npm install
+   ```
+
+### Development
+
+To start the development server with hot-reloading, run the following command:
 
 ```sh
 bun dev
 ```
 
-### Type-Check, Compile and Minify for Production
+or with npm
+
+```sh
+npm run dev
+```
+
+### Build
+
+To build the application for production, run the following command:
 
 ```sh
 bun run build
+```
+
+or with npm
+
+```sh
+npm run build
 ```
