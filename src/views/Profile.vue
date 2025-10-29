@@ -25,7 +25,8 @@ async function changeEmail(email: string) {
 
     toast.add({
       title: 'Successfully changed email',
-      description: `Email has been changed to ${email}`,
+      description: `Email has been changed to ${email}, please reverify your email.`,
+      icon: "lucide:mail-question-mark",
       color: 'success'
     })
 
