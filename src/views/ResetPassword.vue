@@ -31,6 +31,21 @@ const token = route.params.token as string;
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
     errorBox.value = [];
+    const password = event.data.password;
+    const confirm = event.data.confirmPassword;
+
+    if (password !== confirm) {
+      const errorMessage = 'Passwords do not match';
+      toast.add({
+        title: 'Registration Failed',
+        icon: "lucide:user-x",
+        description: errorMessage,
+        color: 'error'
+      })
+      errorBox.value = [{description: errorMessage}];
+      return;
+    }
+
     await profileStore.confirmResetPassword(userId, token, event.data.password);
     toast.add({
       title: 'Password has been reset',
@@ -41,7 +56,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     await router.push('/login');
   } catch (e: any) {
     console.error(e);
-    errorBox.value = e.response.data as {description: string}[];
+    errorBox.value = e.response.data as { description: string }[];
     toast.add({title: "Failed to reset password", description: `Failed to reset password, ${e}`, color: "error"})
   }
 }
