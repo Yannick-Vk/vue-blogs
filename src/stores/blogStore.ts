@@ -3,6 +3,7 @@ import {ref} from "vue";
 import type {Author} from "@/types/Author.ts";
 import {api, isAxiosError} from '@/services/Api.ts'
 import {useProfileStore} from "@/stores/profileStore.ts";
+import type {AxiosResponse} from "axios";
 
 export interface Blog {
     id: string;
@@ -49,22 +50,7 @@ export const useBlogStore = defineStore('blogs', () => {
         error.value = null;
         try {
             const response = await api.get<Array<ApiBlog>>(`blogs/`);
-            blogs.value = await Promise.all(response.data.map(async (blog) => {
-                const authors = await Promise.all(blog.authors.map(async (author) => {
-                    const profilePic = await profileStore.getProfilePicture(author.id);
-                    return {
-                        id: author.id,
-                        name: author.username,
-                        avatar: {
-                            src: profilePic || `https://i.pravatar.cc/32?u=${author.username}`,
-                        }
-                    };
-                }));
-                return {
-                    ...blog,
-                    authors,
-                };
-            }));
+            blogs.value = await mapAuthor(response);
         } catch (err) {
             //console.error(err);
             if (isAxiosError(err)) {
@@ -276,22 +262,7 @@ export const useBlogStore = defineStore('blogs', () => {
         error.value = null;
         try {
             const response = await api.get<Array<ApiBlog>>(`/blogs/author/me`);
-            blogs.value = await Promise.all(response.data.map(async (blog) => {
-                const authors = await Promise.all(blog.authors.map(async (author) => {
-                    const profilePic = await profileStore.getProfilePicture(author.id);
-                    return {
-                        id: author.id,
-                        name: author.username,
-                        avatar: {
-                            src: profilePic || `https://i.pravatar.cc/32?u=${author.username}`,
-                        }
-                    };
-                }));
-                return {
-                    ...blog,
-                    authors,
-                };
-            }));
+            blogs.value = await mapAuthor(response);
         } catch (err) {
             console.error(err);
             if (isAxiosError(err)) {
@@ -309,6 +280,25 @@ export const useBlogStore = defineStore('blogs', () => {
         } finally {
             loading.value = false;
         }
+    }
+
+    async function mapAuthor(response: AxiosResponse<ApiBlog[], any, {}>) {
+        return Promise.all(response.data.map(async (blog) => {
+            const authors = await Promise.all(blog.authors.map(async (author) => {
+                const profilePic = await profileStore.getProfilePicture(author.id);
+                return {
+                    id: author.id,
+                    name: author.username,
+                    avatar: {
+                        src: profilePic || `https://i.pravatar.cc/32?u=${author.username}`,
+                    }
+                };
+            }));
+            return {
+                ...blog,
+                authors,
+            };
+        }));
     }
 
     return {
