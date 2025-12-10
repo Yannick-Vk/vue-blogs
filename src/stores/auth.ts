@@ -63,7 +63,7 @@ export const useAuthStore = defineStore('auth', () => {
     async function fetchUser() {
         try {
             const response = await api.get<LoginResponse>(`${authApiUrl}/whoAmI`);
-            handleLoginResponse(response);
+            await handleLoginResponse(response);
         } catch (error) {
             console.error("Failed to fetch user session:", error);
             await logout(); // Log out if session is invalid
@@ -71,20 +71,20 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     // Helper function to centralize login/registration logic
-    function handleLoginResponse(response: AxiosResponse<LoginResponse>) {
+    async function handleLoginResponse(response: AxiosResponse<LoginResponse>) {
         const userData = response.data;
         user.value = new User(userData);
         localStorage.setItem('user', JSON.stringify(userData));
         localStorage.setItem('expiration', userData.expiry);
         adminCheckPromise = checkIsAdmin();
         const userStore = useUserStore();
-        userStore.getUser();
+        await userStore.getUser();
     }
 
     async function login(credentials: { username?: string, password?: string }) {
         try {
             const response = await axios.post<LoginResponse>(`${authApiUrl}/login`, credentials);
-            handleLoginResponse(response);
+            await handleLoginResponse(response);
         } catch (error) {
             user.value = null;
             throw error
@@ -96,7 +96,7 @@ export const useAuthStore = defineStore('auth', () => {
     }) {
         try {
             const response = await axios.post<LoginResponse>(`${authApiUrl}/register`, details);
-            handleLoginResponse(response);
+            await handleLoginResponse(response);
         } catch (error) {
             user.value = null;
             throw error
@@ -117,13 +117,13 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     async function refresh(response: AxiosResponse) {
-        handleLoginResponse(response);
+        await handleLoginResponse(response);
     }
 
     async function whoAmI() {
         try {
             const login = await axios.get<LoginResponse>(`${authApiUrl}/whoAmI`);
-            handleLoginResponse(login);
+            await handleLoginResponse(login);
         } catch (e) {
             console.error("WhoAmI failed:" + e);
         }
